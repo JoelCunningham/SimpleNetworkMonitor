@@ -1,0 +1,8 @@
+{
+  "data_file": "data.json",
+  "subnet": "192.168.0",
+  "ping_count": 1,
+  "ping_timeout_ms": 200,
+  "arp_timeout_s": 1,
+  "max_threads": 50
+}
