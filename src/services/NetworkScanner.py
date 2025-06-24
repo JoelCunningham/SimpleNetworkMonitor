@@ -13,7 +13,12 @@ from utilities.Timer import Time, time_operation
 
 class NetworkScanner:
     SUCCESSFUL_EXIT_CODE: int = 0
-    
+    BROADCAST_MAC: str = "ff:ff:ff:ff:ff:ff"
+    NO_MAC_NAME: str = "Unknown"
+    PING_COMMAND: str = "ping"
+    PING_FLAG_COUNT: str = "-n"
+    PING_FLAG_TIMEOUT: str = "-w"
+
     def __init__(self, config: AppConfig, resolver: DeviceResolver) -> None:
         self.subnet = config.subnet
         self.min_ip = config.min_ip
@@ -36,11 +41,16 @@ class NetworkScanner:
                     devices.append(device)
         return devices
 
-    def scan_ip(self, ip: str) -> Optional[NetworkDevice]:
+    def scan_ip(self, ip_address: str) -> Optional[NetworkDevice]:
         ping_time = Time()
         with time_operation(ping_time):
-            result: int = subprocess.call(
-                ["ping", "-n", str(self.ping_count), "-w", str(self.ping_timeout_ms), ip],
+            result = subprocess.call(
+                [
+                    self.PING_COMMAND,
+                    self.PING_FLAG_COUNT, str(self.ping_count),
+                    self.PING_FLAG_TIMEOUT, str(self.ping_timeout_ms),
+                    ip_address
+                ],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
@@ -48,16 +58,20 @@ class NetworkScanner:
         if result != self.SUCCESSFUL_EXIT_CODE:
             return None
 
-        mac, arp_elapsed = self.arp_lookup(ip)
-        if mac is None:
-            return None
+        mac, arp_elapsed = self.arp_lookup(ip_address)
+        resolved_device = self.resolver.resolve(mac.lower()) if mac else None
 
-        name: str = self.resolver.resolve_name(mac)
-        return NetworkDevice(ip=ip, mac=mac, name=name, ping_time_ms=round(ping_time.value, 1), arp_time_ms=round(arp_elapsed, 1))
+        return NetworkDevice(
+            mac=mac, 
+            ip=ip_address, 
+            ping_time_ms=round(ping_time.value, 1), 
+            arp_time_ms=round(arp_elapsed, 1),
+            resolved=resolved_device
+        )
 
     def arp_lookup(self, ip: str) -> Tuple[Optional[str], float]:
         arp: Packet = ARP(pdst=ip)  # type: ignore
-        ether: Packet = Ether(dst="ff:ff:ff:ff:ff:ff")  # type: ignore
+        ether: Packet = Ether(dst=self.BROADCAST_MAC)  # type: ignore
         packet: Packet = ether / arp  # type: ignore
 
         arp_time = Time()

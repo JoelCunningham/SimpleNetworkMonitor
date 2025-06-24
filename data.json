@@ -1,6 +1,98 @@
 {
-  "48:d2:4f:26:7a:4e": "Router",
-  "40:b0:34:76:ba:a4": "Printer",
-  "b2:be:76:af:c8:9d": "NVR",
-  "b2:be:76:d2:a1:26": "Bridge"
+  "48:d2:4f:26:7a:4e": {
+    "type": "Router",
+    "owner": "Household",
+    "location": "None",
+    "model": "Sagemcom F@ST 5366 TN"
+  },
+  "40:b0:34:76:ba:a4": {
+    "type": "Printer",
+    "owner": "Household",
+    "location": "None",
+    "model": "HP OfficeJet Pro 7740"
+  },
+  "b2:be:76:af:c8:9d": {
+    "type": "NVR",
+    "owner": "Household",
+    "location": "None",
+    "model": "Dahua NVR4108HS-8P-4KS2/L"
+  },
+  "b2:be:76:d2:a1:26": {
+    "type": "Bridge",
+    "owner": "Household",
+    "location": "Hallway",
+    "model": "TP-LINK TL-WR840N"
+  },
+  "38:8b:59:4f:f0:ce": {
+    "type": "Smart Speaker",
+    "owner": "Joel",
+    "location": "Bedroom",
+    "model": "Google Home Mini"
+  },
+  "f4:a8:0d:2f:35:d8": {
+    "type": "Laptop",
+    "owner": "Joel",
+    "location": "None",
+    "model": "HP Envy 14"
+  },
+  "64:79:f0:4b:cc:a6": {
+    "type": "Laptop",
+    "owner": "Joel",
+    "location": "None",
+    "model": "HP Envy 14"
+  },
+  "b2:be:76:ed:74:b3": {
+    "type": "Smart Speaker",
+    "owner": "Household",
+    "location": "Kitchen",
+    "model": "Google Home Mini"
+  },
+  "b2:be:76:4c:07:55": {
+    "type": "Smart TV",
+    "owner": "Household",
+    "location": "Living",
+    "model": "Panasonic VIErA TH-75FX780A"
+  },
+  "7a:46:af:82:0a:1e": {
+    "type": "Smart Phone",
+    "owner": "Joel",
+    "location": "None",
+    "model": "Samsung Galaxy S21 FE"
+  },
+  "3a:c2:11:94:93:f3": {
+    "type": "Tablet",
+    "owner": "Caryn",
+    "location": "None",
+    "model": "iPad Air 2"
+  },
+  "2c:f0:5d:22:28:3c": {
+    "type": "Desktop",
+    "owner": "Caryn",
+    "location": "None",
+    "model": "None"
+  },
+  "a8:a6:48:41:f1:ac": {
+    "type": "Smart TV",
+    "owner": "Household",
+    "location": "Rumpus",
+    "model": "TBD"
+  },
+  "18:c0:4d:34:2d:e1": {
+    "type": "Desktop",
+    "owner": "Ruth",
+    "location": "None",
+    "model": "None"
+  },
+  "b2:be:76:e3:3c:ad": {
+    "type": "Smart Radio",
+    "owner": "Household",
+    "location": "Kitchen",
+    "model": "Tivoli Model One Digital"
+  },
+  "2c:f0:5d:08:9c:fb": {
+    "type": "Desktop",
+    "owner": "Joel",
+    "location": "None",
+    "model": "None"
+  }
 }

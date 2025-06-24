@@ -16,10 +16,12 @@ class AppConfig:
 
     @staticmethod
     def load(filepath: str) -> "AppConfig":
+        ENCODING = "utf-8"
+        
         if not os.path.exists(filepath):
             raise FileNotFoundError(f"AppConfig file {filepath} does not exist.")
         try:
-            with open(filepath, "r", encoding="utf-8") as file:
+            with open(filepath, "r", encoding=ENCODING) as file:
                 data: Dict[str, Any] = json.load(file)
                 
                 return AppConfig(
