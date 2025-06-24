@@ -27,7 +27,7 @@ class NetworkScanner:
         self.max_threads = config.max_threads
         self.ping_count = config.ping_count
         self.ping_timeout_ms = config.ping_timeout_ms
-        self.arp_timeout_s = config.arp_timeout_s
+        self.arp_timeout_ms = config.arp_timeout_ms
                 
     def scan_network(self) -> List[NetworkDevice]:
         devices: List[NetworkDevice] = []
@@ -58,29 +58,29 @@ class NetworkScanner:
         if result != self.SUCCESSFUL_EXIT_CODE:
             return None
 
-        mac, arp_elapsed = self.arp_lookup(ip_address)
+        mac, arp_time = self.lookup_arp(ip_address)
         resolved_device = self.resolver.resolve(mac.lower()) if mac else None
 
         return NetworkDevice(
             mac=mac, 
             ip=ip_address, 
             ping_time_ms=round(ping_time.value, 1), 
-            arp_time_ms=round(arp_elapsed, 1),
+            arp_time_ms=round(arp_time.value, 1),
             resolved=resolved_device
         )
 
-    def arp_lookup(self, ip: str) -> Tuple[Optional[str], float]:
+    def lookup_arp(self, ip: str) -> Tuple[Optional[str], Time]:
         arp: Packet = ARP(pdst=ip)  # type: ignore
         ether: Packet = Ether(dst=self.BROADCAST_MAC)  # type: ignore
         packet: Packet = ether / arp  # type: ignore
 
         arp_time = Time()
         with time_operation(arp_time):
-            results = srp(packet, timeout=self.arp_timeout_s, verbose=0)[0]  # type: ignore
+            results = srp(packet, timeout=self.arp_timeout_ms/1000, verbose=0)[0]  # type: ignore
 
         if results:
             received_pkt = results[0][1]
             mac_address = getattr(received_pkt, "hwsrc", None)
             if isinstance(mac_address, str):
-                return mac_address.lower(), arp_time.value
-        return None, arp_time.value
+                return mac_address.lower(), arp_time
+        return None, arp_time

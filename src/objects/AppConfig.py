@@ -11,7 +11,7 @@ class AppConfig:
     max_threads: int
     ping_count: int
     ping_timeout_ms: int
-    arp_timeout_s: float
+    arp_timeout_ms: int
     data_file: str
 
     @staticmethod
@@ -31,7 +31,7 @@ class AppConfig:
                     max_threads=int(data["max_threads"]),
                     ping_count=int(data["ping_count"]),
                     ping_timeout_ms=int(data["ping_timeout_ms"]),
-                    arp_timeout_s=float(data["arp_timeout_s"]),
+                    arp_timeout_ms=int(data["arp_timeout_ms"]),
                     data_file=str(data["data_file"])
                 )
         except (json.JSONDecodeError, ValueError):

@@ -18,11 +18,14 @@ class KnownDevice:
             model=str(data["model"]),
         )
 
-    @staticmethod
-    def hasDefaultOwner(device: "KnownDevice") -> bool:
+    def hasDefaultOwner(self) -> bool:
         DEFAULT_DEVICE_OWNER: str = "Household"
-        return device.owner == DEFAULT_DEVICE_OWNER
-    
+        return self.owner == DEFAULT_DEVICE_OWNER
+
     def hasNoLocation(self) -> bool:
         DEFAULT_DEVICE_LOCATION: str = "None"
         return not self.location or self.location == DEFAULT_DEVICE_LOCATION
+    
+    def hasNoModel(self) -> bool:
+        DEFAULT_DEVICE_MODEL: str = "None"
+        return not self.model or self.model == DEFAULT_DEVICE_MODEL

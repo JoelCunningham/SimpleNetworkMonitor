@@ -1,18 +1,20 @@
-from objects.KnownDevice import KnownDevice
 from objects.NetworkDevice import NetworkDevice
 
-
 class Common:
+    
     @staticmethod
     def get_device_name(device: NetworkDevice) -> str:
+        device_name = ""
+        
         if device.resolved:
-            if KnownDevice.hasDefaultOwner(device.resolved) and device.resolved.hasNoLocation():
-                return f"{device.resolved.type}"
-            if KnownDevice.hasDefaultOwner(device.resolved):
-                return f"{device.resolved.location} {device.resolved.type}"
-            if device.resolved.hasNoLocation():
-                return f"{device.resolved.owner}'s {device.resolved.type}"
-            return f"{device.resolved.owner}'s {device.resolved.location} {device.resolved.type}"
+            details = device.resolved
+
+            device_name += details.owner + "'s " if not details.hasDefaultOwner() else ""
+            device_name += details.location + " " if not details.hasNoLocation() else ""
+            device_name += details.type + " "
+
+            return device_name.strip()
+        
         if device.mac:
             return f"Unknown device {device.mac}"
         if device.ip:
