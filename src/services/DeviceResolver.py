@@ -10,25 +10,29 @@ class DeviceResolver:
         self.known_devices: Dict[str, KnownDevice] = self.load_known_devices(data_file)
 
     def resolve(self, mac: str) -> Optional[KnownDevice]:
-        if mac not in self.known_devices:
-            return None
-        return self.known_devices[mac]
+        return self.known_devices.get(mac.lower())
 
     @staticmethod
     def load_known_devices(filename: str) -> Dict[str, KnownDevice]:
         ENCODING = "utf-8"
-        
+        mac_lookup: Dict[str, KnownDevice] = {}
+
         if os.path.exists(filename):
             with open(filename, "r", encoding=ENCODING) as f:
                 try:
                     raw_data: Dict[str, Any] = json.load(f)
-                    known_devices: Dict[str, KnownDevice] = {}
-                    
-                    for mac, data in raw_data.items():
+
+                    for _id, data in raw_data.items():
+                        if "macs" not in data or not isinstance(data["macs"], list):
+                            continue
+
                         known_device = KnownDevice.load(data)
-                        known_devices[mac] = known_device
-                    return known_devices
-                
+
+                        for mac in data["macs"]:
+                            if isinstance(mac, str):
+                                mac_lookup[mac.lower()] = known_device
+
                 except (json.JSONDecodeError, TypeError):
                     pass
-        return {}
+
+        return mac_lookup
