@@ -5,9 +5,8 @@ from typing import List, Optional, Tuple
 from scapy.all import ARP, Ether, srp  # type: ignore
 from scapy.packet import Packet
 
+from objects.AddressData import AddressData
 from objects.AppConfig import AppConfig
-from objects.NetworkDevice import NetworkDevice
-from services.DeviceResolver import DeviceResolver
 from utilities.Timer import Time, time_operation
 
 
@@ -19,29 +18,29 @@ class NetworkScanner:
     PING_FLAG_COUNT: str = "-n"
     PING_FLAG_TIMEOUT: str = "-w"
 
-    def __init__(self, config: AppConfig, resolver: DeviceResolver) -> None:
+    def __init__(self, config: AppConfig) -> None:
         self.subnet = config.subnet
         self.min_ip = config.min_ip
         self.max_ip = config.max_ip
-        self.resolver = resolver
+        
         self.max_threads = config.max_threads
         self.ping_count = config.ping_count
         self.ping_timeout_ms = config.ping_timeout_ms
         self.arp_timeout_ms = config.arp_timeout_ms
                 
-    def scan_network(self) -> List[NetworkDevice]:
-        devices: List[NetworkDevice] = []
+    def scan_network(self) -> List[AddressData]:
+        devices: List[AddressData] = []
         ip_range: List[str] = [f"{self.subnet}.{i}" for i in range(self.min_ip, self.max_ip + 1)]
 
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
             futures = [executor.submit(self.scan_ip, ip) for ip in ip_range]
             for future in as_completed(futures):
-                device: Optional[NetworkDevice] = future.result()
+                device: Optional[AddressData] = future.result()
                 if device is not None:
                     devices.append(device)
         return devices
 
-    def scan_ip(self, ip_address: str) -> Optional[NetworkDevice]:
+    def scan_ip(self, ip_address: str) -> Optional[AddressData]:
         ping_time = Time()
         with time_operation(ping_time):
             result = subprocess.call(
@@ -59,14 +58,12 @@ class NetworkScanner:
             return None
 
         mac, arp_time = self.lookup_arp(ip_address)
-        resolved_device = self.resolver.resolve(mac.lower()) if mac else None
 
-        return NetworkDevice(
+        return AddressData(
             mac=mac, 
             ip=ip_address, 
-            ping_time_ms=round(ping_time.value, 1), 
-            arp_time_ms=round(arp_time.value, 1),
-            resolved=resolved_device
+            ping_time_ms=int(ping_time.value), 
+            arp_time_ms=int(arp_time.value),
         )
 
     def lookup_arp(self, ip: str) -> Tuple[Optional[str], Time]:

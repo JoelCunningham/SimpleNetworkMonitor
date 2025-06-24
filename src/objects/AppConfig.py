@@ -12,7 +12,6 @@ class AppConfig:
     ping_count: int
     ping_timeout_ms: int
     arp_timeout_ms: int
-    data_file: str
 
     @staticmethod
     def load(filepath: str) -> "AppConfig":
@@ -32,7 +31,6 @@ class AppConfig:
                     ping_count=int(data["ping_count"]),
                     ping_timeout_ms=int(data["ping_timeout_ms"]),
                     arp_timeout_ms=int(data["arp_timeout_ms"]),
-                    data_file=str(data["data_file"])
                 )
         except (json.JSONDecodeError, ValueError):
             raise ValueError(f"Invalid configuration in {filepath}. Please check the format.")
