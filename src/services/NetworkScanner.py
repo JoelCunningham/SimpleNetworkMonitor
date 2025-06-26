@@ -8,9 +8,9 @@ from scapy.packet import Packet
 
 import Constants
 import Exceptions
-from objects.AddressData import AddressData
-from objects.AppConfig import AppConfig
-from utilities.Timer import Time, time_operation
+from Objects.AddressData import AddressData
+from Objects.AppConfig import AppConfig
+from Utilities.Timer import Time, time_operation
 
 
 class NetworkScanner:

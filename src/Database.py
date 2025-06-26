@@ -5,7 +5,7 @@ from sqlmodel import Field, Session, SQLModel, create_engine
 
 import Constants
 import Exceptions
-from objects.AppConfig import AppConfig
+from Objects.AppConfig import AppConfig
 
 
 class BaseModel(SQLModel):
@@ -27,11 +27,11 @@ class Database:
                 pool_recycle=Constants.DATABASE_POOL_RECYCLE_TIME,
             )
             
-            from database.models.CategoryModel import Category  # type: ignore[unused-import]
-            from database.models.DeviceModel import Device  # type: ignore[unused-import]
-            from database.models.LocationModel import Location  # type: ignore[unused-import]
-            from database.models.MacModel import Mac  # type: ignore[unused-import]
-            from database.models.OwnerModel import Owner  # type: ignore[unused-import]
+            from Models.CategoryModel import Category  # type: ignore[unused-import]
+            from Models.DeviceModel import Device  # type: ignore[unused-import]
+            from Models.LocationModel import Location  # type: ignore[unused-import]
+            from Models.MacModel import Mac  # type: ignore[unused-import]
+            from Models.OwnerModel import Owner  # type: ignore[unused-import]
             
             SQLModel.metadata.create_all(cls._engine)
         except Exception as e:

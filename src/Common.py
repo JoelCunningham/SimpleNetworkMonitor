@@ -1,7 +1,7 @@
 from typing import Optional
 
 import Constants
-from database.models.DeviceModel import Device
+from Models.DeviceModel import Device
 
 
 def get_device_name(device: Optional[Device]) -> str:

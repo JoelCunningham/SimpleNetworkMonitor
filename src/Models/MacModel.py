@@ -3,8 +3,8 @@ from typing import Optional
 
 from sqlmodel import Field, Relationship
 
-from database.Database import BaseModel
-from database.models.DeviceModel import Device
+from Database import BaseModel
+from Models.DeviceModel import Device
 
 
 class Mac(BaseModel, table=True):

@@ -2,13 +2,13 @@ from typing import TYPE_CHECKING, List, Optional
 
 from sqlmodel import Field, Relationship
 
-from database.Database import BaseModel
+from Database import BaseModel
 
 if TYPE_CHECKING:
-    from database.models.CategoryModel import Category
-    from database.models.LocationModel import Location
-    from database.models.MacModel import Mac
-    from database.models.OwnerModel import Owner
+    from Models.CategoryModel import Category
+    from Models.LocationModel import Location
+    from Models.MacModel import Mac
+    from Models.OwnerModel import Owner
 
 class Device(BaseModel, table=True):
     model: Optional[str] = Field(default=None) 

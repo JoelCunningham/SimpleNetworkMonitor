@@ -4,12 +4,12 @@ from typing import Optional
 from sqlmodel import select
 
 import Exceptions
-from database.Database import Database
-from database.models.MacModel import Mac
-from objects.AddressData import AddressData
+from Database import Database
+from Models.MacModel import Mac
+from Objects.AddressData import AddressData
 
 
-class MacRepository:
+class MacService:
     
     @staticmethod
     def upsert_mac(address_data: AddressData) -> Mac:   

@@ -1,7 +1,7 @@
 from sqlmodel import Relationship
 
-from database.Database import BaseModel
-from database.models.DeviceModel import Device
+from Database import BaseModel
+from Models.DeviceModel import Device
 
 class Location(BaseModel, table=True):
     name: str

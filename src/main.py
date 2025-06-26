@@ -4,11 +4,11 @@ from typing import List
 import Common
 import Constants
 import Exceptions
-from database.Database import Database
-from database.models.MacModel import Mac
-from database.repositories.MacRepository import MacRepository
-from objects.AppConfig import AppConfig
-from services.NetworkScanner import NetworkScanner
+from Database import Database
+from Models.MacModel import Mac
+from Services.MacService import MacService
+from Objects.AppConfig import AppConfig
+from Services.NetworkScanner import NetworkScanner
 
 
 def main() -> None:
@@ -25,7 +25,7 @@ def main() -> None:
         for address_data in address_data_list:
             if address_data.hasMac():
                 try:
-                    mac_data = MacRepository.upsert_mac(address_data)
+                    mac_data = MacService.upsert_mac(address_data)
                     mac_data_list.append(mac_data)
                 except Exception as e:
                     print(f"Error processing {address_data.ip_address}: {e}")
