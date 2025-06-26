@@ -1,3 +1,4 @@
+import platform
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Optional, Tuple
@@ -5,19 +6,14 @@ from typing import List, Optional, Tuple
 from scapy.all import ARP, Ether, srp  # type: ignore
 from scapy.packet import Packet
 
+import Constants
+import Exceptions
 from objects.AddressData import AddressData
 from objects.AppConfig import AppConfig
 from utilities.Timer import Time, time_operation
 
 
 class NetworkScanner:
-    SUCCESSFUL_EXIT_CODE: int = 0
-    BROADCAST_MAC: str = "ff:ff:ff:ff:ff:ff"
-    NO_MAC_NAME: str = "Unknown"
-    PING_COMMAND: str = "ping"
-    PING_FLAG_COUNT: str = "-n"
-    PING_FLAG_TIMEOUT: str = "-w"
-
     def __init__(self, config: AppConfig) -> None:
         self.subnet = config.subnet
         self.min_ip = config.min_ip
@@ -27,6 +23,14 @@ class NetworkScanner:
         self.ping_count = config.ping_count
         self.ping_timeout_ms = config.ping_timeout_ms
         self.arp_timeout_ms = config.arp_timeout_ms
+        
+        system = platform.system()
+        if system not in Constants.PING_COMMANDS:
+            raise Exceptions.NetworkScanError(f"Unsupported operating system: {system}")
+        
+        self.ping_cmd = Constants.PING_COMMANDS[system]["cmd"]
+        self.ping_count_flag = Constants.PING_COMMANDS[system]["count_flag"]
+        self.ping_timeout_flag = Constants.PING_COMMANDS[system]["timeout_flag"]
                 
     def scan_network(self) -> List[AddressData]:
         devices: List[AddressData] = []
@@ -43,41 +47,49 @@ class NetworkScanner:
     def scan_ip(self, ip_address: str) -> Optional[AddressData]:
         ping_time = Time()
         with time_operation(ping_time):
-            result = subprocess.call(
-                [
-                    self.PING_COMMAND,
-                    self.PING_FLAG_COUNT, str(self.ping_count),
-                    self.PING_FLAG_TIMEOUT, str(self.ping_timeout_ms),
-                    ip_address
-                ],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+            try:
+                result = subprocess.call(
+                    [
+                        self.ping_cmd,
+                        self.ping_count_flag, str(self.ping_count),
+                        self.ping_timeout_flag, str(self.ping_timeout_ms),
+                        ip_address
+                    ],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+            except (subprocess.TimeoutExpired, subprocess.SubprocessError) as e:
+                print(f"Ping error for {ip_address}: {e}")
+                return None
 
-        if result != self.SUCCESSFUL_EXIT_CODE:
+        if result != Constants.SUCCESSFUL_PING_EXIT_CODE:
             return None
 
         mac, arp_time = self.lookup_arp(ip_address)
 
         return AddressData(
-            mac=mac, 
-            ip=ip_address, 
+            mac_address=mac, 
+            ip_address=ip_address, 
             ping_time_ms=int(ping_time.value), 
             arp_time_ms=int(arp_time.value),
         )
 
     def lookup_arp(self, ip: str) -> Tuple[Optional[str], Time]:
         arp: Packet = ARP(pdst=ip)  # type: ignore
-        ether: Packet = Ether(dst=self.BROADCAST_MAC)  # type: ignore
+        ether: Packet = Ether(dst=Constants.BROADCAST_MAC_ADDRESS)  # type: ignore
         packet: Packet = ether / arp  # type: ignore
 
         arp_time = Time()
         with time_operation(arp_time):
-            results = srp(packet, timeout=self.arp_timeout_ms/1000, verbose=0)[0]  # type: ignore
+            try:
+                results = srp(packet, timeout=self.arp_timeout_ms/1000, verbose=0)[0]  # type: ignore
+            except Exception as e:
+                print(f"ARP lookup error for {ip}: {e}")
+                return None, arp_time
 
         if results:
             received_pkt = results[0][1]
             mac_address = getattr(received_pkt, "hwsrc", None)
-            if isinstance(mac_address, str):
+            if mac_address and isinstance(mac_address, str):
                 return mac_address.lower(), arp_time
         return None, arp_time

@@ -8,13 +8,13 @@ from database.models.DeviceModel import Device
 
 
 class Mac(BaseModel, table=True):
-    address: str = Field(primary_key=True)
+    address: str = Field(unique=True)
 
-    ping_time_ms: int
-    arp_time_ms: int
+    ping_time_ms: int = Field(ge=0)
+    arp_time_ms: int = Field(ge=0)
 
     last_ip: str
-    last_seen: datetime = Field(default=datetime.now(timezone.utc))
+    last_seen: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-    device_id: int = Field(default=None, foreign_key="device.id")
+    device_id: Optional[int] = Field(default=None, foreign_key="device.id")
     device: Optional[Device] = Relationship(back_populates="macs")

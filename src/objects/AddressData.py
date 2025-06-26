@@ -3,10 +3,10 @@ from typing import Optional
 
 @dataclass
 class AddressData:
-    ip: str
-    mac: Optional[str]
+    ip_address: str
+    mac_address: Optional[str]
     ping_time_ms: int
     arp_time_ms: int
 
     def hasMac(self) -> bool:
-        return self.mac is not None and len(self.mac) > 0
+        return self.mac_address is not None and len(self.mac_address) > 0

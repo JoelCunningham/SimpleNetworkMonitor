@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from sqlmodel import Field, Relationship
 
@@ -11,8 +11,7 @@ if TYPE_CHECKING:
     from database.models.OwnerModel import Owner
 
 class Device(BaseModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    model: str
+    model: Optional[str] = Field(default=None) 
     
     owner_id: Optional[int] = Field(default=None, foreign_key="owner.id")
     owner: Optional["Owner"] = Relationship(back_populates="devices")
@@ -20,7 +19,7 @@ class Device(BaseModel, table=True):
     location_id: Optional[int] = Field(default=None, foreign_key="location.id")
     location: Optional["Location"] = Relationship(back_populates="devices")
 
-    category_id: int = Field(default=None, foreign_key="category.id")
+    category_id: int = Field(foreign_key="category.id") 
     category: "Category" = Relationship(back_populates="devices")
     
-    macs: list["Mac"] = Relationship(back_populates="device")
+    macs: List["Mac"] = Relationship(back_populates="device")

@@ -1,5 +1,9 @@
 from typing import Optional
+
+import Constants
 from database.models.DeviceModel import Device
+
+
 class Common:
     
     @staticmethod
@@ -13,5 +17,5 @@ class Common:
             
             return device_name.strip()
         
-        return "Unknown Device"
+        return Constants.UNKNOWN_DEVICE_NAME
         

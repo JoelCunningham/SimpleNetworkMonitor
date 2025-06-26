@@ -1,0 +1,66 @@
+# Configuration
+DEFAULT_CONFIG_PATH = "config.json"
+DEFAULT_ENCODING = "utf-8"
+
+# Network scanning
+IP_ADDRESS_REGEX = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+MAC_ADDRESS_REGEX = r'^[0-9a-f]{12}$'
+
+# Network protocols
+BROADCAST_MAC_ADDRESS = "ff:ff:ff:ff:ff:ff"
+SUCCESSFUL_PING_EXIT_CODE = 0
+
+# Platform-specific ping commands
+PING_COMMANDS = {
+    "Windows": {"cmd": "ping", "count_flag": "-n", "timeout_flag": "-w"},
+    "Linux": {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"},
+    "Darwin": {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"},  # macOS
+}
+
+# Database
+DATABASE_POOL_RECYCLE_TIME = 3600  # 1 hour
+
+# Network timeouts (in seconds)
+DEFAULT_ARP_TIMEOUT = 0.5
+DEFAULT_PING_TIMEOUT = 0.3
+
+# Validation limits
+MIN_IP_ADDRESS = 1
+MAX_IP_ADDRESS = 254
+MIN_TIMEOUT_MS = 1
+MIN_THREADS = 1
+MIN_PING_COUNT = 1
+
+# Display formatting
+SEPARATOR_LINE = "-" * 80
+IP_COLUMN_WIDTH = 15
+MAC_COLUMN_WIDTH = 17
+DEVICE_NAME_COLUMN_WIDTH = 30
+
+# Default values
+UNKNOWN_DEVICE_NAME = "Unknown Device"
+UNKNOWN_MAC_NAME = "Unknown"
+
+# Exit codes
+EXIT_SUCCESS = 0
+EXIT_FAILURE = 1
+
+# Messages
+SCAN_INTERRUPTED_MESSAGE = "\nScan interrupted by user."
+DEVICE_SCAN_FORMAT = "{ip:<15} - {mac:<17} - {name:<30} | ping: {ping:>4}ms | arp: {arp:>4}ms"
+NETWORK_SCAN_SUMMARY = "Found {count} responsive devices"
+DEVICES_PROCESSED_SUMMARY = "Processed {count} devices:"
+
+# Database messages
+DB_ALREADY_INITIALIZED = "Database already initialized"
+DB_NOT_INITIALIZED = "Database not initialized"
+DB_INIT_FAILED = "Failed to initialize database: {error}"
+DB_CLOSE_FAILED = "Failed to close database connection: {error}"
+
+# Error messages
+CONFIG_FILE_NOT_FOUND = "AppConfig file {filepath} does not exist."
+CONFIG_INVALID = "Invalid configuration in {filepath}: {error}"
+CONFIG_MISSING_FIELDS = "Missing required fields in {filepath}: {fields}"
+UNSUPPORTED_OS = "Unsupported operating system: {system}"
+PING_ERROR = "Ping error for {ip}: {error}"
+ARP_ERROR = "ARP lookup error for {ip}: {error}"
