@@ -4,20 +4,24 @@ from typing import Optional
 from sqlmodel import select
 
 import Exceptions
-from Database import Database
 from Models.MacModel import Mac
 from Objects.AddressData import AddressData
+from Objects.Injectable import Injectable
+from Services.Database import Database
 
 
-class MacService:
+class MacService(Injectable):
+    _database: Database
     
-    @staticmethod
-    def upsert_mac(address_data: AddressData) -> Mac:   
+    def __init__(self, database: Database) -> None:
+        self._database = database
+    
+    def upsert_mac(self, address_data: AddressData) -> Mac:   
         if address_data.mac_address is None:
             raise Exceptions.ValidationError("AddressData does not contain a MAC address.")
         
         try:
-            with Database.get_session() as session:
+            with self._database.get_session() as session:
                 mac: Optional[Mac] = session.exec(
                     select(Mac).where(Mac.address == address_data.mac_address)
                 ).first()

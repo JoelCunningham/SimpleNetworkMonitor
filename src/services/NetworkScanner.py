@@ -9,34 +9,40 @@ from scapy.packet import Packet
 import Constants
 import Exceptions
 from Objects.AddressData import AddressData
-from Objects.AppConfig import AppConfig
+from Objects.Injectable import Injectable
+from Services.AppConfig import AppConfig
 from Utilities.Timer import Time, time_operation
 
 
-class NetworkScanner:
+class NetworkScanner(Injectable):
+    _config: AppConfig
+    _ping_cmd: str
+    _ping_count_flag: str
+    _ping_timeout_flag: str
+    _ping_timeout_value: float
+    
     def __init__(self, config: AppConfig) -> None:
-        self.subnet = config.subnet
-        self.min_ip = config.min_ip
-        self.max_ip = config.max_ip
-        
-        self.max_threads = config.max_threads
-        self.ping_count = config.ping_count
-        self.ping_timeout_ms = config.ping_timeout_ms
-        self.arp_timeout_ms = config.arp_timeout_ms
+        self._config = config
         
         system = platform.system()
         if system not in Constants.PING_COMMANDS:
             raise Exceptions.NetworkScanError(f"Unsupported operating system: {system}")
         
-        self.ping_cmd = Constants.PING_COMMANDS[system]["cmd"]
-        self.ping_count_flag = Constants.PING_COMMANDS[system]["count_flag"]
-        self.ping_timeout_flag = Constants.PING_COMMANDS[system]["timeout_flag"]
+        if system == Constants.PLATFORM_WINDOWS:
+            self._ping_timeout_value = int(config.ping_timeout_ms)
+        else:
+            self._ping_timeout_value = config.ping_timeout_ms / 1000
+        
+        self._ping_cmd = Constants.PING_COMMANDS[system]["cmd"]
+        self._ping_count_flag = Constants.PING_COMMANDS[system]["count_flag"]
+        self._ping_timeout_flag = Constants.PING_COMMANDS[system]["timeout_flag"]
+        
                 
     def scan_network(self) -> List[AddressData]:
         devices: List[AddressData] = []
-        ip_range: List[str] = [f"{self.subnet}.{i}" for i in range(self.min_ip, self.max_ip + 1)]
+        ip_range: List[str] = [f"{self._config.subnet}.{i}" for i in range(self._config.min_ip, self._config.max_ip + 1)]
 
-        with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
+        with ThreadPoolExecutor(max_workers=self._config.max_threads) as executor:
             futures = [executor.submit(self.scan_ip, ip) for ip in ip_range]
             for future in as_completed(futures):
                 device: Optional[AddressData] = future.result()
@@ -50,9 +56,9 @@ class NetworkScanner:
             try:
                 result = subprocess.call(
                     [
-                        self.ping_cmd,
-                        self.ping_count_flag, str(self.ping_count),
-                        self.ping_timeout_flag, str(self.ping_timeout_ms),
+                        self._ping_cmd,
+                        self._ping_count_flag, str(self._config.ping_count),
+                        self._ping_timeout_flag, str(self._ping_timeout_value),
                         ip_address
                     ],
                     stdout=subprocess.DEVNULL,
@@ -82,7 +88,7 @@ class NetworkScanner:
         arp_time = Time()
         with time_operation(arp_time):
             try:
-                results = srp(packet, timeout=self.arp_timeout_ms/1000, verbose=0)[0]  # type: ignore
+                results = srp(packet, timeout=self._config.arp_timeout_ms/1000, verbose=0)[0]  # type: ignore
             except Exception as e:
                 print(f"ARP lookup error for {ip}: {e}")
                 return None, arp_time

@@ -4,28 +4,27 @@ from typing import List
 import Common
 import Constants
 import Exceptions
-from Database import Database
+from Container import Container
 from Models.MacModel import Mac
-from Services.MacService import MacService
-from Objects.AppConfig import AppConfig
-from Services.NetworkScanner import NetworkScanner
 
 
 def main() -> None:
+    container = Container()
+    
+    app_config = container.config.get()
+    scanner_service = container.scanner_service.get()
+    mac_service = container.mac_service.get()
+    
     try:
-        config = AppConfig.load(Constants.DEFAULT_CONFIG_PATH)
-        Database.init(config)
-        scanner = NetworkScanner(config)
-        
-        print(f"Scanning network: {config.subnet}.{config.min_ip}-{config.max_ip}")
-        address_data_list = scanner.scan_network()
+        print(f"Scanning network: {app_config.subnet}.{app_config.min_ip}-{app_config.max_ip}")
+        address_data_list = scanner_service.scan_network()
         print(Constants.NETWORK_SCAN_SUMMARY.format(count=len(address_data_list)))
         
         mac_data_list: List[Mac] = []
         for address_data in address_data_list:
             if address_data.hasMac():
                 try:
-                    mac_data = MacService.upsert_mac(address_data)
+                    mac_data = mac_service.upsert_mac(address_data)
                     mac_data_list.append(mac_data)
                 except Exception as e:
                     print(f"Error processing {address_data.ip_address}: {e}")
@@ -56,7 +55,7 @@ def main() -> None:
         sys.exit(Constants.EXIT_FAILURE)
     finally:
         try:
-            Database.close()
+            container.dispose()  
         except Exception:
             pass
 

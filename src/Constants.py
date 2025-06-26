@@ -10,11 +10,16 @@ MAC_ADDRESS_REGEX = r'^[0-9a-f]{12}$'
 BROADCAST_MAC_ADDRESS = "ff:ff:ff:ff:ff:ff"
 SUCCESSFUL_PING_EXIT_CODE = 0
 
+# Platforms
+PLATFORM_WINDOWS = "Windows"
+PLATFORM_LINUX = "Linux"
+PLATFORM_MACOS = "Darwin"
+
 # Platform-specific ping commands
 PING_COMMANDS = {
-    "Windows": {"cmd": "ping", "count_flag": "-n", "timeout_flag": "-w"},
-    "Linux": {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"},
-    "Darwin": {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"},  # macOS
+    PLATFORM_WINDOWS: {"cmd": "ping", "count_flag": "-n", "timeout_flag": "-w"},
+    PLATFORM_LINUX: {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"},
+    PLATFORM_MACOS: {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"}, 
 }
 
 # Database

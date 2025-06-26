@@ -1,14 +1,13 @@
 import json
 import os
-from dataclasses import dataclass
 from typing import Any, Dict
 
 import Constants
 import Exceptions
+from Objects.Injectable import Injectable
 
 
-@dataclass
-class AppConfig:
+class AppConfig(Injectable):
     database: str
     subnet: str
     min_ip: int
@@ -18,8 +17,7 @@ class AppConfig:
     ping_timeout_ms: int
     arp_timeout_ms: int
 
-    @staticmethod
-    def load(filepath: str) -> "AppConfig":
+    def __init__(self, filepath: str) -> None:
         if not os.path.exists(filepath):
             raise Exceptions.ConfigurationError(Constants.CONFIG_FILE_NOT_FOUND.format(filepath=filepath))
         try:
@@ -44,20 +42,15 @@ class AppConfig:
                         fields=missing_fields
                     ))
                 
-                config = AppConfig(
-                    database=str(data["database"]),
-                    subnet=str(data["subnet"]),
-                    min_ip=int(data["min_ip"]),
-                    max_ip=int(data["max_ip"]),
-                    max_threads=int(data["max_threads"]),
-                    ping_count=int(data["ping_count"]),
-                    ping_timeout_ms=int(data["ping_timeout_ms"]),
-                    arp_timeout_ms=int(data["arp_timeout_ms"]),
-                )
-                
-                config._validate()
-                return config
-                
+                self.database = str(data["database"])
+                self.subnet = str(data["subnet"])
+                self.min_ip = int(data["min_ip"])
+                self.max_ip = int(data["max_ip"])
+                self.max_threads = int(data["max_threads"])
+                self.ping_count = int(data["ping_count"])
+                self.ping_timeout_ms = int(data["ping_timeout_ms"])
+                self.arp_timeout_ms = int(data["arp_timeout_ms"])
+                            
         except (json.JSONDecodeError, ValueError, KeyError) as e:
             raise Exceptions.ConfigurationError(Constants.CONFIG_INVALID.format(filepath=filepath, error=str(e)))
     

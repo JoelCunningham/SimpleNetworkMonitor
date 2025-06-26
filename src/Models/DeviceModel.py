@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, List, Optional
 
 from sqlmodel import Field, Relationship
 
-from Database import BaseModel
+from Models.BaseModel import BaseModel
 
 if TYPE_CHECKING:
     from Models.CategoryModel import Category
