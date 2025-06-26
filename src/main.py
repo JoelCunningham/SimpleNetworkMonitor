@@ -1,6 +1,7 @@
 import sys
 from typing import List
 
+import Common
 import Constants
 import Exceptions
 from database.Database import Database
@@ -8,7 +9,6 @@ from database.models.MacModel import Mac
 from database.repositories.MacRepository import MacRepository
 from objects.AppConfig import AppConfig
 from services.NetworkScanner import NetworkScanner
-from utilities.Common import Common
 
 
 def main() -> None:
