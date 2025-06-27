@@ -41,7 +41,10 @@ def main() -> None:
                 mac=mac_data.address,
                 name=device_name,
                 ping=mac_data.ping_time_ms,
-                arp=mac_data.arp_time_ms
+                arp=mac_data.arp_time_ms,
+                hostname=mac_data.hostname or "Unknown",
+                vendor=mac_data.vendor or "Unknown", 
+                os_guess=mac_data.os_guess or "Unknown"
             ))
             
     except KeyboardInterrupt:

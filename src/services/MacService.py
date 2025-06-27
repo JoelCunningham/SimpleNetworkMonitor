@@ -30,13 +30,21 @@ class MacService(Injectable):
                     mac.ping_time_ms = address_data.ping_time_ms
                     mac.arp_time_ms = address_data.arp_time_ms
                     mac.last_ip = address_data.ip_address
-                    mac.last_seen = datetime.now(timezone.utc)
+                    mac.last_seen = datetime.now(timezone.utc)      
+                    mac.hostname = address_data.hostname
+                    mac.vendor = address_data.mac_vendor 
+                    mac.os_guess = address_data.os_guess
+                    mac.ttl = address_data.ttl
                 else:
                     mac = Mac(
                         address=address_data.mac_address,
                         ping_time_ms=address_data.ping_time_ms,
                         arp_time_ms=address_data.arp_time_ms,
                         last_ip=address_data.ip_address,
+                        hostname=address_data.hostname,
+                        vendor=address_data.mac_vendor, 
+                        os_guess=address_data.os_guess,
+                        ttl=address_data.ttl
                     )
                     session.add(mac)
 

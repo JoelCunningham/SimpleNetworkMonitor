@@ -15,6 +15,11 @@ class Mac(BaseModel, table=True):
 
     last_ip: str
     last_seen: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    hostname: Optional[str] = Field(default=None)
+    vendor: Optional[str] = Field(default=None)
+    os_guess: Optional[str] = Field(default=None)
+    ttl: Optional[int] = Field(default=None)
 
     device_id: Optional[int] = Field(default=None, foreign_key="device.id")
     device: Optional[Device] = Relationship(back_populates="macs")

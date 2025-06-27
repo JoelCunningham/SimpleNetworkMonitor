@@ -5,8 +5,16 @@
   "min_ip": 1,
   "max_ip": 254,
 
+  "max_threads": 50,
   "ping_count": 1,
   "ping_timeout_ms": 300,
   "arp_timeout_ms": 500,
-  "max_threads": 50
+  "hostname_timeout_ms": 1000,
+
+  "enrichment": {
+    "mac_resolution": true,
+    "hostname_resolution": true,
+    "mac_vendor_lookup": true,
+    "os_detection": true
+  }
 }

@@ -16,6 +16,12 @@ class AppConfig(Injectable):
     ping_count: int
     ping_timeout_ms: int
     arp_timeout_ms: int
+    hostname_timeout_ms: int
+    
+    mac_resolution: bool
+    hostname_resolution: bool
+    mac_vendor_lookup: bool
+    os_detection: bool
 
     def __init__(self, filepath: str) -> None:
         if not os.path.exists(filepath):
@@ -50,7 +56,15 @@ class AppConfig(Injectable):
                 self.ping_count = int(data["ping_count"])
                 self.ping_timeout_ms = int(data["ping_timeout_ms"])
                 self.arp_timeout_ms = int(data["arp_timeout_ms"])
-                            
+                self.hostname_timeout_ms = int(data["hostname_timeout_ms"])
+                
+                enrichment = data["enrichment"]
+                self.mac_resolution = bool(enrichment["mac_resolution"])
+                self.hostname_resolution = bool(enrichment["hostname_resolution"])
+                self.mac_vendor_lookup = bool(enrichment["mac_vendor_lookup"])
+                self.os_detection = bool(enrichment["os_detection"])
+                
+                self._validate()
         except (json.JSONDecodeError, ValueError, KeyError) as e:
             raise Exceptions.ConfigurationError(Constants.CONFIG_INVALID.format(filepath=filepath, error=str(e)))
     
@@ -70,3 +84,5 @@ class AppConfig(Injectable):
             raise Exceptions.ConfigurationError("ping_timeout_ms must be positive")
         if self.arp_timeout_ms < Constants.MIN_TIMEOUT_MS:
             raise Exceptions.ConfigurationError("arp_timeout_ms must be positive")
+        if self.hostname_timeout_ms < Constants.MIN_TIMEOUT_MS:
+            raise Exceptions.ConfigurationError("hostname_timeout_ms must be positive")

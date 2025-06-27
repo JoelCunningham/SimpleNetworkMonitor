@@ -5,6 +5,7 @@ DEFAULT_ENCODING = "utf-8"
 # Network scanning
 IP_ADDRESS_REGEX = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
 MAC_ADDRESS_REGEX = r'^[0-9a-f]{12}$'
+TTL_REGEX = r'[tT][tT][lL][=](\d+)' # Windows: "TTL=64" or "TTL=128" # Linux/Mac: "ttl=64" or "ttl=128"
 
 # Network protocols
 BROADCAST_MAC_ADDRESS = "ff:ff:ff:ff:ff:ff"
@@ -52,7 +53,7 @@ EXIT_FAILURE = 1
 
 # Messages
 SCAN_INTERRUPTED_MESSAGE = "\nScan interrupted by user."
-DEVICE_SCAN_FORMAT = "{ip:<15} - {mac:<17} - {name:<30} | ping: {ping:>4}ms | arp: {arp:>4}ms"
+DEVICE_SCAN_FORMAT = "{ip:<15} - {mac:<17} - {name:<30} | ping: {ping:>4}ms | arp: {arp:>4}ms | host: {hostname:<20} | vendor: {vendor:<15} | os: {os_guess:<10}"
 NETWORK_SCAN_SUMMARY = "Found {count} responsive devices"
 DEVICES_PROCESSED_SUMMARY = "Processed {count} devices:"
 
@@ -69,3 +70,13 @@ CONFIG_MISSING_FIELDS = "Missing required fields in {filepath}: {fields}"
 UNSUPPORTED_OS = "Unsupported operating system: {system}"
 PING_ERROR = "Ping error for {ip}: {error}"
 ARP_ERROR = "ARP lookup error for {ip}: {error}"
+
+# TTL-based OS detection
+TTL_OS_MAPPING = {
+    30: "Android",
+    32: "Windows 95/98/ME",
+    60: "Other Linux",
+    64: "Linux/Unix/macOS", 
+    128: "Windows XP/Vista/7/8/10/11",
+    255: "Cisco/Network Device"
+}
