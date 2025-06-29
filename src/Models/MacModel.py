@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, List
 
 from sqlmodel import Field, Relationship
 
@@ -20,6 +20,15 @@ class Mac(BaseModel, table=True):
     vendor: Optional[str] = Field(default=None)
     os_guess: Optional[str] = Field(default=None)
     ttl: Optional[int] = Field(default=None)
-
+    
     device_id: Optional[int] = Field(default=None, foreign_key="device.id")
     device: Optional[Device] = Relationship(back_populates="macs")
+    
+    # Relationships to new tables
+    ports: List["Port"] = Relationship(back_populates="mac", cascade_delete=True)
+    discoveries: List["Discovery"] = Relationship(back_populates="mac", cascade_delete=True)
+
+
+# Import here to avoid circular imports
+from Models.PortModel import Port
+from Models.DiscoveryModel import Discovery

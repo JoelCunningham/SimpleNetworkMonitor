@@ -8,7 +8,7 @@ from Objects.Injectable import Injectable
 from Services.AppConfig import AppConfig
 
 
-class DeviceEnrichmentService(Injectable):
+class EnrichmentService(Injectable):
     """Service for enriching device data with hostname, vendor, and OS information."""
     
     def __init__(self, config: AppConfig) -> None:

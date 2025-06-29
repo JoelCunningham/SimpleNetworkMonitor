@@ -54,6 +54,7 @@ EXIT_FAILURE = 1
 # Messages
 SCAN_INTERRUPTED_MESSAGE = "\nScan interrupted by user."
 DEVICE_SCAN_FORMAT = "{ip:<15} - {mac:<17} - {name:<30} | ping: {ping:>4}ms | arp: {arp:>4}ms | host: {hostname:<20} | vendor: {vendor:<15} | os: {os_guess:<10}"
+DEVICE_SCAN_FORMAT_ADVANCED = "{ip:<15} - {mac:<17} - {name:<30} | ping: {ping:>4}ms | arp: {arp:>4}ms | host: {hostname:<20} | vendor: {vendor:<15} | os: {os_guess:<10} | ports: {ports} | services: {services}"
 NETWORK_SCAN_SUMMARY = "Found {count} responsive devices"
 DEVICES_PROCESSED_SUMMARY = "Processed {count} devices:"
 
@@ -80,3 +81,12 @@ TTL_OS_MAPPING = {
     128: "Windows XP/Vista/7/8/10/11",
     255: "Cisco/Network Device"
 }
+
+# Service detection
+COMMON_PORTS = [
+    22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 
+    993, 995, 1723, 3389, 5900, 8080
+]
+HTTP_PORTS = [80, 443, 8080]
+SSH_PORT = 22
+BANNER_SERVICES = ["ftp", "smtp", "pop3", "imap"];

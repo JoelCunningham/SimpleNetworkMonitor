@@ -1,5 +1,10 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Dict, List, Optional
+
+from Objects.DiscoveryInfo import DiscoveryInfo
+from Objects.PortInfo import PortInfo
+from Objects.ServiceInfo import ServiceInfo
+
 
 @dataclass
 class AddressData:
@@ -12,6 +17,11 @@ class AddressData:
     mac_vendor: Optional[str] = None
     os_guess: Optional[str] = None
     ttl: Optional[int] = None
+    
+    open_ports: Optional[List[PortInfo]] = None
+    services_info: Optional[Dict[int, ServiceInfo]] = None  
+    discovered_info: Optional[List[DiscoveryInfo]] = None
 
     def hasMac(self) -> bool:
         return self.mac_address is not None and len(self.mac_address) > 0
+

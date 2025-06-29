@@ -8,6 +8,9 @@ from Models.DeviceModel import Device  # type: ignore[unused-import]
 from Models.LocationModel import Location  # type: ignore[unused-import]
 from Models.MacModel import Mac  # type: ignore[unused-import]
 from Models.OwnerModel import Owner  # type: ignore[unused-import]
+from Models.PortModel import Port  # type: ignore[unused-import]
+from Models.DiscoveryModel import Discovery  # type: ignore[unused-import]
+from Models.ServiceModel import Service  # type: ignore[unused-import]
 from Objects.Injectable import Injectable
 from Services.AppConfig import AppConfig
 

@@ -1,8 +1,8 @@
 import platform
-import subprocess
 import re
+import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from scapy.all import ARP, Ether, srp  # type: ignore
 from scapy.packet import Packet
@@ -10,24 +10,35 @@ from scapy.packet import Packet
 import Constants
 import Exceptions
 from Objects.AddressData import AddressData
+from Objects.DiscoveryInfo import DiscoveryInfo
 from Objects.Injectable import Injectable
+from Objects.PortInfo import PortInfo
+from Objects.ServiceInfo import ServiceInfo
 from Services.AppConfig import AppConfig
-from Services.DeviceEnrichmentService import DeviceEnrichmentService
+from Services.EnrichmentService import EnrichmentService
+from Services.PortScannerService import PortScannerService
+from Services.ServiceDetectionService import ServiceDetectionService
+from Services.DiscoveryService import DiscoveryService
 from Utilities.Timer import Time, time_operation
 
 
 class NetworkScanner(Injectable):
     _config: AppConfig
-    _enrichment_service: DeviceEnrichmentService
+    _enrichment_service: EnrichmentService
+    _port_scanner: PortScannerService
+    _service_detector: ServiceDetectionService
     
     _ping_cmd: str
     _ping_count_flag: str
     _ping_timeout_flag: str
     _ping_timeout_value: float
     
-    def __init__(self, config: AppConfig, enrichment_service: DeviceEnrichmentService) -> None:
+    def __init__(self, config: AppConfig, enrichment_service: EnrichmentService, port_scanner: PortScannerService, service_detector: ServiceDetectionService, discovery_service: DiscoveryService) -> None:
         self._config = config
         self._enrichment_service = enrichment_service
+        self._port_scanner = port_scanner
+        self._service_detector = service_detector
+        self.discovery_service = discovery_service
         
         system = platform.system()
         if system not in Constants.PING_COMMANDS:
@@ -84,6 +95,9 @@ class NetworkScanner(Injectable):
         hostname: Optional[str] = None
         mac_vendor: Optional[str] = None
         os_guess: Optional[str] = None
+        open_ports: List[PortInfo] = []
+        services_info: Dict[int, ServiceInfo] = {}
+        discovered_info: List[DiscoveryInfo] = []
       
         if self._config.mac_resolution and ip_address:
             mac, arp_time = self._lookup_arp(ip_address)
@@ -99,6 +113,47 @@ class NetworkScanner(Injectable):
             if ttl:
                 os_guess = self._enrichment_service.guess_os_from_ttl(ttl)
 
+        if self._config.port_scan and ip_address:
+            open_ports = self._port_scanner.scan_ports(ip_address, Constants.COMMON_PORTS)
+
+        if self._config.detect_http and open_ports:
+            for port_info in open_ports:
+                if port_info.port in Constants.HTTP_PORTS:
+                    service_info = self._service_detector.detect_http_service(ip_address, port_info.port)
+                    if service_info:
+                        services_info[port_info.port] = service_info
+
+        if self._config.detect_ssh and open_ports:
+            for port_info in open_ports:
+                if port_info.port == Constants.SSH_PORT:
+                    service_info = self._service_detector.detect_ssh_service(ip_address, port_info.port)
+                    if service_info:
+                        services_info[port_info.port] = service_info
+                    
+        if self._config.detect_banners and open_ports:
+            for port_info in open_ports:
+                if port_info.service in Constants.BANNER_SERVICES:
+                    service_info = self._service_detector.grab_banner(ip_address, port_info.port)
+                    if service_info:
+                        services_info[port_info.port] = service_info
+
+
+        if self._config.discover_netbios and ip_address:
+            netbios_info = self.discovery_service.discover_netbios(ip_address)
+            if netbios_info:
+                discovered_info.append(netbios_info)
+
+        if self._config.discover_upnp and ip_address:
+            upnp_info = self.discovery_service.discover_upnp(ip_address)
+            if upnp_info:
+                discovered_info.append(upnp_info)
+                
+        if self._config.discover_mdns and ip_address:
+            mdns_info = self.discovery_service.discover_mdns(ip_address)
+            if mdns_info:
+                discovered_info.append(mdns_info)
+
+
         return AddressData(
             mac_address=mac, 
             ip_address=ip_address, 
@@ -107,7 +162,10 @@ class NetworkScanner(Injectable):
             hostname=hostname,
             mac_vendor=mac_vendor,
             os_guess=os_guess,
-            ttl=ttl
+            ttl=ttl,
+            open_ports=open_ports,
+            services_info=services_info,
+            discovered_info=discovered_info
         )
 
     def _lookup_arp(self, ip: str) -> Tuple[Optional[str], Time]:
@@ -138,3 +196,25 @@ class NetworkScanner(Injectable):
         except (ValueError, AttributeError):
             pass
         return None
+
+
+    def get_scan_summary(self, address_data: AddressData) -> Dict[str, Any]:
+        summary: Dict[str, Any] = {
+            "open_ports": [],
+            "services": [],
+            "discovered_info": []
+        }
+        
+        # Get open ports
+        if address_data.open_ports:
+            summary["open_ports"] = [f"{p.port}/{p.protocol}" for p in address_data.open_ports]
+        
+        # Get services
+        if address_data.services_info:
+            summary["services"] = [f"{port}:{service.service_name}" for port, service in address_data.services_info.items()]
+        
+        # Get discovery info
+        if address_data.discovered_info:
+            summary["discovered_info"] = [f"{d.protocol}:{d.device_type}" for d in address_data.discovered_info if d.device_type]
+        
+        return summary

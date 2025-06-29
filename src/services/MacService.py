@@ -8,13 +8,16 @@ from Models.MacModel import Mac
 from Objects.AddressData import AddressData
 from Objects.Injectable import Injectable
 from Services.Database import Database
+from Services.AdvancedDataService import AdvancedDataService
 
 
 class MacService(Injectable):
     _database: Database
+    _advanced_data_service: AdvancedDataService
     
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: Database, advanced_data_service: AdvancedDataService) -> None:
         self._database = database
+        self._advanced_data_service = advanced_data_service
     
     def upsert_mac(self, address_data: AddressData) -> Mac:   
         if address_data.mac_address is None:
@@ -49,6 +52,18 @@ class MacService(Injectable):
                     session.add(mac)
 
                 session.commit()
+                session.refresh(mac)
+
+                # Save advanced scan data using the AdvancedDataService
+                if address_data.open_ports:
+                    self._advanced_data_service.save_port_data(
+                        mac, 
+                        address_data.open_ports, 
+                        address_data.services_info
+                    )
+                
+                if address_data.discovered_info:
+                    self._advanced_data_service.save_discovery_data(mac, address_data.discovered_info)
 
                 session.refresh(mac, attribute_names=["device"])
                 if mac.device:

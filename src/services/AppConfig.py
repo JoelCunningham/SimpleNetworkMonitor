@@ -17,12 +17,22 @@ class AppConfig(Injectable):
     ping_timeout_ms: int
     arp_timeout_ms: int
     hostname_timeout_ms: int
+    port_scan_timeout_ms: int
+    service_detection_timeout_ms: int
+    discovery_timeout_ms: int
     
     mac_resolution: bool
     hostname_resolution: bool
     mac_vendor_lookup: bool
     os_detection: bool
-
+    port_scan: bool
+    detect_http: bool
+    detect_ssh: bool
+    detect_banners: bool
+    discover_netbios: bool
+    discover_upnp: bool
+    discover_mdns: bool
+    
     def __init__(self, filepath: str) -> None:
         if not os.path.exists(filepath):
             raise Exceptions.ConfigurationError(Constants.CONFIG_FILE_NOT_FOUND.format(filepath=filepath))
@@ -57,13 +67,23 @@ class AppConfig(Injectable):
                 self.ping_timeout_ms = int(data["ping_timeout_ms"])
                 self.arp_timeout_ms = int(data["arp_timeout_ms"])
                 self.hostname_timeout_ms = int(data["hostname_timeout_ms"])
+                self.port_scan_timeout_ms = int(data["port_scan_timeout_ms"])
+                self.service_detection_timeout_ms = int(data["port_scan_timeout_ms"])
+                self.discovery_timeout_ms = int(data["discovery_timeout_ms"])
                 
                 enrichment = data["enrichment"]
                 self.mac_resolution = bool(enrichment["mac_resolution"])
                 self.hostname_resolution = bool(enrichment["hostname_resolution"])
                 self.mac_vendor_lookup = bool(enrichment["mac_vendor_lookup"])
                 self.os_detection = bool(enrichment["os_detection"])
-                
+                self.port_scan = bool(enrichment["port_scan"])
+                self.detect_http = bool(enrichment["detect_http"])
+                self.detect_ssh = bool(enrichment["detect_ssh"])
+                self.detect_banners = bool(enrichment["detect_banners"])
+                self.discover_netbios = bool(enrichment["discover_netbios"])
+                self.discover_upnp = bool(enrichment["discover_upnp"])
+                self.discover_mdns = bool(enrichment["discover_mdns"])
+                                
                 self._validate()
         except (json.JSONDecodeError, ValueError, KeyError) as e:
             raise Exceptions.ConfigurationError(Constants.CONFIG_INVALID.format(filepath=filepath, error=str(e)))
