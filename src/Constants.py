@@ -1,78 +1,163 @@
-# Configuration
-DEFAULT_CONFIG_PATH = "config.json"
-DEFAULT_ENCODING = "utf-8"
+# ============================================================================
+# SYSTEM & PLATFORM CONSTANTS
+# ============================================================================
 
-# Network scanning
-IP_ADDRESS_REGEX = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
-MAC_ADDRESS_REGEX = r'^[0-9a-f]{12}$'
-TTL_REGEX = r'[tT][tT][lL][=](\d+)' # Windows: "TTL=64" or "TTL=128" # Linux/Mac: "ttl=64" or "ttl=128"
-
-# Network protocols
-BROADCAST_MAC_ADDRESS = "ff:ff:ff:ff:ff:ff"
-SUCCESSFUL_PING_EXIT_CODE = 0
-
-# Platforms
+# Platform Identifiers
 PLATFORM_WINDOWS = "Windows"
 PLATFORM_LINUX = "Linux"
 PLATFORM_MACOS = "Darwin"
 
-# Platform-specific ping commands
+# Configuration
+DEFAULT_CONFIG_PATH = "config.json"
+
+# Concurrency
+MAX_WORKERS = 20
+
+# Encoding & Buffer Settings
+ASCII_ENCODING = 'ascii'
+DEFAULT_ENCODING = 'utf-8'
+ENCODING_ERROR_HANDLING = 'ignore'
+SOCKET_BUFFER_SIZE = 1024
+
+# Durations
+DB_POOL_RECYCLE_TIME = 3600  # 1 hour
+
+# ============================================================================
+# NETWORK PORTS & SERVICES
+# ============================================================================
+
+# Individual Port Definitions
+SSH_PORT = 22
+UPNP_PORT = 1900
+MDNS_PORT = 5353
+HTTPS_PORT = 443
+NETBIOS_PORT = 137
+
+# Port Collections
+HTTP_PORTS = [80, 443, 8080, 8443]
+COMMON_PORTS = [
+    21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 
+    993, 995, 1723, 3389, 5900, 8080
+]
+
+# Port-to-Service Mapping
+PORT_SERVICE_MAP = {
+    21: "ftp",
+    22: "ssh",
+    23: "telnet",
+    25: "smtp",
+    53: "dns",
+    80: "http",
+    110: "pop3",
+    135: "msrpc",
+    139: "netbios-ssn",
+    143: "imap",
+    443: "https",
+    993: "imaps",
+    995: "pop3s",
+    1723: "pptp",
+    3389: "rdp",
+    5900: "vnc",
+    8080: "http-alt"
+}
+
+# Port Scanning Constants
+OPEN_PORT_RESULT = 0
+UNKNOWN_PORT_TEMPLATE = "unknown-{port}"
+
+# ============================================================================
+# SERVICE DETECTION & PROTOCOLS
+# ============================================================================
+
+# Protocol Schemes
+HTTP_SCHEME = "http"
+HTTPS_SCHEME = "https"
+
+# Service Names
+SSH_SERVICE_NAME = "ssh"
+HTTP_SERVICE_NAME = "http"
+BANNER_SERVICE_NAMES = ["telnet", "smtp", "pop3", "imap", "ftp"]
+
+# SSH Service Constants
+DEFAULT_SSH_PRODUCT = "SSH Server"
+SSH_BANNER_PREFIX = 'SSH-'
+DEFAULT_VERSION = "Unknown"
+
+# HTTP Service Constants
+DEFAULT_HTTP_SERVER = 'Unknown HTTP Server'
+SERVER_HEADER = 'Server'
+USER_AGENT_HEADER = "User-Agent"
+USER_AGENT_VALUE = 'NetworkMonitor/1.0'
+HTTP_URL_TEMPLATE = "{protocol_scheme}://{ip_address}:{port}/"
+HTTP_INFO_TEMPLATE = "Status: {status}"
+HTTP_OK_RESPONSE = "HTTP/1.1 200 OK"
+
+# Banner Service Constants
+MAX_BANNER_LENGTH = 100
+
+# ============================================================================
+# NETWORK DISCOVERY PROTOCOLS
+# ============================================================================
+
+# UPnP/SSDP Constants
+SSDP_REQUEST_LINE = "M-SEARCH * HTTP/1.1\r\n"
+SSDP_HOST_HEADER = "HOST: 239.255.255.250:1900\r\n"
+SSDP_MAN_HEADER = 'MAN: "ssdp:discover"\r\n'
+SSDP_ST_HEADER = "ST: upnp:rootdevice\r\n"
+SSDP_MX_PREFIX = "MX: "
+UPNP_PROTOCOL_NAME = "upnp"
+DEFAULT_UPNP_DEVICE_TYPE = "UPnP Device"
+UPNP_SERVER_HEADER_PREFIX = 'SERVER:'
+ST_HEADER_PREFIX = 'ST:'
+UPNP_HEADER_SEPARATOR = ':'
+UPNP_SPLIT_LIMIT = 1
+
+# NetBIOS Constants
+NETBIOS_TRANSACTION_ID = 0x1234
+NETBIOS_QUERY_FLAGS = 0x0110
+NETBIOS_QUESTIONS_COUNT = 1
+NETBIOS_ANSWERS_COUNT = 0
+NETBIOS_AUTHORITY_COUNT = 0
+NETBIOS_ADDITIONAL_COUNT = 0
+NETBIOS_NAME_LENGTH = b'\x20'
+NETBIOS_WILDCARD = b'A' * 31 
+NETBIOS_QUERY_SUFFIX = b'\x00\x00\x20\x00\x01'
+NETBIOS_HEADER_LENGTH = 12
+NETBIOS_PROTOCOL_NAME = "netbios"
+WINDOWS_DEVICE_TYPE = "Windows/SMB Device"
+NETBIOS_MIN_RESPONSE_LENGTH = 50
+NETBIOS_MIN_WORD_LENGTH = 2
+NETBIOS_MAX_NAME_LENGTH = 15
+
+# mDNS Constants
+MDNS_TRANSACTION_ID = 0x0000
+MDNS_FLAGS = 0x0000
+MDNS_QUESTIONS_COUNT = 1
+MDNS_ANSWERS_COUNT = 0
+MDNS_AUTHORITY_COUNT = 0
+MDNS_ADDITIONAL_COUNT = 0
+MDNS_SERVICE_QUERY = b'\x09_services\x07_dns-sd\x04_udp\x05local\x00\x00\x0c\x00\x01'
+MDNS_HEADER_LENGTH = 12
+HTTP_SERVICE_TYPE = b'_http._tcp'
+DEVICE_INFO_SERVICE_TYPE = b'_device-info._tcp'
+MDNS_PROTOCOL_NAME = "mdns"
+MDNS_DEVICE_NAME_PREFIX = "mDNS-"
+MDNS_DEVICE_TYPE = "mDNS/Bonjour Device"
+
+# ============================================================================
+# NETWORK UTILITIES & PING
+# ============================================================================
+
+# Ping Configuration
+SUCCESSFUL_PING_EXIT_CODE = 0
 PING_COMMANDS = {
     PLATFORM_WINDOWS: {"cmd": "ping", "count_flag": "-n", "timeout_flag": "-w"},
     PLATFORM_LINUX: {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"},
     PLATFORM_MACOS: {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"}, 
 }
 
-# Database
-DATABASE_POOL_RECYCLE_TIME = 3600  # 1 hour
-
-# Network timeouts (in seconds)
-DEFAULT_ARP_TIMEOUT = 0.5
-DEFAULT_PING_TIMEOUT = 0.3
-
-# Validation limits
-MIN_IP_ADDRESS = 1
-MAX_IP_ADDRESS = 254
-MIN_TIMEOUT_MS = 1
-MIN_THREADS = 1
-MIN_PING_COUNT = 1
-
-# Display formatting
-SEPARATOR_LINE = "-" * 80
-IP_COLUMN_WIDTH = 15
-MAC_COLUMN_WIDTH = 17
-DEVICE_NAME_COLUMN_WIDTH = 30
-
-# Default values
-UNKNOWN_DEVICE_NAME = "Unknown Device"
-UNKNOWN_MAC_NAME = "Unknown"
-
-# Exit codes
-EXIT_SUCCESS = 0
-EXIT_FAILURE = 1
-
-# Messages
-SCAN_INTERRUPTED_MESSAGE = "\nScan interrupted by user."
-DEVICE_SCAN_FORMAT = "{ip:<15} - {mac:<17} - {name:<30} | ping: {ping:>4}ms | arp: {arp:>4}ms | host: {hostname:<20} | vendor: {vendor:<15} | os: {os_guess:<10}"
-DEVICE_SCAN_FORMAT_ADVANCED = "{ip:<15} - {mac:<17} - {name:<30} | ping: {ping:>4}ms | arp: {arp:>4}ms | host: {hostname:<20} | vendor: {vendor:<15} | os: {os_guess:<10} | ports: {ports} | services: {services}"
-NETWORK_SCAN_SUMMARY = "Found {count} responsive devices"
-DEVICES_PROCESSED_SUMMARY = "Processed {count} devices:"
-
-# Database messages
-DB_ALREADY_INITIALIZED = "Database already initialized"
-DB_NOT_INITIALIZED = "Database not initialized"
-DB_INIT_FAILED = "Failed to initialize database: {error}"
-DB_CLOSE_FAILED = "Failed to close database connection: {error}"
-
-# Error messages
-CONFIG_FILE_NOT_FOUND = "AppConfig file {filepath} does not exist."
-CONFIG_INVALID = "Invalid configuration in {filepath}: {error}"
-CONFIG_MISSING_FIELDS = "Missing required fields in {filepath}: {fields}"
-UNSUPPORTED_OS = "Unsupported operating system: {system}"
-PING_ERROR = "Ping error for {ip}: {error}"
-ARP_ERROR = "ARP lookup error for {ip}: {error}"
-
-# TTL-based OS detection
+# TTL (Time To Live) Constants
+TTL_REGEX = r'[tT][tT][lL][=](\d+)'  # Windows: "TTL=64" or "TTL=128" # Linux/Mac: "ttl=64" or "ttl=128"
 TTL_OS_MAPPING = {
     30: "Android",
     32: "Windows 95/98/ME",
@@ -81,9 +166,20 @@ TTL_OS_MAPPING = {
     128: "Windows XP/Vista/7/8/10/11",
     255: "Cisco/Network Device"
 }
+ROUTER_TTL_TEMPLATE = "{os_name} (via router)"
+UNKNOWN_OS_TEMPLATE = "Unknown (TTL: {ttl})"
 
-# MAC address vendor mapping
-MAC_VENDOR_FALLBACK_MAPPING =  {
+# ============================================================================
+# MAC ADDRESS & VENDOR LOOKUP
+# ============================================================================
+
+# MAC Address Constants
+BROADCAST_MAC_ADDRESS = "ff:ff:ff:ff:ff:ff"
+MAC_ADDRESS_ATTR = "hwsrc"
+MAC_OUI_LENGTH = 6
+
+# MAC Vendor Fallback Mapping
+MAC_VENDOR_FALLBACK_MAPPING = {
     "00:03:93": "Apple",
     "00:1A:11": "Google", 
     "00:0D:3A": "Microsoft",
@@ -95,11 +191,15 @@ MAC_VENDOR_FALLBACK_MAPPING =  {
     "00:01:42": "Cisco"
 }
 
-# Service detection
-COMMON_PORTS = [
-    22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 
-    993, 995, 1723, 3389, 5900, 8080
-]
-HTTP_PORTS = [80, 443, 8080]
-SSH_PORT = 22
-BANNER_SERVICES = ["ftp", "smtp", "pop3", "imap"];
+# ============================================================================
+# STRING CONSTANTS & TEMPLATES
+# ============================================================================
+
+# String Literals
+CRLF = "\r\n"
+IP_SEPARATOR = '.'
+UNKNOWN_DEVICE_NAME = "Unknown Device"
+
+# Binary & Struct Constants
+STRUCT_PACK_FORMAT = '>HHHHHH'
+LAST_OCTET_INDEX = -1

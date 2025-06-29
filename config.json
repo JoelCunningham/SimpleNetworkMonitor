@@ -2,30 +2,28 @@
   "database": "sqlite:///network_monitor.db",
 
   "subnet": "192.168.0",
-  "min_ip": 1,
-  "max_ip": 254,
+  "min_scan_ip": 1,
+  "max_scan_ip": 254,
 
   "max_threads": 50,
   "ping_count": 1,
+
   "ping_timeout_ms": 300,
   "arp_timeout_ms": 500,
   "hostname_timeout_ms": 1000,
-
   "port_scan_timeout_ms": 1000,
   "service_detection_timeout_ms": 2000,
   "discovery_timeout_ms": 3000,
 
-  "enrichment": {
-    "mac_resolution": true,
-    "hostname_resolution": true,
-    "mac_vendor_lookup": true,
-    "os_detection": true,
-    "port_scan": true,
-    "detect_http": true,
-    "detect_ssh": true,
-    "detect_banners": true,
-    "discover_netbios": true,
-    "discover_upnp": true,
-    "discover_mdns": true
-  }
+  "mac_resolution": true,
+  "hostname_resolution": true,
+  "mac_vendor_lookup": true,
+  "os_detection": true,
+  "port_scan": true,
+  "detect_http": true,
+  "detect_ssh": true,
+  "detect_banners": true,
+  "discover_netbios": true,
+  "discover_upnp": true,
+  "discover_mdns": true
 }

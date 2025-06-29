@@ -1,163 +1,135 @@
-"""Dependency injection container for refactored services."""
-from typing import Dict, Any
+from typing import Any, Dict
+from mac_vendor_lookup import MacLookup  # type: ignore
 
-# Configuration Services
-from Services.Configuration.ConfigurationServices import (
-    ConfigurationLoader, ConfigurationValidator, NetworkMonitorConfiguration
-)
-
-# Networking Services  
-from Services.Networking.PingAndArpServices import NetworkPinger, ArpResolver
-from Services.Networking.PortScannerService import PortScannerService
-
-# Enrichment Services
-from Services.Enrichment.DeviceEnrichmentServices import (
-    HostnameResolver, MacVendorLookupService, OperatingSystemDetector, DeviceEnrichmentService
-)
-
-# Service Detection Services
-from Services.ServiceDetection.ServiceDetectors import (
-    HttpServiceDetector, SshServiceDetector, GenericBannerGrabber, ServiceDetectionOrchestrator
-)
-
-# Discovery Services
-from Services.Discovery.DiscoveryProtocols import (
-    NetBiosDiscoveryProtocol, UpnpDiscoveryProtocol, MdnsDiscoveryProtocol, DeviceDiscoveryService
-)
-
-# Data Persistence Services
-from Services.DataPersistence.DataPersistenceServices import (
-    DatabaseConnection, DeviceRepository, ScanDataRepository
-)
-
-# Main Orchestrator
-from Services.NetworkScanOrchestrator import NetworkScanOrchestrator
-
-# Interface Implementations
-from Interfaces.IConfigurationProvider import IConfigurationProvider
-from Interfaces.INetworkScanning import INetworkScanner
-from Interfaces.IDataPersistence import IDatabaseConnection, IDeviceRepository, IScanDataRepository
+from Services.AppConfiguration import AppConfig
+from Services.DataPersistence import DatabaseConnection, DeviceRepository, ScanDataRepository
+from Services.Discovery.MdnsDiscoverer import MdnsDiscoverer
+from Services.Discovery.NetBiosDiscoverer import NetBiosDiscoverer
+from Services.Discovery.UpnpDiscoverer import UpnpDiscoverer
+from Services.Enrichment.HostnameResolver import HostnameResolver
+from Services.Enrichment.MacVendorLookup import MacVendorLookup
+from Services.Enrichment.OperatingSystemLookup import OperatingSystemLookup
+from Services.Networking.MacResolver import MacResolver
+from Services.Networking.NetworkPinger import NetworkPinger
+from Services.Networking.PortScanner import PortScanner
+from Services.NetworkScanner import NetworkScanner
+from Services.ServiceDetection.GenericBannerDetector import GenericBannerDetector
+from Services.ServiceDetection.HttpServiceDetector import HttpServiceDetector
+from Services.ServiceDetection.SshServiceDetector import SshServiceDetector
 
 
 class ServiceContainer:
     """
     Dependency injection container for the network monitor services.
-    
-    This container follows SOLID principles:
-    - Single Responsibility: Each service has one clear responsibility
-    - Open/Closed: Services can be extended through interfaces
-    - Liskov Substitution: All implementations follow their interface contracts  
-    - Interface Segregation: Interfaces are focused and specific
-    - Dependency Inversion: Services depend on abstractions, not concretions
     """
     
     def __init__(self, config_file_path: str) -> None:
         self._config_file_path = config_file_path
-        self._services: Dict[str, Any] = {}
-        self._initialize_services()
+        self._services = self._initialize_services()
     
-    def _initialize_services(self) -> None:
+    def _initialize_services(self) -> Dict[str, Any]:
         """Initialize all services with proper dependency injection."""
         
-        # Configuration Services
-        config_loader = ConfigurationLoader()
-        config_validator = ConfigurationValidator()
-        configuration = NetworkMonitorConfiguration(
-            self._config_file_path, config_loader, config_validator
-        )
+        # External Dependencies
+        mac_lookup = MacLookup()  # type: ignore
+        
+        # Application Configuration
+        config = AppConfig(self._config_file_path)
         
         # Networking Services
-        pinger = NetworkPinger(configuration)
-        arp_resolver = ArpResolver(configuration)
-        port_scanner = PortScannerService(configuration)
+        pinger = NetworkPinger(config)
+        mac_resolver = MacResolver(config)
+        port_scanner = PortScanner(config)
         
         # Enrichment Services
-        hostname_resolver = HostnameResolver(configuration)
-        mac_vendor_lookup = MacVendorLookupService()
-        os_detector = OperatingSystemDetector()
-        device_enrichment = DeviceEnrichmentService(
-            hostname_resolver, mac_vendor_lookup, os_detector, configuration
-        )
+        hostname_resolver = HostnameResolver(config)
+        vendor_lookup = MacVendorLookup(mac_lookup)
+        os_lookup = OperatingSystemLookup()
         
         # Service Detection Services
-        http_detector = HttpServiceDetector(configuration)
-        ssh_detector = SshServiceDetector(configuration)
-        banner_grabber = GenericBannerGrabber(configuration)
-        service_orchestrator = ServiceDetectionOrchestrator(
-            configuration, http_detector, ssh_detector, banner_grabber
-        )
+        http_detector = HttpServiceDetector(config)
+        ssh_detector = SshServiceDetector(config)
+        banner_detector = GenericBannerDetector(config)
         
         # Discovery Services
-        netbios_protocol = NetBiosDiscoveryProtocol(configuration)
-        upnp_protocol = UpnpDiscoveryProtocol(configuration)
-        mdns_protocol = MdnsDiscoveryProtocol(configuration)
-        
-        discovery_service = DeviceDiscoveryService(configuration)
-        discovery_service.register_protocol(netbios_protocol)
-        discovery_service.register_protocol(upnp_protocol)
-        discovery_service.register_protocol(mdns_protocol)
-        
+        netbios_discoverer = NetBiosDiscoverer(config)
+        upnp_discoverer = UpnpDiscoverer(config)
+        mdns_discoverer = MdnsDiscoverer(config)
+                
         # Data Persistence Services
-        database_connection = DatabaseConnection(configuration)
+        database_connection = DatabaseConnection(config)
         device_repository = DeviceRepository(database_connection)
         scan_data_repository = ScanDataRepository(database_connection)
         
         # Main Orchestrator
-        network_scanner = NetworkScanOrchestrator(
-            configuration, pinger, arp_resolver, port_scanner,
-            device_enrichment, discovery_service, service_orchestrator
+        network_scanner = NetworkScanner(
+            config, pinger, mac_resolver, port_scanner,
+            http_detector, ssh_detector, banner_detector,
+            hostname_resolver, vendor_lookup, os_lookup,
+            netbios_discoverer, upnp_discoverer, mdns_discoverer
         )
         
-        # Store services for retrieval
-        self._services.update({
-            # Main interfaces
-            'configuration': configuration,
+        return {
+            'config': config,
             'network_scanner': network_scanner,
             'database_connection': database_connection,
             'device_repository': device_repository,
             'scan_data_repository': scan_data_repository,
             
-            # Individual services
             'pinger': pinger,
-            'arp_resolver': arp_resolver,
+            'mac_resolver': mac_resolver,
             'port_scanner': port_scanner,
-            'device_enrichment': device_enrichment,
-            'discovery_service': discovery_service,
-            'service_orchestrator': service_orchestrator,
+            
             'hostname_resolver': hostname_resolver,
-            'mac_vendor_lookup': mac_vendor_lookup,
-            'os_detector': os_detector,
+            'vendor_lookup': vendor_lookup,
+            'os_detector': os_lookup,
+            
             'http_detector': http_detector,
             'ssh_detector': ssh_detector,
-            'banner_grabber': banner_grabber
-        })
+            'banner_detector': banner_detector,
+            
+            'netbios_discoverer': netbios_discoverer,
+            'upnp_discoverer': upnp_discoverer,
+            'mdns_discoverer': mdns_discoverer,
+        }
     
-    def get_configuration(self) -> IConfigurationProvider:
-        """Get the configuration provider."""
-        return self._services['configuration']
-    
-    def get_network_scanner(self) -> INetworkScanner:
-        """Get the main network scanner."""
+    def config(self) -> AppConfig:
+        return self._services['config']
+    def network_scanner(self) -> NetworkScanner:
         return self._services['network_scanner']
-    
-    def get_database_connection(self) -> IDatabaseConnection:
-        """Get the database connection."""
+    def database_connection(self) -> DatabaseConnection:
         return self._services['database_connection']
-    
-    def get_device_repository(self) -> IDeviceRepository:
-        """Get the device repository."""
+    def device_repository(self) -> DeviceRepository:
         return self._services['device_repository']
-    
-    def get_scan_data_repository(self) -> IScanDataRepository:
-        """Get the scan data repository."""
+    def scan_data_repository(self) -> ScanDataRepository:
         return self._services['scan_data_repository']
+    def pinger(self) -> NetworkPinger:
+        return self._services['pinger']
+    def mac_resolver(self) -> MacResolver:
+        return self._services['mac_resolver']
+    def port_scanner(self) -> PortScanner:
+        return self._services['port_scanner']
+    def hostname_resolver(self) -> HostnameResolver:
+        return self._services['hostname_resolver']
+    def vendor_lookup(self) -> MacVendorLookup:
+        return self._services['vendor_lookup']
+    def os_detector(self) -> OperatingSystemLookup:
+        return self._services['os_detector']
+    def http_detector(self) -> HttpServiceDetector:
+        return self._services['http_detector']
+    def ssh_detector(self) -> SshServiceDetector:
+        return self._services['ssh_detector']
+    def banner_detector(self) -> GenericBannerDetector:
+        return self._services['banner_detector']
+    def netbios_discoverer(self) -> NetBiosDiscoverer:
+        return self._services['netbios_discoverer']
+    def upnp_discoverer(self) -> UpnpDiscoverer:
+        return self._services['upnp_discoverer']
+    def mdns_discoverer(self) -> MdnsDiscoverer:
+        return self._services['mdns_discoverer']
     
-    def get_service(self, service_name: str) -> Any:
-        """Get a specific service by name."""
-        return self._services.get(service_name)
     
     def close(self) -> None:
         """Clean up resources."""
-        database_connection = self._services.get('database_connection')
-        if database_connection:
-            database_connection.close()
+        if self.database_connection():
+            self.database_connection().close()

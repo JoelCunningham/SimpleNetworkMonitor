@@ -1,54 +1,50 @@
-"""Data persistence services."""
 from datetime import datetime, timezone
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
 from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine, select
 
-import Constants
 import Exceptions
-from Interfaces.IConfigurationProvider import IConfigurationProvider
-from Interfaces.IDataPersistence import IDatabaseConnection, IDeviceRepository, IScanDataRepository
+from Constants import DB_POOL_RECYCLE_TIME
 from Models.CategoryModel import Category  # type: ignore[unused-import]
 from Models.DeviceModel import Device  # type: ignore[unused-import]
+from Models.DiscoveryModel import Discovery
 from Models.LocationModel import Location  # type: ignore[unused-import]
 from Models.MacModel import Mac
 from Models.OwnerModel import Owner  # type: ignore[unused-import]
 from Models.PortModel import Port
-from Models.DiscoveryModel import Discovery
 from Models.ServiceModel import Service
 from Objects.AddressData import AddressData
+from Objects.DiscoveryInfo import DiscoveryInfo
 from Objects.Injectable import Injectable
 from Objects.PortInfo import PortInfo
 from Objects.ServiceInfo import ServiceInfo
-from Objects.DiscoveryInfo import DiscoveryInfo
+from Services.AppConfiguration import AppConfig
 
 
-class DatabaseConnection(IDatabaseConnection, Injectable):
+class DatabaseConnection(Injectable):
     """Service responsible for database connection management."""
     
-    def __init__(self, config_provider: IConfigurationProvider) -> None:
+    def __init__(self, config: AppConfig) -> None:
         self._engine: Optional[Engine] = None
-        self._config_provider = config_provider
+        self._config = config
         self._initialize_database()
     
     def _initialize_database(self) -> None:
         """Initialize database connection."""
         try:
-            database_path = self._config_provider.get_database_path()
+            database_path = self._config.database_path()
             self._engine = create_engine(
                 database_path,
                 echo=False,
                 pool_pre_ping=True,
-                pool_recycle=Constants.DATABASE_POOL_RECYCLE_TIME,
+                pool_recycle=DB_POOL_RECYCLE_TIME,
             )
             
             SQLModel.metadata.create_all(self._engine)
             
         except Exception as e:
-            raise Exceptions.DatabaseError(
-                Constants.DB_INIT_FAILED.format(error=str(e))
-            ) from e
+            raise Exceptions.DatabaseError(f"Failed to initialize database: {str(e)}") from e
     
     def get_session(self) -> Session:
         """Get database session."""
@@ -62,15 +58,13 @@ class DatabaseConnection(IDatabaseConnection, Injectable):
             if self._engine:
                 self._engine.dispose()
         except Exception as e:
-            raise Exceptions.DatabaseError(
-                Constants.DB_CLOSE_FAILED.format(error=str(e))
-            ) from e
+            raise Exceptions.DatabaseError(f"Failed to close database connection: {str(e)}") from e
 
 
-class DeviceRepository(IDeviceRepository, Injectable):
+class DeviceRepository(Injectable):
     """Repository for device data persistence."""
     
-    def __init__(self, database_connection: IDatabaseConnection) -> None:
+    def __init__(self, database_connection: DatabaseConnection) -> None:
         self._database_connection = database_connection
     
     def save_device(self, address_data: AddressData) -> Mac:
@@ -135,10 +129,10 @@ class DeviceRepository(IDeviceRepository, Injectable):
             raise Exceptions.DatabaseError(f"Failed to get devices: {str(e)}") from e
 
 
-class ScanDataRepository(IScanDataRepository, Injectable):
+class ScanDataRepository(Injectable):
     """Repository for scan data persistence."""
     
-    def __init__(self, database_connection: IDatabaseConnection) -> None:
+    def __init__(self, database_connection: DatabaseConnection) -> None:
         self._database_connection = database_connection
     
     def save_scan_results(self, mac: Mac, address_data: AddressData) -> None:

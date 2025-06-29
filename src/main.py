@@ -1,27 +1,22 @@
-"""
-Network Monitor Main Application
-
-This application uses a clean, SOLID-principle-based architecture
-for comprehensive network device discovery and analysis.
-"""
 import sys
 
+from Constants import DEFAULT_CONFIG_PATH
 from Services.ServiceContainer import ServiceContainer
 
 
 def main():
     """Main application entry point."""
-    print("Network Monitor")
+    print("Simple Network Monitor")
     print("=" * 50)
     
     container = None
     
     try:
-        container = ServiceContainer("config.json")
+        container = ServiceContainer(DEFAULT_CONFIG_PATH)
         
-        scanner = container.get_network_scanner()
-        device_repo = container.get_device_repository()
-        scan_data_repo = container.get_scan_data_repository()
+        scanner = container.network_scanner()
+        device_repo = container.device_repository()
+        scan_data_repo = container.scan_data_repository()
         
         print("Scanning network...")
         
@@ -52,26 +47,23 @@ def main():
             if device.os_guess:
                 print(f"  OS: {device.os_guess}")
             
-            summary = scanner.get_scan_summary(device)
+            ports, services, discoveries = scanner.get_scan_summary(device)
             
-            if summary.get("open_ports"):
-                ports = summary["open_ports"]
+            if ports:
                 if len(ports) > 5:
                     ports_display = ports[:5] + [f"... +{len(ports)-5} more"]
                 else:
                     ports_display = ports
                 print(f"  Open Ports: {', '.join(ports_display)}")
             
-            if summary.get("services"):
-                services = summary["services"]
+            if services:
                 if len(services) > 3:
                     services_display = services[:3] + [f"... +{len(services)-3} more"]
                 else:
                     services_display = services
                 print(f"  Services: {', '.join(services_display)}")
             
-            if summary.get("discovered_info"):
-                discoveries = summary["discovered_info"]
+            if discoveries:
                 print(f"  Discovery: {', '.join(discoveries)}")
             
             print(f"  Response Time: {device.ping_time_ms}ms")
@@ -88,7 +80,6 @@ def main():
         return 1
     
     finally:
-        # Clean up resources
         if container:
             try:
                 container.close()

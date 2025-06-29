@@ -1,6 +1,6 @@
 from typing import Optional
 
-import Constants
+from Constants import UNKNOWN_DEVICE_NAME
 from Models.DeviceModel import Device
 
 
@@ -14,5 +14,5 @@ def get_device_name(device: Optional[Device]) -> str:
         
         return device_name.strip()
     
-    return Constants.UNKNOWN_DEVICE_NAME
+    return UNKNOWN_DEVICE_NAME
         
