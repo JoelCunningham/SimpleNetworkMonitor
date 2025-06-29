@@ -82,6 +82,19 @@ TTL_OS_MAPPING = {
     255: "Cisco/Network Device"
 }
 
+# MAC address vendor mapping
+MAC_VENDOR_FALLBACK_MAPPING =  {
+    "00:03:93": "Apple",
+    "00:1A:11": "Google", 
+    "00:0D:3A": "Microsoft",
+    "00:07:AB": "Samsung",
+    "00:03:47": "Intel",
+    "00:27:19": "TP-Link",
+    "00:09:5B": "Netgear",
+    "00:06:25": "Linksys",
+    "00:01:42": "Cisco"
+}
+
 # Service detection
 COMMON_PORTS = [
     22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 
