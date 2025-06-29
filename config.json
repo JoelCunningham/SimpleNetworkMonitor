@@ -17,6 +17,7 @@
 
   "mac_resolution": true,
   "hostname_resolution": true,
+  "ttl_resolution": true,
   "mac_vendor_lookup": true,
   "os_detection": true,
   "port_scan": true,

@@ -25,7 +25,7 @@ class NetworkPinger(Injectable):
         cmd_info = PING_COMMANDS[system]
         return cmd_info["cmd"], cmd_info["count_flag"], cmd_info["timeout_flag"]
     
-    def ping(self, ip_address: str) -> Optional[Tuple[bool, int, Optional[str]]]:
+    def ping(self, ip_address: str) -> Tuple[Optional[bool], int, Optional[str]]:
         """
         Ping an IP address.
         Returns: (success, response_time_ms, stdout) or None if error
@@ -57,5 +57,5 @@ class NetworkPinger(Injectable):
             
         except (subprocess.TimeoutExpired, subprocess.SubprocessError) as e:
             print(f"Ping error for {ip_address}: {e}")
-            return None
+            return None, 0, None
 

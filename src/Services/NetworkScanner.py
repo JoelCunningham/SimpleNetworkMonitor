@@ -89,65 +89,60 @@ class NetworkScanner(Injectable):
         discovered_info: List[DiscoveryInfo] = []
         
         # Step 1: Ping the IP
-        print(f"Step 1: Scanning IP: {ip_address}")
-        ping_result = self._pinger.ping(ip_address)
-        if not ping_result or not ping_result[0]:
+        print(f"{ip_address} Scanning started")
+        success, ping_time_ms, ping_out = self._pinger.ping(ip_address)
+        if not success:
             return None
-        
-        _, ping_time_ms, stdout = ping_result
-        
-        # Step 2: ARP resolution
-        print(f"Step 2: Resolving MAC address for {ip_address}")
+                
+        # Step 2: MAC resolution
         if feature.mac_resolution_enabled():
+            print(f"{ip_address} MAC resolution started")
             arp_result = self._mac_resolver.resolve_mac_address(ip_address)
             if arp_result:
                 mac_address, arp_time_ms = arp_result
         
         # Step 3: Extract TTL from ping output
-        print(f"Step 3: Extracting TTL from ping output for {ip_address}")
-        if stdout:
-            ttl = self._extract_ttl_from_ping_output(stdout)
+        if feature.ttl_resolution_enabled() and ping_out:
+            print(f"{ip_address} Extracting TTL from ping output")
+            ttl = self._extract_ttl_from_ping_output(ping_out)
         
         # Step 4: Device enrichment (hostname, vendor, OS detection)
-        print(f"Step 4: Enriching device data for {ip_address}")
         if feature.hostname_resolution_enabled():
+            print(f"{ip_address} Resolving hostname")
             hostname = self._hostname_resolver.resolve_hostname(ip_address)
         
-        print(f"Step 4.1: Resolving MAC vendor for {mac_address}")
         if feature.mac_vendor_lookup_enabled() and mac_address:
+            print(f"{ip_address} Looking up MAC vendor")
             mac_vendor = self._vendor_lookup.get_vendor(mac_address)
         
-        print(f"Step 4.2: Guessing OS from TTL for {ip_address}")
         if feature.os_detection_enabled() and ttl:
+            print(f"{ip_address} Detecting OS from TTL")
             os_guess = self._os_lookup.detect_from_ttl(ttl)
         
         # Step 5: Port scanning
-        print(f"Step 5: Scanning ports for {ip_address}")
         if feature.port_scan_enabled():
+            print(f"{ip_address} Port scanning started")
             open_ports = self._port_scanner.scan_ports(ip_address, COMMON_PORTS)
         
         # Step 6: Service detection
-        print(f"Step 6: Detecting services for {ip_address}")
         for port_info in open_ports:
+            print(f"{ip_address}:{port_info.port} Service detection started")
             service_info: Optional[ServiceInfo] = None
             service_name = port_info.service.lower() if port_info.service else "unknown"
         
             # HTTP detection
-            print(f"Step 6.1: Checking HTTP service on port {port_info.port} for {ip_address}")
-            if (feature.detect_http_enabled() and 
-                (port_info.port in HTTP_PORTS or HTTP_SERVICE_NAME in service_name)):
+            if feature.detect_http_enabled() and (port_info.port in HTTP_PORTS or HTTP_SERVICE_NAME in service_name):
+                print(f"{ip_address}:{port_info.port} Checking HTTP service")
                 service_info = self._http_detector.detect_service(ip_address, port_info.port)
             
             # SSH detection
-            print(f"Step 6.2: Checking SSH service on port {port_info.port} for {ip_address}")
-            if (feature.detect_ssh_enabled() and 
-                (port_info.port == SSH_PORT or SSH_SERVICE_NAME in service_name)):
+            if feature.detect_ssh_enabled() and (port_info.port == SSH_PORT or SSH_SERVICE_NAME in service_name):
+                print(f"{ip_address}:{port_info.port} Checking SSH service")
                 service_info = self._ssh_detector.detect_service(ip_address, port_info.port)
             
             # Generic banner grabbing
-            print(f"Step 6.3: Checking for banners on port {port_info.port} for {ip_address}")
-            if (feature.detect_banners_enabled() and 
-                service_name in BANNER_SERVICE_NAMES):
+            if feature.detect_banners_enabled() and service_name in BANNER_SERVICE_NAMES:
+                print(f"{ip_address}:{port_info.port} Checking banner")
                 banner = self._banner_detector.grab_banner(ip_address, port_info.port)
                 if banner:
                     service_info = ServiceInfo(
@@ -159,20 +154,20 @@ class NetworkScanner(Injectable):
                 services_info[port_info.port] = service_info
         
         # Step 7: Device discovery
-        print(f"Step 7: Discovering devices for {ip_address}")
         if feature.discover_netbios_enabled():
+            print(f"{ip_address} Discovering NetBIOS devices")
             discovery_info = self._netbios_discoverer.discover(ip_address)
             if discovery_info:
                 discovered_info.append(discovery_info)
         
-        print(f"Step 7.1: Discovering UPnP devices for {ip_address}")        
         if feature.discover_upnp_enabled():
+            print(f"{ip_address} Discovering UPnP devices")
             discovery_info = self._upnp_discoverer.discover(ip_address)
             if discovery_info:
                 discovered_info.append(discovery_info)
         
-        print(f"Step 7.2: Discovering mDNS devices for {ip_address}")        
         if feature.discover_mdns_enabled():
+            print(f"{ip_address} Discovering mDNS devices")
             discovery_info = self._mdns_discoverer.discover(ip_address)
             if discovery_info:
                 discovered_info.append(discovery_info)

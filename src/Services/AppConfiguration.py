@@ -75,6 +75,8 @@ class AppConfig(Injectable):
             return bool(self._config_data["mac_resolution"])
         def hostname_resolution_enabled(self) -> bool:
             return bool(self._config_data["hostname_resolution"])
+        def ttl_resolution_enabled(self) -> bool:
+            return bool(self._config_data["ttl_resolution"])
         def mac_vendor_lookup_enabled(self) -> bool:
             return bool(self._config_data["mac_vendor_lookup"])
         def os_detection_enabled(self) -> bool:
