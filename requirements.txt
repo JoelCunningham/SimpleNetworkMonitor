@@ -10,3 +10,6 @@ SQLAlchemy==2.0.41
 sqlmodel==0.0.24
 typing-inspection==0.4.1
 typing_extensions==4.14.0
+Flask==3.1.0
+Flask-SocketIO==5.4.1
+python-socketio==5.11.4
