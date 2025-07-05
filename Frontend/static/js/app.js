@@ -25,18 +25,13 @@ socket.on("scan_progress", (data) => {
   progressText.textContent = `Processing device ${data.current} of ${data.total} (${percent}%)`;
 });
 
-socket.on("device_found", (device) => {
-  addDeviceToGrid(device);
-  discoveredDevices.push(device);
-  updateDeviceCount();
-});
-
 socket.on("scan_complete", (data) => {
   addLogEntry(data.message, data.type);
   statusText.textContent = data.message;
   isScanning = false;
   progressContainer.style.display = "none";
   progressText.style.display = "none";
+  loadDevices();
 });
 
 socket.on("scan_error", (data) => {
@@ -47,7 +42,6 @@ socket.on("scan_error", (data) => {
   progressText.style.display = "none";
 });
 
-// Functions
 function startScan() {
   if (isScanning) return;
 
@@ -80,68 +74,85 @@ function startScan() {
     });
 }
 
+function loadDevices() {
+  fetch("/api/devices")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        addLogEntry(`Failed to load devices: ${data.error}`, "error");
+        return;
+      }
+      console.log("Loaded devices:", data.devices);
+      discoveredDevices = data.devices;
+      devicesContainer.innerHTML = "";
+
+      data.devices.forEach((device) => {
+        addDeviceToGrid(device);
+      });
+
+      updateDeviceCount();
+      addLogEntry(
+        `Loaded ${data.devices.length} devices from database`,
+        "info"
+      );
+    })
+    .catch((error) => {
+      console.error("Error loading devices:", error);
+      addLogEntry("Failed to load devices", "error");
+    });
+}
+
 function addDeviceToGrid(device) {
   const deviceCard = document.createElement("div");
   deviceCard.className = "device-card";
 
+  const primaryMac = device.primary_mac;
+
   let portsHtml = "";
-  if (device.ports && device.ports.length > 0) {
+  if (primaryMac && primaryMac.ports && primaryMac.ports.length > 0) {
     portsHtml = `
-            <div class="device-ports">
-                <strong>Open Ports:</strong><br>
-                ${device.ports
-                  .map((port) => `<span class="badge port">${port}</span>`)
-                  .join("")}
-            </div>
-        `;
+      <div class="device-ports">
+          <strong>Open Ports:</strong><br>
+          ${primaryMac.ports
+            .map(
+              (port) =>
+                `<span class="badge port">${port.port}/${port.protocol}</span>`
+            )
+            .join("")}
+      </div>
+    `;
   }
 
   let servicesHtml = "";
-  if (device.services && device.services.length > 0) {
+  if (
+    primaryMac &&
+    primaryMac.discoveries &&
+    primaryMac.discoveries.length > 0
+  ) {
     servicesHtml = `
-            <div class="device-services">
-                <strong>Services:</strong><br>
-                ${device.services
-                  .map(
-                    (service) => `<span class="badge service">${service}</span>`
-                  )
-                  .join("")}
-            </div>
-        `;
+      <div class="device-services">
+          <strong>Services:</strong><br>
+          ${primaryMac.discoveries
+            .map(
+              (discovery) =>
+                `<span class="badge service">${
+                  discovery.device_type || discovery.protocol
+                }</span>`
+            )
+            .join("")}
+      </div>
+    `;
   }
 
   deviceCard.innerHTML = `
-        <div class="device-ip">${device.ip_address}</div>
-        <div class="device-info">
-            ${
-              device.mac_address
-                ? `<div><strong>MAC:</strong> ${device.mac_address}</div>`
-                : ""
-            }
-            ${
-              device.hostname
-                ? `<div><strong>Hostname:</strong> ${device.hostname}</div>`
-                : ""
-            }
-            ${
-              device.mac_vendor
-                ? `<div><strong>Vendor:</strong> ${device.mac_vendor}</div>`
-                : ""
-            }
-            ${
-              device.os_guess
-                ? `<div><strong>OS:</strong> ${device.os_guess}</div>`
-                : ""
-            }
-            <div><strong>Response Time:</strong> ${device.ping_time_ms}ms</div>
-            ${
-              device.arp_time_ms > 0
-                ? `<div><strong>ARP Time:</strong> ${device.arp_time_ms}ms</div>`
-                : ""
-            }
-        </div>
-        ${portsHtml}
-        ${servicesHtml}
+      <div class="device-info">
+          <div><strong>${device.name}</strong></div>
+          ${
+            device.category && device.category.name
+              ? `<img src="/static/icons/devices/${device.category.name.toLowerCase()}.svg"</div>`
+              : "?"
+          }
+      </div>
     `;
 
   devicesContainer.appendChild(deviceCard);
@@ -160,5 +171,5 @@ function addLogEntry(message, type = "info") {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  startScan();
+  loadDevices();
 });

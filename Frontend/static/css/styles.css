@@ -36,50 +36,13 @@ body {
     padding: 2rem;
 }
 
-.status-panel {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e5e7;
-}
-
-.status-panel h3 {
-    margin-bottom: 1rem;
-    color: #333;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background: #e5e5e7;
-    border-radius: 4px;
-    overflow: hidden;
-    margin: 1rem 0;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    transition: width 0.3s ease;
-    width: 0%;
-}
-
+/* Devices Panel - Currently Using */
 .devices-panel {
     background: white;
     border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     border: 1px solid #e5e5e7;
-}
-
-.devices-panel h3 {
-    margin-bottom: 1.5rem;
-    color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .device-count {
@@ -89,12 +52,6 @@ body {
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 500;
-}
-
-.device-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
 }
 
 .device-card {
@@ -108,49 +65,6 @@ body {
 .device-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-}
-
-.device-ip {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 0.5rem;
-}
-
-.device-info {
-    display: grid;
-    gap: 0.3rem;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.device-info strong {
-    color: #333;
-}
-
-.device-ports,
-.device-services {
-    margin-top: 0.8rem;
-}
-
-.badge {
-    display: inline-block;
-    background: #e9ecef;
-    color: #495057;
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    margin: 0.2rem 0.3rem 0.2rem 0;
-}
-
-.badge.port {
-    background: #d1ecf1;
-    color: #0c5460;
-}
-
-.badge.service {
-    background: #d4edda;
-    color: #155724;
 }
 
 .logs {
@@ -198,16 +112,112 @@ body {
     opacity: 0.5;
 }
 
+/* Scan Status Panel - Top Component */
+.scan-status-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e5e7;
+}
+
+.status-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.status-info {
+    flex: 1;
+}
+
+.status-info h3 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.last-scan-time {
+    font-size: 1rem;
+    color: #666;
+}
+
+.scanning-status {
+    font-size: 1rem;
+    color: #667eea;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.scan-controls {
+    display: flex;
+    align-items: center;
+}
+
+.scan-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.scan-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.scan-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.scan-icon {
+    font-size: 1.1rem;
+}
+
+/* Devices and Logs Panel - Bottom Component */
+.devices-logs-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e5e7;
+    margin-top: 2rem;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
     }
 
-    .device-grid {
-        grid-template-columns: 1fr;
-    }
-
     .header h1 {
         font-size: 2rem;
+    }
+
+    .status-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .scan-controls {
+        justify-content: center;
+    }
+
+    .scan-btn {
+        width: 100%;
+        justify-content: center;
     }
 }

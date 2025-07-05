@@ -23,3 +23,20 @@ class Device(BaseModel, table=True):
     category: "Category" = Relationship(back_populates="devices")
     
     macs: List["Mac"] = Relationship(back_populates="device")
+   
+    @property
+    def name(self) -> str:
+        device_name = ""
+        
+        device_name += self.owner.name + "'s " if self.owner else ""
+        device_name += self.location.name + " " if self.location else ""
+        device_name += self.category.name if self.category else ""
+    
+        return device_name.strip() or "Unknown Device"
+        
+    @property
+    def primary_mac(self) -> Optional["Mac"]:
+        if not self.macs:
+            return None
+        return max(self.macs, key=lambda mac: mac.last_seen or 0)
+    

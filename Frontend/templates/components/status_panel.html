@@ -1,12 +1,21 @@
-<div class="status-panel">
-    <h3>Scan Status</h3>
-    <div id="statusText">Ready to scan</div>
-    <div class="progress-bar" id="progressContainer" style="display: none;">
-        <div class="progress-fill" id="progressBar"></div>
+<div class="scan-status-panel">
+  <div class="status-content">
+    <div class="status-info">
+      <div id="lastScanTime" class="last-scan-time">Last scan: Never</div>
+      <div id="scanningStatus" class="scanning-status" style="display: none">
+        Scanning now...
+      </div>
     </div>
-    <div id="progressText" style="display: none; margin-top: 0.5rem; font-size: 0.9rem; color: #666;"></div>
-    
-    <div class="logs" id="logs" style="display: none;">
-        <div id="logEntries"></div>
+    <div class="scan-controls">
+      <button id="scanButton" class="scan-btn" onclick="startScan()">
+        <img
+          src="/static/icons/refresh.svg"
+          alt="Refresh"
+          class="scan-icon"
+          style="width: 1em; height: 1em; vertical-align: middle"
+        />
+        Start Scan
+      </button>
     </div>
+  </div>
 </div>

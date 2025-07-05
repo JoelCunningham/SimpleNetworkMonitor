@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine, select
@@ -110,24 +110,27 @@ class DeviceRepository(Injectable):
         except Exception as e:
             raise Exceptions.DatabaseError(f"Failed to save device: {str(e)}") from e
     
-    def get_device_by_mac(self, mac_address: str) -> Optional[Mac]:
-        """Get device by MAC address."""
+    def get_all_devices(self) -> List[Device]:
+        """Get all devices from database."""
         try:
             with self._database_connection.get_session() as session:
-                return session.exec(
-                    select(Mac).where(Mac.address == mac_address)
-                ).first()
+                devices = list(session.exec(select(Device)).all())
+                
+                # Manually load relationships for each device
+                for device in devices:
+                    _ = device.macs 
+                    _ = device.category  
+                    _ = device.owner
+                    _ = device.location
+                    for mac in device.macs:
+                        _ = mac.discoveries
+                        _ = mac.ports
+                        for discovery in mac.discoveries:
+                            _ = discovery.services
+                
+                return devices
         except Exception as e:
-            raise Exceptions.DatabaseError(f"Failed to get device: {str(e)}") from e
-    
-    def get_all_devices(self) -> List[Mac]:
-        """Get all known devices."""
-        try:
-            with self._database_connection.get_session() as session:
-                return list(session.exec(select(Mac)).all())
-        except Exception as e:
-            raise Exceptions.DatabaseError(f"Failed to get devices: {str(e)}") from e
-
+            raise Exceptions.DatabaseError(f"Failed to get all devices: {str(e)}") from e
 
 class ScanDataRepository(Injectable):
     """Repository for scan data persistence."""
@@ -223,27 +226,3 @@ class ScanDataRepository(Injectable):
                         port=None
                     )
                     session.add(service)
-    
-    def get_scan_history(self, mac: Mac) -> List[Dict[str, Any]]:
-        """Get scan history for device."""
-        try:
-            with self._database_connection.get_session() as session:
-                # Get port data
-                ports = list(session.exec(
-                    select(Port).where(Port.mac_id == mac.id)
-                ).all())
-                
-                # Get discovery data
-                discoveries = list(session.exec(
-                    select(Discovery).where(Discovery.mac_id == mac.id)
-                ).all())
-                
-                return [
-                    {
-                        "ports": [{"port": p.port, "service": p.service, "protocol": p.protocol} for p in ports],
-                        "discoveries": [{"protocol": d.protocol, "device_name": d.device_name, "device_type": d.device_type} for d in discoveries]
-                    }
-                ]
-                
-        except Exception as e:
-            raise Exceptions.DatabaseError(f"Failed to get scan history: {str(e)}") from e
