@@ -32,7 +32,7 @@ class ScanManager {
         "Last scan: " + new Date().toLocaleString();
       this.progressContainer.style.display = "none";
       this.isScanning = false;
-      window.deviceManager.loadDevices();
+      window.deviceManager.updateDeviceDisplay(data.devices);
     });
 
     socket.on("scan_error", (data) => {

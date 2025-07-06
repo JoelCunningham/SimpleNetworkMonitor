@@ -18,7 +18,6 @@ class SvgLoader {
       });
 
       await Promise.all(loadPromises);
-      console.log(`Preloaded ${data.icons.length} icons`);
     } catch (error) {
       console.error("Failed to preload icons:", error);
     }

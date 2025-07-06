@@ -1,8 +1,9 @@
 from typing import Any, Dict
+
 from mac_vendor_lookup import MacLookup  # type: ignore
 
 from Backend.Services.AppConfiguration import AppConfig
-from Backend.Services.DataPersistence import DatabaseConnection, DeviceRepository, ScanDataRepository
+from Backend.Services.DataPersistence import DatabaseConnection, DataRepository, DiscoveryRepository, MacRepository, PortRepository
 from Backend.Services.Discovery.MdnsDiscoverer import MdnsDiscoverer
 from Backend.Services.Discovery.NetBiosDiscoverer import NetBiosDiscoverer
 from Backend.Services.Discovery.UpnpDiscoverer import UpnpDiscoverer
@@ -58,8 +59,10 @@ class ServiceContainer:
                 
         # Data Persistence Services
         database_connection = DatabaseConnection(config)
-        device_repository = DeviceRepository(database_connection)
-        scan_data_repository = ScanDataRepository(database_connection)
+        data_repository = DataRepository(database_connection)
+        discovery_repository = DiscoveryRepository(database_connection)
+        mac_repository = MacRepository(database_connection)
+        port_repository = PortRepository(database_connection)
         
         # Main Orchestrator
         network_scanner = NetworkScanner(
@@ -73,8 +76,10 @@ class ServiceContainer:
             'config': config,
             'network_scanner': network_scanner,
             'database_connection': database_connection,
-            'device_repository': device_repository,
-            'scan_data_repository': scan_data_repository,
+            'data_repository': data_repository,
+            'discovery_repository': discovery_repository,
+            'mac_repository': mac_repository,
+            'port_repository': port_repository,
             
             'pinger': pinger,
             'mac_resolver': mac_resolver,
@@ -99,10 +104,14 @@ class ServiceContainer:
         return self._services['network_scanner']
     def database_connection(self) -> DatabaseConnection:
         return self._services['database_connection']
-    def device_repository(self) -> DeviceRepository:
-        return self._services['device_repository']
-    def scan_data_repository(self) -> ScanDataRepository:
-        return self._services['scan_data_repository']
+    def data_repository(self) -> DataRepository:
+        return self._services['data_repository']
+    def discovery_repository(self) -> DiscoveryRepository:
+        return self._services['discovery_repository']
+    def mac_repository(self) -> MacRepository:
+        return self._services['mac_repository']
+    def port_repository(self) -> PortRepository:
+        return self._services['port_repository']
     def pinger(self) -> NetworkPinger:
         return self._services['pinger']
     def mac_resolver(self) -> MacResolver:

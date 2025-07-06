@@ -61,10 +61,7 @@ class DeviceManager {
         return;
       }
 
-      console.log("Loaded devices:", data.devices);
-      this.devices = data.devices;
-
-      await this.updateDeviceDisplay();
+      await this.updateDeviceDisplay(data.devices);
 
       window.logger.addLogEntry(
         `Loaded ${data.devices.length} devices from database`,
@@ -76,16 +73,16 @@ class DeviceManager {
     }
   }
 
-  async updateDeviceDisplay() {
-    // Clear device grid
+  async updateDeviceDisplay(devices = this.devices) {
+    if (!devices || devices.length === 0) return;
+
+    this.devices = devices;
     this.devicesGrid.innerHTML = "";
 
-    // Apply current grid size
     const gridClass = `device-grid grid-${this.currentGridSize}`;
     this.devicesGrid.className = gridClass;
 
-    // Sort devices by last seen (most recent first)
-    const sortedDevices = [...this.devices].sort((a, b) => {
+    const sortedDevices = [...devices].sort((a, b) => {
       const lastSeenA = a.primary_mac?.last_seen
         ? new Date(a.primary_mac.last_seen)
         : new Date(0);
@@ -103,10 +100,10 @@ class DeviceManager {
     }
 
     // Update total device count
-    this.deviceCount.textContent = this.devices.length;
+    this.deviceCount.textContent = devices.length;
 
     // Show/hide empty state
-    if (this.devices.length === 0) {
+    if (devices.length === 0) {
       this.emptyState.style.display = "block";
       this.devicesGrid.style.display = "none";
     } else {

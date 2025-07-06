@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import threading
-import time
+from typing import Any, List
 
 from flask import Flask, jsonify, render_template
 from flask_socketio import SocketIO, emit  # type: ignore
@@ -36,7 +36,7 @@ def start_scan():
     scanning = True
     
     # Start scan in background thread
-    thread = threading.Thread(target=perform_network_scan)
+    thread = threading.Thread(target=_perform_network_scan)
     thread.daemon = True
     thread.start()
     
@@ -70,16 +70,16 @@ def get_device_icons():
 def get_devices():
     """Get all devices from database."""
     try:
-        device_repo = container.device_repository()
+        device_repo = container.data_repository()
         devices = device_repo.get_all_devices()
-        devices_data = json.loads(json.dumps(devices, cls=ModelEncoder))
-        return jsonify({'devices': devices_data})
+        devices_raw = json.loads(json.dumps(devices, cls=ModelEncoder))
+        return jsonify({'devices': devices_raw})
     except Exception as e:
         print(f"Failed to load devices: {str(e)}")
         return jsonify({'error': f'Failed to load devices: {str(e)}'}), 500
 
 
-def perform_network_scan():
+def _perform_network_scan():
     """Perform the actual network scan and save results to database."""
     global scanning
     
@@ -87,55 +87,53 @@ def perform_network_scan():
         socketio.emit('scan_update', {'message': 'Starting network scan...', 'type': 'info'}) # type: ignore
         
         scanner = container.network_scanner()
-        device_repo = container.device_repository()
-        scan_data_repo = container.scan_data_repository()
+        repository = container.data_repository()
         
         socketio.emit('scan_update', {'message': 'Scanning network...', 'type': 'info'})  # type: ignore
         
-        devices = scanner.scan_network()
+        scanned_devices = scanner.scan_network()
         
-        if not devices:
+        if not scanned_devices:
             socketio.emit('scan_update', {'message': 'No devices found on the network.', 'type': 'warning'})  # type: ignore
             return
         
         socketio.emit('scan_update', {  # type: ignore
-            'message': f'Found {len(devices)} devices. Saving to database...', 
+            'message': f'Found {len(scanned_devices)} devices. Saving to database...', 
             'type': 'info'
         }) 
         
         saved_count = 0
         
-        for i, device in enumerate(devices):
-            # Emit progress update
-            progress = int((i / len(devices)) * 100)
-            socketio.emit('scan_progress', {'progress': progress, 'current': i + 1, 'total': len(devices)})  # type: ignore
+        for i, device in enumerate(scanned_devices):
+            progress = int((i / len(scanned_devices)) * 100)
+            socketio.emit('scan_progress', {'progress': progress, 'current': i + 1, 'total': len(scanned_devices)})  # type: ignore
             
-            # Save to database if MAC address is available
             if device.mac_address:
                 try:
-                    mac_record = device_repo.save_device(device)
-                    scan_data_repo.save_scan_results(mac_record, device)
+                    repository.save_scan_result(device)
                     saved_count += 1
                 except Exception as e:
                     socketio.emit('scan_update', {  # type: ignore
                         'message': f'Failed to save device {device.ip_address}: {str(e)}', 
                         'type': 'warning'
                     })
-            
-            time.sleep(0.1)  # Small delay to prevent overwhelming the database
-        
+              
+        all_devices = repository.get_known_unknown_devices(scanned_devices)  
+        all_devices_raw: List[Any] = []
+        for device in all_devices:
+            device_raw = json.loads(json.dumps(device, cls=ModelEncoder))
+            all_devices_raw.append(device_raw)
+
         socketio.emit('scan_complete', {  # type: ignore
-            'message': f'Scan completed. {saved_count} of {len(devices)} devices saved to database.',
-            'devices_found': len(devices),
-            'devices_saved': saved_count,
+            'message': f'Scan completed. {saved_count} of {len(scanned_devices)} devices saved to database.',
+            'devices': all_devices_raw,
             'type': 'success'
         })
-        
+                
     except Exception as e:
         socketio.emit('scan_error', {'message': f'Scan error: {str(e)}', 'type': 'error'})  # type: ignore
     
-    finally:
-        scanning = False
+    scanning = False
 
 
 @socketio.on('connect')

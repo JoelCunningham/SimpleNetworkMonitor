@@ -15,8 +15,7 @@ def main():
         container = ServiceContainer(DEFAULT_CONFIG_PATH)
         
         scanner = container.network_scanner()
-        device_repo = container.device_repository()
-        scan_data_repo = container.scan_data_repository()
+        repository = container.data_repository()
         
         print("Scanning network...")
         
@@ -33,10 +32,8 @@ def main():
             print(f"IP: {device.ip_address}")
             
             if device.mac_address:
+                repository.save_scan_result(device)
                 print(f"  MAC: {device.mac_address}")
-                
-                mac_record = device_repo.save_device(device)
-                scan_data_repo.save_scan_results(mac_record, device)
             
             if device.hostname:
                 print(f"  Hostname: {device.hostname}")
