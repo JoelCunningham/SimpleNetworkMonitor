@@ -2,14 +2,14 @@
 <svg id="Flat" height="512" viewBox="0 0 64 64" width="512" xmlns="http://www.w3.org/2000/svg">
     <path
         d="m11.662 14.082-.744-3.42 47.71-10.372a1.75 1.75 0 0 1 2.082 1.338 1.75 1.75 0 0 1 -1.339 2.082z"
-        fill="var(--light_purple)"></path>
+        fill="var(--svg_light_purple)"></path>
     <path d="m8 11.75v8h9v-8a4.5 4.5 0 0 0 -4.5-4.5 4.5 4.5 0 0 0 -4.5 4.5z"
-        fill="var(--dark_purple)"></path>
-    <rect fill="var(--light_purple)" height="47.5" rx="4.75" width="63.5" x=".25" y="16.25"></rect>
-    <rect fill="var(--screen)" height="10.5" rx="1.75" width="49.5" x="7.25" y="23.25"></rect>
-    <circle cx="47" cy="47" fill="var(--dark_purple)" r="9.75"></circle>
-    <circle cx="47" cy="47" fill="var(--light_purple)" r="3.5"></circle>
-    <g fill="var(--dark_purple)">
+        fill="var(--svg_dark_purple)"></path>
+    <rect fill="var(--svg_light_purple)" height="47.5" rx="4.75" width="63.5" x=".25" y="16.25"></rect>
+    <rect fill="var(--svg_screen)" height="10.5" rx="1.75" width="49.5" x="7.25" y="23.25"></rect>
+    <circle cx="47" cy="47" fill="var(--svg_dark_purple)" r="9.75"></circle>
+    <circle cx="47" cy="47" fill="var(--svg_light_purple)" r="3.5"></circle>
+    <g fill="var(--svg_dark_purple)">
         <path
             d="m30 56.75a1.75 1.75 0 0 1 -1.75-1.75v-3a1.75 1.75 0 0 1 3.5 0v3a1.75 1.75 0 0 1 -1.75 1.75z"></path>
         <path

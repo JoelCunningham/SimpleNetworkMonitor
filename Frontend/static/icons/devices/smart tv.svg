@@ -1,16 +1,16 @@
 <!-- https://www.flaticon.com/free-icon/tv_16928385 -->
 <svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <path d="m4 57h56v4h-56z" fill="var(--dark_purple)"></path>
+    <path d="m4 57h56v4h-56z" fill="var(--svg_dark_purple)"></path>
     <path
         d="m32 14.009-10.5-9.452a.751.751 0 0 1 -.057-1.057.749.749 0 0 1 1.057-.057l9.5 8.548 9.5-8.548a.749.749 0 0 1 1.059.055.751.751 0 0 1 -.059 1.059z"
-        fill="var(--light_purple)"></path>
-    <path d="m32 12a5 5 0 0 0 -5 5h10a5 5 0 0 0 -5-5z" fill="var(--dark_purple)"></path>
-    <rect fill="var(--light_purple)" height="40" rx="3" width="62" x="1" y="17"></rect>
-    <path d="m5 21h44v32h-44z" fill="var(--screen)"></path>
-    <circle cx="56" cy="24" fill="var(--red)" r="3"></circle>
-    <circle cx="57" cy="33" fill="var(--yellow)" r="2"></circle>
-    <circle cx="57" cy="41" fill="var(--green)" r="2"></circle>
-    <g fill="var(--white)">
+        fill="var(--svg_light_purple)"></path>
+    <path d="m32 12a5 5 0 0 0 -5 5h10a5 5 0 0 0 -5-5z" fill="var(--svg_dark_purple)"></path>
+    <rect fill="var(--svg_light_purple)" height="40" rx="3" width="62" x="1" y="17"></rect>
+    <path d="m5 21h44v32h-44z" fill="var(--svg_screen)"></path>
+    <circle cx="56" cy="24" fill="var(--svg_red)" r="3"></circle>
+    <circle cx="57" cy="33" fill="var(--svg_yellow)" r="2"></circle>
+    <circle cx="57" cy="41" fill="var(--svg_green)" r="2"></circle>
+    <g fill="var(--svg_white)">
         <path d="m59 53.75a.75.75 0 0 1 -.75-.75v-6a.75.75 0 0 1 1.5 0v6a.75.75 0 0 1 -.75.75z"></path>
         <path d="m55 53.75a.75.75 0 0 1 -.75-.75v-6a.75.75 0 0 1 1.5 0v6a.75.75 0 0 1 -.75.75z"></path>
     </g>

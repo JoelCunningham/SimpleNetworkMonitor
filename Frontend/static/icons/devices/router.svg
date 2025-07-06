@@ -1,17 +1,18 @@
 <!-- https://www.flaticon.com/free-icon/wifi-router_18836028 -->
 <svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <rect fill="var(--light_purple)" height="16" rx="3" width="62" x="1" y="43"></rect>
-    <path d="m4 59h56v4h-56z" fill="var(--dark_purple)"></path>
-    <circle cx="7" cy="49" fill="var(--red)" r="2"></circle>
-    <circle cx="15" cy="49" fill="var(--green)" r="2"></circle>
-    <circle cx="23" cy="49" fill="var(--yellow)" r="2"></circle>
-    <path d="m9.5 4h3l1 34h-5z" fill="var(--light_purple)"></path>
-    <path d="m9.176 15h3.648l-.148-5h-3.352z" fill="var(--dark_purple)"></path>
+    <rect fill="var(--svg_light_purple)" height="16" rx="3" width="62" x="1" y="43"></rect>
+    <path d="m4 59h56v4h-56z" fill="var(--svg_dark_purple)"></path>
+    <circle cx="7" cy="49" fill="var(--svg_red)" r="2"></circle>
+    <circle cx="15" cy="49" fill="var(--svg_green)" r="2"></circle>
+    <circle cx="23" cy="49" fill="var(--svg_yellow)" r="2"></circle>
+    <path d="m9.5 4h3l1 34h-5z" fill="var(--svg_light_purple)"></path>
+    <path d="m9.176 15h3.648l-.148-5h-3.352z" fill="var(--svg_dark_purple)"></path>
     <path
         d="m8.031 38h47.938a3 3 0 0 1 2.785 1.886l1.246 3.114h-56l1.246-3.114a3 3 0 0 1 2.785-1.886z"
-        fill="var(--dark_purple)"></path>
-    <path d="m25 55.75h-20a.75.75 0 0 1 0-1.5h20a.75.75 0 0 1 0 1.5z" fill="var(--white)"></path>
-    <path d="m51.5 4h3l1 34h-5z" fill="var(--light_purple)"></path>
-    <path d="m51.176 15h3.648l-.148-5h-3.352z" fill="var(--dark_purple)"></path>
-    <rect fill="var(--screen)" height="8" rx="3" width="20" x="39" y="47" style="stroke-width: 1;"></rect>
+        fill="var(--svg_dark_purple)"></path>
+    <path d="m25 55.75h-20a.75.75 0 0 1 0-1.5h20a.75.75 0 0 1 0 1.5z" fill="var(--svg_white)"></path>
+    <path d="m51.5 4h3l1 34h-5z" fill="var(--svg_light_purple)"></path>
+    <path d="m51.176 15h3.648l-.148-5h-3.352z" fill="var(--svg_dark_purple)"></path>
+    <rect fill="var(--svg_screen)" height="8" rx="3" width="20" x="39" y="47"
+        style="stroke-width: 1;"></rect>
 </svg>

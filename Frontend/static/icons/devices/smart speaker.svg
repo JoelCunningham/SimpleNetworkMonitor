@@ -1,11 +1,11 @@
 <!-- https://www.flaticon.com/free-icon/speaker_10693950 -->
 <svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
     <path d="m47.75 53.25h-31.5v8.75a1.751 1.751 0 0 0 1.75 1.75h28a1.751 1.751 0 0 0 1.75-1.75z"
-        fill="var(--dark_purple)"></path>
-    <rect fill="var(--light_purple)" height="56.5" rx="5.75" width="39.5" x="12.25" y=".25"></rect>
-    <circle cx="32" cy="37" fill="var(--dark_purple)" r="12.75"></circle>
-    <circle cx="32" cy="37" fill="var(--white)" r="5.75"></circle>
-    <g fill="var(--dark_purple)">
+        fill="var(--svg_dark_purple)"></path>
+    <rect fill="var(--svg_light_purple)" height="56.5" rx="5.75" width="39.5" x="12.25" y=".25"></rect>
+    <circle cx="32" cy="37" fill="var(--svg_dark_purple)" r="12.75"></circle>
+    <circle cx="32" cy="37" fill="var(--svg_white)" r="5.75"></circle>
+    <g fill="var(--svg_dark_purple)">
         <circle cx="19" cy="7" r="1.75"></circle>
         <circle cx="45" cy="7" r="1.75"></circle>
         <circle cx="32" cy="14" r="6.75"></circle>

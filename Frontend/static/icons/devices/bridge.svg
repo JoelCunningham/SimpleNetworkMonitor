@@ -1,16 +1,17 @@
 <!-- https://www.flaticon.com/free-icon/wifi-router_18836028 -->
 <svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <rect fill="var(--light_purple)" height="11.02" rx="3" width="62" x="1" y="47.98" style=""></rect>
-    <path d="m4 59h56v4h-56z" fill="var(--dark_purple)"></path>
-    <circle cx="6.963" cy="53.599" fill="var(--red)" r="2"></circle>
-    <circle cx="14.963" cy="53.599" fill="var(--green)" r="2"></circle>
-    <circle cx="22.963" cy="53.599" fill="var(--yellow)" r="2"></circle>
+    <rect fill="var(--svg_light_purple)" height="11.02" rx="3" width="62" x="1" y="47.98" style=""></rect>
+    <path d="m4 59h56v4h-56z" fill="var(--svg_dark_purple)"></path>
+    <circle cx="6.963" cy="53.599" fill="var(--svg_red)" r="2"></circle>
+    <circle cx="14.963" cy="53.599" fill="var(--svg_green)" r="2"></circle>
+    <circle cx="22.963" cy="53.599" fill="var(--svg_yellow)" r="2"></circle>
     <path
         d="M 8.031 43 L 55.969 43 C 57.196 43 58.299 43.747 58.754 44.886 L 60 48 L 4 48 L 5.246 44.886 C 5.701 43.747 6.804 43 8.031 43 Z"
-        fill="var(--dark_purple)"></path>
+        fill="var(--svg_dark_purple)"></path>
     <path
         d="M 57.16 54.509 L 37.16 54.509 C 36.582 54.509 36.221 53.884 36.51 53.384 C 36.644 53.152 36.892 53.009 37.16 53.009 L 57.16 53.009 C 57.737 53.009 58.098 53.634 57.809 54.134 C 57.675 54.366 57.428 54.509 57.16 54.509 Z"
-        fill="var(--white)"></path>
-    <path d="M 51.5 9 L 54.5 9 L 55.5 43 L 50.5 43 L 51.5 9 Z" fill="var(--light_purple)"></path>
-    <path d="M 51.176 20 L 54.824 20 L 54.676 15 L 51.324 15 L 51.176 20 Z" fill="var(--dark_purple)"></path>
+        fill="var(--svg_white)"></path>
+    <path d="M 51.5 9 L 54.5 9 L 55.5 43 L 50.5 43 L 51.5 9 Z" fill="var(--svg_light_purple)"></path>
+    <path d="M 51.176 20 L 54.824 20 L 54.676 15 L 51.324 15 L 51.176 20 Z"
+        fill="var(--svg_dark_purple)"></path>
 </svg>

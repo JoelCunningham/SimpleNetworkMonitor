@@ -1,10 +1,10 @@
 <!-- https://www.flaticon.com/free-icon/laptop_16928558 -->
 <svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
     <path d="m8 6h48a2 2 0 0 1 2 2v34a0 0 0 0 1 0 0h-52a0 0 0 0 1 0 0v-34a2 2 0 0 1 2-2z"
-        fill="var(--light_purple)"></path>
-    <path d="m9 9h46v30h-46z" fill="var(--screen)"></path>
-    <path d="m6 42h52l5 13h-62z" fill="var(--dark_purple)"></path>
-    <g fill="var(--light_purple)">
+        fill="var(--svg_light_purple)"></path>
+    <path d="m9 9h46v30h-46z" fill="var(--svg_screen)"></path>
+    <path d="m6 42h52l5 13h-62z" fill="var(--svg_dark_purple)"></path>
+    <g fill="var(--svg_light_purple)">
         <path d="m3 58h58a2 2 0 0 0 2-2v-1h-62v1a2 2 0 0 0 2 2z"></path>
         <path d="m10.5 45.75h-2a.75.75 0 0 1 0-1.5h2a.75.75 0 0 1 0 1.5z"></path>
         <path d="m15.5 45.75h-2a.75.75 0 0 1 0-1.5h2a.75.75 0 0 1 0 1.5z"></path>
@@ -27,5 +27,5 @@
         <path d="m50.5 48.75h-2a.75.75 0 0 1 0-1.5h2a.75.75 0 0 1 0 1.5z"></path>
         <path d="m55.5 48.75h-2a.75.75 0 0 1 0-1.5h2a.75.75 0 0 1 0 1.5z"></path>
     </g>
-    <path d="m25 51-2 4h18l-2-4z" fill="var(--light_purple)"></path>
+    <path d="m25 51-2 4h18l-2-4z" fill="var(--svg_light_purple)"></path>
 </svg>

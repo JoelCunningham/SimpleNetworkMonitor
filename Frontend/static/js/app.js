@@ -10,8 +10,13 @@ const logEntries = document.getElementById("logEntries");
 const devicesContainer = document.getElementById("devicesContainer");
 const deviceCount = document.getElementById("deviceCount");
 
+// Device grid element
+const devicesGrid = document.getElementById("devicesGrid");
+const emptyState = document.getElementById("emptyState");
+
 let discoveredDevices = [];
 let isScanning = false;
+let deviceUpdateInterval;
 
 // Socket.IO event handlers
 socket.on("scan_update", (data) => {
@@ -58,8 +63,8 @@ function startScan() {
 
       // Clear previous results
       discoveredDevices = [];
-      devicesContainer.innerHTML = "";
-      updateDeviceCount();
+      devicesGrid.innerHTML = "";
+      deviceCount.textContent = "0";
 
       // Show progress elements
       progressContainer.style.display = "block";
@@ -72,6 +77,25 @@ function startScan() {
       console.error("Error starting scan:", error);
       alert("Failed to start scan");
     });
+}
+
+// Device status calculation
+function getDeviceStatus(device) {
+  if (!device.primary_mac || !device.primary_mac.last_seen) {
+    return "offline";
+  }
+
+  const lastSeen = new Date(device.primary_mac.last_seen);
+  const now = new Date();
+  const minutesSinceLastSeen = (now - lastSeen) / (1000 * 60);
+
+  if (minutesSinceLastSeen < 1) {
+    return "online";
+  } else if (minutesSinceLastSeen < 5) {
+    return "away";
+  } else {
+    return "offline";
+  }
 }
 
 async function loadDevices() {
@@ -87,28 +111,8 @@ async function loadDevices() {
     console.log("Loaded devices:", data.devices);
     discoveredDevices = data.devices;
 
-    // Clear the container completely
-    devicesContainer.innerHTML = "";
-    devicesContainer.className = `devices-container grid-${currentGridSize}`;
+    await updateDeviceDisplay();
 
-    if (data.devices.length === 0) {
-      // Show empty state
-      devicesContainer.innerHTML = `
-        <div class="empty-state">
-          <svg fill="currentColor" viewBox="0 0 20 20">
-            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-          </svg>
-          <p>No devices discovered yet. Start a scan to find devices on your network.</p>
-        </div>
-      `;
-    } else {
-      // Add devices to grid (process them sequentially to avoid race conditions)
-      for (const device of data.devices) {
-        await addDeviceToGrid(device);
-      }
-    }
-
-    updateDeviceCount();
     addLogEntry(`Loaded ${data.devices.length} devices from database`, "info");
   } catch (error) {
     console.error("Error loading devices:", error);
@@ -116,47 +120,47 @@ async function loadDevices() {
   }
 }
 
-async function addDeviceToGrid(device) {
+async function updateDeviceDisplay() {
+  // Clear device grid
+  devicesGrid.innerHTML = "";
+
+  // Apply current grid size
+  const gridClass = `device-grid grid-${currentGridSize}`;
+  devicesGrid.className = gridClass;
+
+  // Sort devices by status (online first, then away, then offline)
+  const statusOrder = { online: 1, away: 2, offline: 3 };
+  const sortedDevices = [...discoveredDevices].sort((a, b) => {
+    const statusA = getDeviceStatus(a);
+    const statusB = getDeviceStatus(b);
+    return statusOrder[statusA] - statusOrder[statusB];
+  });
+
+  // Add all devices to the single grid
+  for (const device of sortedDevices) {
+    const status = getDeviceStatus(device);
+    await addDeviceToGrid(device, status);
+  }
+
+  // Update total device count
+  deviceCount.textContent = discoveredDevices.length;
+
+  // Show/hide empty state
+  if (discoveredDevices.length === 0) {
+    emptyState.style.display = "block";
+    devicesGrid.style.display = "none";
+  } else {
+    emptyState.style.display = "none";
+    devicesGrid.style.display = "grid";
+  }
+}
+
+async function addDeviceToGrid(device, status) {
   const deviceCard = document.createElement("div");
-  deviceCard.className = "device-card";
+  deviceCard.className = `device-card ${status}`;
+  deviceCard.setAttribute("data-device-id", device.id);
 
   const primaryMac = device.primary_mac;
-
-  let portsHtml = "";
-  if (primaryMac && primaryMac.ports && primaryMac.ports.length > 0) {
-    portsHtml = `
-      <div class="device-ports">
-          <strong>Open Ports:</strong><br>
-          ${primaryMac.ports
-            .map(
-              (port) =>
-                `<span class="badge port">${port.port}/${port.protocol}</span>`
-            )
-            .join("")}
-      </div>
-    `;
-  }
-
-  let servicesHtml = "";
-  if (
-    primaryMac &&
-    primaryMac.discoveries &&
-    primaryMac.discoveries.length > 0
-  ) {
-    servicesHtml = `
-      <div class="device-services">
-          <strong>Services:</strong><br>
-          ${primaryMac.discoveries
-            .map(
-              (discovery) =>
-                `<span class="badge service">${
-                  discovery.device_type || discovery.protocol
-                }</span>`
-            )
-            .join("")}
-      </div>
-    `;
-  }
 
   const deviceInfo = document.createElement("div");
   deviceInfo.className = "device-info";
@@ -187,14 +191,8 @@ async function addDeviceToGrid(device) {
   deviceInfo.appendChild(deviceName);
   deviceCard.appendChild(deviceInfo);
 
-  // if (portsHtml) {
-  //   deviceCard.insertAdjacentHTML("beforeend", portsHtml);
-  // }
-  // if (servicesHtml) {
-  //   deviceCard.insertAdjacentHTML("beforeend", servicesHtml);
-  // }
-
-  devicesContainer.appendChild(deviceCard);
+  // Add to the main device grid
+  devicesGrid.appendChild(deviceCard);
 }
 
 function updateDeviceCount() {
@@ -214,11 +212,15 @@ let currentGridSize = 4;
 const gridSizes = [4, 5, 6];
 
 function initializeGridSize() {
-  const devicesContainer = document.getElementById("devicesContainer");
   const gridSizeBtn = document.getElementById("gridSizeBtn");
 
-  // Set initial grid size
-  devicesContainer.className = `devices-container grid-${currentGridSize}`;
+  if (!gridSizeBtn) return;
+
+  // Update button title to show current grid size
+  const updateButtonTitle = () => {
+    gridSizeBtn.title = `Change grid size (currently ${currentGridSize} columns)`;
+  };
+  updateButtonTitle();
 
   // Add click event listener
   gridSizeBtn.addEventListener("click", function () {
@@ -227,8 +229,12 @@ function initializeGridSize() {
     const nextIndex = (currentIndex + 1) % gridSizes.length;
     currentGridSize = gridSizes[nextIndex];
 
-    // Update UI
-    devicesContainer.className = `devices-container grid-${currentGridSize}`;
+    // Update button title
+    updateButtonTitle();
+
+    // Update the device grid
+    const gridClass = `device-grid grid-${currentGridSize}`;
+    devicesGrid.className = gridClass;
 
     // Add visual feedback
     gridSizeBtn.style.transform = "scale(0.95)";
@@ -238,7 +244,25 @@ function initializeGridSize() {
   });
 }
 
+// Auto-refresh functionality
+function startDeviceStatusUpdates() {
+  // Update device status every 30 seconds
+  deviceUpdateInterval = setInterval(async () => {
+    if (!isScanning && discoveredDevices.length > 0) {
+      await updateDeviceDisplay();
+    }
+  }, 30000);
+}
+
+function stopDeviceStatusUpdates() {
+  if (deviceUpdateInterval) {
+    clearInterval(deviceUpdateInterval);
+    deviceUpdateInterval = null;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   loadDevices();
   initializeGridSize();
+  startDeviceStatusUpdates();
 });

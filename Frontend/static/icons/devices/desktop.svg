@@ -1,7 +1,7 @@
 <!-- https://www.flaticon.com/free-icon/cpu_10554463 -->
 <svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <rect fill="var(--light_purple)" height="63.5" rx="5.75" width="35.5" x="14.25" y=".25"></rect>
-    <g fill="var(--dark_purple)">
+    <rect fill="var(--svg_light_purple)" height="63.5" rx="5.75" width="35.5" x="14.25" y=".25"></rect>
+    <g fill="var(--svg_dark_purple)">
         <path d="m17.75 11h28.5v10h-28.5z"></path>
         <path d="m43 27.75h-3a1.75 1.75 0 0 1 0-3.5h3a1.75 1.75 0 0 1 0 3.5z"></path>
         <path d="m33 27.75h-3a1.75 1.75 0 0 1 0-3.5h3a1.75 1.75 0 0 1 0 3.5z"></path>

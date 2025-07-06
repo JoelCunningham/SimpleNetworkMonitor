@@ -1,18 +1,19 @@
 <!-- https://www.flaticon.com/free-icon/printer_16975588 -->
 <svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <rect fill="var(--light_purple)" height="11" rx="1.5" width="49" x="7.5" y="8.5" />
-    <rect fill="var(--white)" height="19" rx="1.5" width="35" x="14.5" y=".5" />
-    <rect fill="var(--light_purple)" height="34" rx="5.5" width="63" x=".5" y="16.5" />
+    <rect fill="var(--svg_light_purple)" height="11" rx="1.5" width="49" x="7.5" y="8.5" />
+    <rect fill="var(--svg_white)" height="19" rx="1.5" width="35" x="14.5" y=".5" />
+    <rect fill="var(--svg_light_purple)" height="34" rx="5.5" width="63" x=".5" y="16.5" />
     <path d="m58 16.5h-52a5.507 5.507 0 0 0 -5.5 5.5v10h63v-10a5.507 5.507 0 0 0 -5.5-5.5z"
-        fill="var(--dark_purple)" />
+        fill="var(--svg_dark_purple)" />
     <path d="m7.5 42.5v8h49v-8a1.5 1.5 0 0 0 -1.5-1.5h-46a1.5 1.5 0 0 0 -1.5 1.5z"
-        fill="var(--dark_purple)" />
-    <circle cx="9" cy="25" fill="var(--red)" r="1.5" />
-    <circle cx="15" cy="25" fill="var(--green)" r="1.5" />
-    <circle cx="22" cy="25" fill="var(--yellow)" r="1.5" />
-    <path d="m55 26.5h-12a1.5 1.5 0 0 1 0-3h12a1.5 1.5 0 0 1 0 3z" fill="var(--screen)" />
-    <path d="m14.5 41v21a1.5 1.5 0 0 0 1.5 1.5h32a1.5 1.5 0 0 0 1.5-1.5v-21z" fill="var(--white)" />
-    <g fill="var(--dark_purple)">
+        fill="var(--svg_dark_purple)" />
+    <circle cx="9" cy="25" fill="var(--svg_red)" r="1.5" />
+    <circle cx="15" cy="25" fill="var(--svg_green)" r="1.5" />
+    <circle cx="22" cy="25" fill="var(--svg_yellow)" r="1.5" />
+    <path d="m55 26.5h-12a1.5 1.5 0 0 1 0-3h12a1.5 1.5 0 0 1 0 3z" fill="var(--svg_screen)" />
+    <path d="m14.5 41v21a1.5 1.5 0 0 0 1.5 1.5h32a1.5 1.5 0 0 0 1.5-1.5v-21z"
+        fill="var(--svg_white)" />
+    <g fill="var(--svg_dark_purple)">
         <path d="m42 49.5h-20a1.5 1.5 0 0 1 0-3h20a1.5 1.5 0 0 1 0 3z" />
         <path d="m42 57.5h-20a1.5 1.5 0 0 1 0-3h20a1.5 1.5 0 0 1 0 3z" />
     </g>
