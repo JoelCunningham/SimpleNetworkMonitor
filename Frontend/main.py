@@ -49,6 +49,23 @@ def get_scan_status():
     return jsonify({'scanning': scanning})
 
 
+@app.route('/api/icons/devices')
+def get_device_icons():
+    """Get list of available device icons."""
+    if app.static_folder is None:
+        return jsonify({'icons': []})
+    
+    icons_dir: str = os.path.join(app.static_folder, 'icons', 'devices')
+    try:
+        if os.path.exists(icons_dir):
+            svg_files = [f for f in os.listdir(icons_dir) if f.endswith('.svg')]
+            return jsonify({'icons': svg_files})
+        else:
+            return jsonify({'icons': []})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/devices')
 def get_devices():
     """Get all devices from database."""

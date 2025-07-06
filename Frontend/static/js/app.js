@@ -139,7 +139,8 @@ async function updateDeviceDisplay() {
   // Add all devices to the single grid
   for (const device of sortedDevices) {
     const status = getDeviceStatus(device);
-    await addDeviceToGrid(device, status);
+    const deviceCard = await createDeviceCard(device, status);
+    devicesGrid.appendChild(deviceCard);
   }
 
   // Update total device count
@@ -155,31 +156,26 @@ async function updateDeviceDisplay() {
   }
 }
 
-async function addDeviceToGrid(device, status) {
+async function createDeviceCard(device, status) {
   const deviceCard = document.createElement("div");
   deviceCard.className = `device-card ${status}`;
   deviceCard.setAttribute("data-device-id", device.id);
 
-  const primaryMac = device.primary_mac;
-
   const deviceInfo = document.createElement("div");
   deviceInfo.className = "device-info";
 
-  let iconElement;
+  const iconElement = document.createElement("div");
+  iconElement.className = "device-icon";
+
   if (device.category && device.category.name) {
-    try {
-      iconElement = await window.svgLoader.createDeviceIcon(
-        device.category.name
-      );
-    } catch (error) {
-      console.warn(`Failed to load icon for ${device.category.name}:`, error);
-      iconElement = document.createElement("div");
-      iconElement.className = "device-icon";
-      iconElement.innerHTML = `<div class="unknown-device">?</div>`;
+    var svgContent = null;
+    if (window.svgLoader.isIconCached(device.category.name)) {
+      svgContent = await window.svgLoader.getDeviceIcon(device.category.name);
+    } else {
+      svgContent = window.svgLoader.getDeviceIconAsync(device.category.name);
     }
+    iconElement.innerHTML = svgContent;
   } else {
-    iconElement = document.createElement("div");
-    iconElement.className = "device-icon";
     iconElement.innerHTML = `<div class="unknown-device">?</div>`;
   }
 
@@ -191,8 +187,7 @@ async function addDeviceToGrid(device, status) {
   deviceInfo.appendChild(deviceName);
   deviceCard.appendChild(deviceInfo);
 
-  // Add to the main device grid
-  devicesGrid.appendChild(deviceCard);
+  return deviceCard;
 }
 
 function updateDeviceCount() {
@@ -261,8 +256,10 @@ function stopDeviceStatusUpdates() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  loadDevices();
+document.addEventListener("DOMContentLoaded", async function () {
+  await window.svgLoader.preloadCommonIcons();
+
+  await loadDevices();
   initializeGridSize();
   startDeviceStatusUpdates();
 });
