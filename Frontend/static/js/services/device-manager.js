@@ -1,0 +1,176 @@
+class DeviceManager {
+  constructor() {
+    this.devices = [];
+    this.devicesGrid = document.getElementById("devicesGrid");
+    this.emptyState = document.getElementById("emptyState");
+    this.deviceCount = document.getElementById("deviceCount");
+    this.currentGridSize = 4;
+    this.gridSizes = [4, 5, 6];
+  }
+
+  // Device status calculation
+  getDeviceStatus(device) {
+    if (!device.primary_mac || !device.primary_mac.last_seen) {
+      return "offline";
+    }
+
+    const lastSeen = new Date(device.primary_mac.last_seen);
+    const now = new Date();
+    const minutesSinceLastSeen = (now - lastSeen) / (1000 * 60);
+
+    if (minutesSinceLastSeen < 1) {
+      return "online";
+    } else if (minutesSinceLastSeen < 5) {
+      return "away";
+    } else {
+      return "offline";
+    }
+  }
+
+  async loadDevices() {
+    try {
+      const response = await fetch("/api/devices");
+      const data = await response.json();
+
+      if (data.error) {
+        window.logger.addLogEntry(
+          `Failed to load devices: ${data.error}`,
+          "error"
+        );
+        return;
+      }
+
+      console.log("Loaded devices:", data.devices);
+      this.devices = data.devices;
+
+      await this.updateDeviceDisplay();
+
+      window.logger.addLogEntry(
+        `Loaded ${data.devices.length} devices from database`,
+        "info"
+      );
+    } catch (error) {
+      console.error("Error loading devices:", error);
+      window.logger.addLogEntry("Failed to load devices", "error");
+    }
+  }
+
+  async updateDeviceDisplay() {
+    // Clear device grid
+    this.devicesGrid.innerHTML = "";
+
+    // Apply current grid size
+    const gridClass = `device-grid grid-${this.currentGridSize}`;
+    this.devicesGrid.className = gridClass;
+
+    // Sort devices by status (online first, then away, then offline)
+    const statusOrder = { online: 1, away: 2, offline: 3 };
+    const sortedDevices = [...this.devices].sort((a, b) => {
+      const statusA = this.getDeviceStatus(a);
+      const statusB = this.getDeviceStatus(b);
+      return statusOrder[statusA] - statusOrder[statusB];
+    });
+
+    // Add all devices to the single grid
+    for (const device of sortedDevices) {
+      const status = this.getDeviceStatus(device);
+      const deviceCard = await this.createDeviceCard(device, status);
+      this.devicesGrid.appendChild(deviceCard);
+    }
+
+    // Update total device count
+    this.deviceCount.textContent = this.devices.length;
+
+    // Show/hide empty state
+    if (this.devices.length === 0) {
+      this.emptyState.style.display = "block";
+      this.devicesGrid.style.display = "none";
+    } else {
+      this.emptyState.style.display = "none";
+      this.devicesGrid.style.display = "grid";
+    }
+  }
+
+  async createDeviceCard(device, status) {
+    const deviceCard = document.createElement("div");
+    deviceCard.className = `device-card ${status}`;
+    deviceCard.setAttribute("data-device-id", device.id);
+
+    const deviceInfo = document.createElement("div");
+    deviceInfo.className = "device-info";
+
+    const iconElement = document.createElement("div");
+    iconElement.className = "device-icon";
+
+    if (device.category && device.category.name) {
+      let svgContent = null;
+      if (window.svgLoader.isIconCached(device.category.name)) {
+        svgContent = window.svgLoader.getDeviceIcon(device.category.name);
+      } else {
+        svgContent = await window.svgLoader.getDeviceIconAsync(
+          device.category.name
+        );
+      }
+
+      if (svgContent) {
+        iconElement.innerHTML = svgContent;
+      } else {
+        iconElement.innerHTML = `<div class="unknown-device">?</div>`;
+      }
+    } else {
+      iconElement.innerHTML = `<div class="unknown-device">?</div>`;
+    }
+
+    const deviceName = document.createElement("div");
+    deviceName.className = "device-name";
+    deviceName.innerHTML = `<strong>${device.name}</strong>`;
+
+    deviceInfo.appendChild(iconElement);
+    deviceInfo.appendChild(deviceName);
+    deviceCard.appendChild(deviceInfo);
+
+    return deviceCard;
+  }
+
+  clearDevices() {
+    this.devices = [];
+    this.devicesGrid.innerHTML = "";
+    this.deviceCount.textContent = "0";
+  }
+
+  initializeGridSize() {
+    const gridSizeBtn = document.getElementById("gridSizeBtn");
+
+    if (!gridSizeBtn) return;
+
+    // Update button title to show current grid size
+    const updateButtonTitle = () => {
+      gridSizeBtn.title = `Change grid size (currently ${this.currentGridSize} columns)`;
+    };
+    updateButtonTitle();
+
+    // Add click event listener
+    gridSizeBtn.addEventListener("click", () => {
+      // Cycle to next grid size
+      const currentIndex = this.gridSizes.indexOf(this.currentGridSize);
+      const nextIndex = (currentIndex + 1) % this.gridSizes.length;
+      this.currentGridSize = this.gridSizes[nextIndex];
+
+      // Update button title
+      updateButtonTitle();
+
+      // Update the device grid
+      const gridClass = `device-grid grid-${this.currentGridSize}`;
+      this.devicesGrid.className = gridClass;
+
+      // Add visual feedback
+      gridSizeBtn.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        gridSizeBtn.style.transform = "";
+      }, 100);
+    });
+  }
+}
+
+// Create global instance
+window.deviceManager = new DeviceManager();
