@@ -1,0 +1,6 @@
+<!-- https://www.flaticon.com/free-icon/tablet_15348970 -->
+<svg id="Flat" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <rect fill="var(--light_purple)" height="62" rx="3" width="46" x="9" y="1"></rect>
+    <path d="m7.5 10.5h49v38h-49z" fill="var(--screen)" transform="matrix(0 1 -1 0 61.5 -2.5)"></path>
+    <rect fill="var(--dark_purple)" height="3" rx="1.5" width="8" x="28" y="57"></rect>
+</svg>

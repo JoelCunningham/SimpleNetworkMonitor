@@ -1,3 +1,16 @@
+:root {
+    --dark_purple: #645d89;
+    --light_purple: #968fbb;
+
+    --white: #f3f3ff;
+
+    --screen: #8ce6ff;
+
+    --red: #ef59a2;
+    --green: #8ceb82;
+    --yellow: #ffdc7a;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -36,7 +49,6 @@ body {
     padding: 2rem;
 }
 
-/* Devices Panel - Currently Using */
 .devices-panel {
     background: white;
     border-radius: 12px;
@@ -54,17 +66,101 @@ body {
     font-weight: 500;
 }
 
+.devices-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
 .device-card {
-    background: #f8f9fa;
+    background: #e3e8ee;
     border-radius: 8px;
     padding: 1.5rem;
     border-left: 4px solid #667eea;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .device-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.device-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.device-name {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.device-icon {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.device-icon svg {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+.unknown-device {
+    width: 32px;
+    height: 32px;
+    background: #e5e5e7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #666;
+}
+
+.device-ip {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.device-ports,
+.device-services {
+    margin-top: 1rem;
+}
+
+.device-ports strong,
+.device-services strong {
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0.25rem 0.25rem 0.25rem 0;
+}
+
+.badge.port {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.badge.service {
+    background: #f3e5f5;
+    color: #7b1fa2;
 }
 
 .logs {
@@ -100,6 +196,8 @@ body {
 }
 
 .empty-state {
+    grid-column: 1 / -1;
+    /* Span all columns */
     text-align: center;
     padding: 3rem;
     color: #666;
@@ -219,5 +317,26 @@ body {
     .scan-btn {
         width: 100%;
         justify-content: center;
+    }
+
+    .devices-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .device-card {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .devices-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1200px) and (min-width: 1025px) {
+    .devices-container {
+        grid-template-columns: repeat(4, 1fr);
     }
 }

@@ -74,35 +74,48 @@ function startScan() {
     });
 }
 
-function loadDevices() {
-  fetch("/api/devices")
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.error) {
-        addLogEntry(`Failed to load devices: ${data.error}`, "error");
-        return;
+async function loadDevices() {
+  try {
+    const response = await fetch("/api/devices");
+    const data = await response.json();
+
+    if (data.error) {
+      addLogEntry(`Failed to load devices: ${data.error}`, "error");
+      return;
+    }
+
+    console.log("Loaded devices:", data.devices);
+    discoveredDevices = data.devices;
+
+    // Clear the container completely
+    devicesContainer.innerHTML = "";
+
+    if (data.devices.length === 0) {
+      // Show empty state
+      devicesContainer.innerHTML = `
+        <div class="empty-state">
+          <svg fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+          </svg>
+          <p>No devices discovered yet. Start a scan to find devices on your network.</p>
+        </div>
+      `;
+    } else {
+      // Add devices to grid (process them sequentially to avoid race conditions)
+      for (const device of data.devices) {
+        await addDeviceToGrid(device);
       }
-      console.log("Loaded devices:", data.devices);
-      discoveredDevices = data.devices;
-      devicesContainer.innerHTML = "";
+    }
 
-      data.devices.forEach((device) => {
-        addDeviceToGrid(device);
-      });
-
-      updateDeviceCount();
-      addLogEntry(
-        `Loaded ${data.devices.length} devices from database`,
-        "info"
-      );
-    })
-    .catch((error) => {
-      console.error("Error loading devices:", error);
-      addLogEntry("Failed to load devices", "error");
-    });
+    updateDeviceCount();
+    addLogEntry(`Loaded ${data.devices.length} devices from database`, "info");
+  } catch (error) {
+    console.error("Error loading devices:", error);
+    addLogEntry("Failed to load devices", "error");
+  }
 }
 
-function addDeviceToGrid(device) {
+async function addDeviceToGrid(device) {
   const deviceCard = document.createElement("div");
   deviceCard.className = "device-card";
 
@@ -144,16 +157,41 @@ function addDeviceToGrid(device) {
     `;
   }
 
-  deviceCard.innerHTML = `
-      <div class="device-info">
-          <div><strong>${device.name}</strong></div>
-          ${
-            device.category && device.category.name
-              ? `<img src="/static/icons/devices/${device.category.name.toLowerCase()}.svg"</div>`
-              : "?"
-          }
-      </div>
-    `;
+  const deviceInfo = document.createElement("div");
+  deviceInfo.className = "device-info";
+
+  let iconElement;
+  if (device.category && device.category.name) {
+    try {
+      iconElement = await window.svgLoader.createDeviceIcon(
+        device.category.name
+      );
+    } catch (error) {
+      console.warn(`Failed to load icon for ${device.category.name}:`, error);
+      iconElement = document.createElement("div");
+      iconElement.className = "device-icon";
+      iconElement.innerHTML = `<div class="unknown-device">?</div>`;
+    }
+  } else {
+    iconElement = document.createElement("div");
+    iconElement.className = "device-icon";
+    iconElement.innerHTML = `<div class="unknown-device">?</div>`;
+  }
+
+  const deviceName = document.createElement("div");
+  deviceName.className = "device-name";
+  deviceName.innerHTML = `<strong>${device.name}</strong>`;
+
+  deviceInfo.appendChild(iconElement);
+  deviceInfo.appendChild(deviceName);
+  deviceCard.appendChild(deviceInfo);
+
+  // if (portsHtml) {
+  //   deviceCard.insertAdjacentHTML("beforeend", portsHtml);
+  // }
+  // if (servicesHtml) {
+  //   deviceCard.insertAdjacentHTML("beforeend", servicesHtml);
+  // }
 
   devicesContainer.appendChild(deviceCard);
 }
