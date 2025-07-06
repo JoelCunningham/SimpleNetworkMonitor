@@ -7,5 +7,5 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 function startScan() {
-  window.scanManager.startScan();
+  new ScanManager().startScan();
 }

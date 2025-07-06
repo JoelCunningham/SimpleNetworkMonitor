@@ -237,6 +237,28 @@ body {
     height: 8px;
     border-radius: 50%;
     z-index: 1;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0;
+    line-height: 1;
+    padding: 0;
+}
+
+.device-card:hover::before {
+    content: attr(data-last-seen);
+    width: auto;
+    height: auto;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    color: white;
+    font-weight: 500;
+    min-width: 8px;
+    min-height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .device-card.online::before {

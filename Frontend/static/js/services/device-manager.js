@@ -18,12 +18,33 @@ class DeviceManager {
     const now = new Date();
     const minutesSinceLastSeen = (now - lastSeen) / (1000 * 60);
 
-    if (minutesSinceLastSeen < 1) {
+    if (minutesSinceLastSeen < 5) {
       return "online";
-    } else if (minutesSinceLastSeen < 5) {
+    } else if (minutesSinceLastSeen < 10) {
       return "away";
     } else {
       return "offline";
+    }
+  }
+
+  // Format last seen time for display
+  getLastSeenText(device) {
+    if (!device.primary_mac || !device.primary_mac.last_seen) {
+      return "Never seen";
+    }
+
+    const lastSeen = new Date(device.primary_mac.last_seen);
+    const now = new Date();
+    const minutesSinceLastSeen = (now - lastSeen) / (1000 * 60);
+
+    if (minutesSinceLastSeen < 1) {
+      return "Just now";
+    } else if (minutesSinceLastSeen < 60) {
+      return `${Math.floor(minutesSinceLastSeen)}m ago`;
+    } else if (minutesSinceLastSeen < 1440) {
+      return `${Math.floor(minutesSinceLastSeen / 60)}h ago`;
+    } else {
+      return `${Math.floor(minutesSinceLastSeen / 1440)}d ago`;
     }
   }
 
@@ -63,12 +84,15 @@ class DeviceManager {
     const gridClass = `device-grid grid-${this.currentGridSize}`;
     this.devicesGrid.className = gridClass;
 
-    // Sort devices by status (online first, then away, then offline)
-    const statusOrder = { online: 1, away: 2, offline: 3 };
+    // Sort devices by last seen (most recent first)
     const sortedDevices = [...this.devices].sort((a, b) => {
-      const statusA = this.getDeviceStatus(a);
-      const statusB = this.getDeviceStatus(b);
-      return statusOrder[statusA] - statusOrder[statusB];
+      const lastSeenA = a.primary_mac?.last_seen
+        ? new Date(a.primary_mac.last_seen)
+        : new Date(0);
+      const lastSeenB = b.primary_mac?.last_seen
+        ? new Date(b.primary_mac.last_seen)
+        : new Date(0);
+      return lastSeenB - lastSeenA;
     });
 
     // Add all devices to the single grid
@@ -95,6 +119,10 @@ class DeviceManager {
     const deviceCard = document.createElement("div");
     deviceCard.className = `device-card ${status}`;
     deviceCard.setAttribute("data-device-id", device.id);
+
+    // Add last seen time for hover tooltip
+    const lastSeenText = this.getLastSeenText(device);
+    deviceCard.setAttribute("data-last-seen", lastSeenText);
 
     const deviceInfo = document.createElement("div");
     deviceInfo.className = "device-info";

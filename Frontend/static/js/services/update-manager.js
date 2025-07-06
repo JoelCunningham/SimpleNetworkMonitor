@@ -6,12 +6,7 @@ class UpdateManager {
   startDeviceStatusUpdates() {
     // Update device status every 30 seconds
     this.deviceUpdateInterval = setInterval(async () => {
-      if (
-        !window.scanManager.isScanning &&
-        window.deviceManager.devices.length > 0
-      ) {
-        await window.deviceManager.updateDeviceDisplay();
-      }
+      await window.deviceManager.updateDeviceDisplay();
     }, 30000);
   }
 

@@ -1,12 +1,13 @@
 class ScanManager {
   constructor() {
     this.isScanning = false;
-    this.statusText = document.getElementById("statusText");
     this.progressContainer = document.getElementById("progressContainer");
     this.progressBar = document.getElementById("progressBar");
-    this.progressText = document.getElementById("progressText");
     this.logs = document.getElementById("logs");
     this.logEntries = document.getElementById("logEntries");
+    this.scanningStatus = document.getElementById("lastScanTime");
+
+    this.previousScanTime = document.getElementById("lastScanTime").textContent;
 
     this.setupSocketListeners();
   }
@@ -16,30 +17,29 @@ class ScanManager {
 
     socket.on("scan_update", (data) => {
       window.logger.addLogEntry(data.message, data.type);
-      this.statusText.textContent = data.message;
     });
 
     socket.on("scan_progress", (data) => {
       const percent = data.progress;
-      this.progressBar.style.width = percent + "%";
-      this.progressText.textContent = `Processing device ${data.current} of ${data.total} (${percent}%)`;
+      if (this.progressBar) {
+        this.progressBar.style.width = percent + "%";
+      }
     });
 
     socket.on("scan_complete", (data) => {
       window.logger.addLogEntry(data.message, data.type);
-      this.statusText.textContent = data.message;
-      this.isScanning = false;
+      this.scanningStatus.textContent =
+        "Last scan: " + new Date().toLocaleString();
       this.progressContainer.style.display = "none";
-      this.progressText.style.display = "none";
+      this.isScanning = false;
       window.deviceManager.loadDevices();
     });
 
     socket.on("scan_error", (data) => {
       window.logger.addLogEntry(data.message, data.type);
-      this.statusText.textContent = "Scan failed: " + data.message;
-      this.isScanning = false;
+      this.scanningStatus.textContent = this.previousScanTime;
       this.progressContainer.style.display = "none";
-      this.progressText.style.display = "none";
+      this.isScanning = false;
     });
   }
 
@@ -53,19 +53,10 @@ class ScanManager {
           alert(data.error);
           return;
         }
-
         this.isScanning = true;
-        this.statusText.textContent = "Starting scan...";
-
-        // Clear previous results
-        window.deviceManager.clearDevices();
-
-        // Show progress elements
+        this.scanningStatus.textContent = "Starting scan...";
         this.progressContainer.style.display = "block";
-        this.progressText.style.display = "block";
-        this.logs.style.display = "block";
         this.progressBar.style.width = "0%";
-        this.logEntries.innerHTML = "";
       })
       .catch((error) => {
         console.error("Error starting scan:", error);
@@ -73,6 +64,3 @@ class ScanManager {
       });
   }
 }
-
-// Create global instance
-window.scanManager = new ScanManager();

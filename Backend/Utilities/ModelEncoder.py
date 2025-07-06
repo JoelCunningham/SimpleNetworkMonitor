@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel
 import json
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 
@@ -58,7 +58,10 @@ class ModelEncoder(json.JSONEncoder):
             return data
         
         if isinstance(o, datetime):
-            return o.isoformat()
+            if o.tzinfo is None:
+                o = o.replace(tzinfo=timezone.utc)
+            utc_dt = o.astimezone(timezone.utc)
+            return utc_dt.isoformat()
         
         if isinstance(o, Decimal):
             return float(o)

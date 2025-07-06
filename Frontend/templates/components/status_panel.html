@@ -2,9 +2,6 @@
   <div class="status-content">
     <div class="status-info">
       <div id="lastScanTime" class="last-scan-time">Last scan: Never</div>
-      <div id="scanningStatus" class="scanning-status" style="display: none">
-        Scanning now...
-      </div>
     </div>
     <div class="scan-controls">
       <button id="scanButton" class="scan-btn" onclick="startScan()">
@@ -16,6 +13,11 @@
         />
         Start Scan
       </button>
+    </div>
+  </div>
+  <div id="progressContainer" class="progress-container" style="display: none">
+    <div class="progress-bar-container">
+      <div id="progressBar" class="progress-bar"></div>
     </div>
   </div>
 </div>
