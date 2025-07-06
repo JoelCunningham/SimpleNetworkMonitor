@@ -89,6 +89,7 @@ async function loadDevices() {
 
     // Clear the container completely
     devicesContainer.innerHTML = "";
+    devicesContainer.className = `devices-container grid-${currentGridSize}`;
 
     if (data.devices.length === 0) {
       // Show empty state
@@ -208,6 +209,36 @@ function addLogEntry(message, type = "info") {
   logEntries.scrollTop = logEntries.scrollHeight;
 }
 
+// Grid size management
+let currentGridSize = 4;
+const gridSizes = [4, 5, 6];
+
+function initializeGridSize() {
+  const devicesContainer = document.getElementById("devicesContainer");
+  const gridSizeBtn = document.getElementById("gridSizeBtn");
+
+  // Set initial grid size
+  devicesContainer.className = `devices-container grid-${currentGridSize}`;
+
+  // Add click event listener
+  gridSizeBtn.addEventListener("click", function () {
+    // Cycle to next grid size
+    const currentIndex = gridSizes.indexOf(currentGridSize);
+    const nextIndex = (currentIndex + 1) % gridSizes.length;
+    currentGridSize = gridSizes[nextIndex];
+
+    // Update UI
+    devicesContainer.className = `devices-container grid-${currentGridSize}`;
+
+    // Add visual feedback
+    gridSizeBtn.style.transform = "scale(0.95)";
+    setTimeout(() => {
+      gridSizeBtn.style.transform = "";
+    }, 100);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   loadDevices();
+  initializeGridSize();
 });

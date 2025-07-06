@@ -68,7 +68,6 @@ body {
 
 .devices-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
     margin-top: 1.5rem;
 }
@@ -100,8 +99,8 @@ body {
 }
 
 .device-icon {
-    width: 80%;
-    height: 80%;
+    width: min(80px, 60%);
+    height: min(80px, 60%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,8 +108,10 @@ body {
 }
 
 .device-icon svg {
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
+    max-width: 64px;
+    max-height: 64px;
     object-fit: contain;
 }
 
@@ -295,7 +296,117 @@ body {
     margin-top: 2rem;
 }
 
+/* Devices header with grid size control */
+.devices-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.devices-header h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.grid-size-btn {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: none;
+    border: none;
+}
+
+.grid-size-btn img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Dynamic grid classes */
+.devices-container.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.devices-container.grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.devices-container.grid-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+/* Adjust device card sizing for different grid sizes */
+.devices-container.grid-5 .device-card {
+    padding: 1.2rem;
+}
+
+.devices-container.grid-6 .device-card {
+    padding: 1rem;
+}
+
+.devices-container.grid-6 .device-name {
+    font-size: 1rem;
+}
+
+.devices-container.grid-6 .device-icon {
+    width: min(60px, 50%);
+    height: min(60px, 50%);
+}
+
+.devices-container.grid-6 .device-icon svg {
+    max-width: 48px;
+    max-height: 48px;
+}
+
+/* Responsive adjustments for different grid sizes */
+@media (max-width: 1400px) {
+    .devices-container.grid-6 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+
+    .devices-container.grid-5,
+    .devices-container.grid-6 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .devices-container.grid-4,
+    .devices-container.grid-5,
+    .devices-container.grid-6 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
+
+    .devices-container.grid-4,
+    .devices-container.grid-5,
+    .devices-container.grid-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .devices-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .devices-header h2 {
+        justify-content: center;
+    }
+
+    .grid-size-btn {
+        align-self: center;
+    }
+
     .container {
         padding: 1rem;
     }
@@ -319,24 +430,16 @@ body {
         justify-content: center;
     }
 
-    .devices-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
     .device-card {
         padding: 1rem;
     }
 }
 
-@media (max-width: 1024px) and (min-width: 769px) {
-    .devices-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
+@media (max-width: 480px) {
 
-@media (max-width: 1200px) and (min-width: 1025px) {
-    .devices-container {
-        grid-template-columns: repeat(4, 1fr);
+    .devices-container.grid-4,
+    .devices-container.grid-5,
+    .devices-container.grid-6 {
+        grid-template-columns: 1fr;
     }
 }
