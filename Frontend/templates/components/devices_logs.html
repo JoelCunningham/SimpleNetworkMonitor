@@ -3,3 +3,42 @@
     <div class="log-entry">Ready to scan network...</div>
   </div>
 </div>
+
+<style>
+  .devices-logs-panel {
+    background: var(--section-background);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  #logEntries {
+    margin-top: 0.25rem;
+  }
+
+  .log-entry {
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.25rem;
+    background: var(--text-black);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--text-white);
+  }
+
+  .log-entry.error {
+    background: #ffeaea;
+    color: var(--danger-color);
+  }
+
+  .log-entry.warning {
+    background: #fff8e1;
+    color: var(--warning-color);
+  }
+
+  .log-entry.success {
+    background: #e8f5e8;
+    color: var(--success-color);
+  }
+</style>
