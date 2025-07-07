@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
-from sqlalchemy import Engine
+from sqlalchemy import Engine, text
 from sqlmodel import Session, SQLModel, create_engine, select
 
 from Backend import Exceptions
@@ -79,6 +79,18 @@ class DataRepository(Injectable):
         if saved_mac and address_data.discovered_info:
             DiscoveryRepository(self._database_connection).save_discoveries(saved_mac, address_data.discovered_info)
         
+    
+    def get_latest_scan_date(self) -> Optional[datetime]:
+        """Get the date of the latest scan."""
+        with self._database_connection.get_session() as session:
+            latest_scan = session.exec(
+                select(Mac).order_by(text("last_seen DESC"))
+            ).first()
+            
+            if latest_scan:
+                return latest_scan.last_seen
+            
+            return None
     
     def get_all_devices(self) -> List[Device]:
         """Get all devices from database."""

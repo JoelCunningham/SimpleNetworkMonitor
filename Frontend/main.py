@@ -49,6 +49,18 @@ def get_scan_status():
     return jsonify({'scanning': scanning})
 
 
+@app.route('/api/scan/latest')
+def get_latest_scan():
+    """Get the date of the lastest scan."""
+    repository = container.data_repository()
+    latest_scan = repository.get_latest_scan_date()
+    
+    if latest_scan:
+        return jsonify({'latest_scan': latest_scan.isoformat()})
+    else:
+        return jsonify({'latest_scan': None})
+
+
 @app.route('/api/icons/devices')
 def get_device_icons():
     """Get list of available device icons."""

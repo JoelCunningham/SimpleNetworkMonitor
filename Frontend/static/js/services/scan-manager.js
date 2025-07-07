@@ -7,8 +7,6 @@ class ScanManager {
     this.logEntries = document.getElementById("logEntries");
     this.scanningStatus = document.getElementById("lastScanTime");
 
-    this.previousScanTime = document.getElementById("lastScanTime").textContent;
-
     this.setupSocketListeners();
   }
 
@@ -28,8 +26,7 @@ class ScanManager {
 
     socket.on("scan_complete", (data) => {
       window.logger.addLogEntry(data.message, data.type);
-      this.scanningStatus.textContent =
-        "Last scan: " + new Date().toLocaleString();
+      this.setLastScanTime();
       this.progressContainer.style.display = "none";
       this.isScanning = false;
       window.deviceManager.updateDeviceDisplay(data.devices);
@@ -37,7 +34,6 @@ class ScanManager {
 
     socket.on("scan_error", (data) => {
       window.logger.addLogEntry(data.message, data.type);
-      this.scanningStatus.textContent = this.previousScanTime;
       this.progressContainer.style.display = "none";
       this.isScanning = false;
     });
@@ -61,6 +57,19 @@ class ScanManager {
       .catch((error) => {
         console.error("Error starting scan:", error);
         alert("Failed to start scan");
+      });
+  }
+
+  setLastScanTime() {
+    fetch("/api/scan/latest")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.latest_scan) {
+          this.scanningStatus.textContent =
+            "Last scan: " + new Date(data.latest_scan).toLocaleString();
+        } else {
+          this.scanningStatus.textContent = "Last scan: Never";
+        }
       });
   }
 }
