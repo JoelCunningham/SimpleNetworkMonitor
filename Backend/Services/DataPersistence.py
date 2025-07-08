@@ -114,22 +114,7 @@ class DataRepository(Injectable):
     def get_known_unknown_devices(self, scanned_devices: List[AddressData]) -> List[Device]:
         """Get all devices from database."""
         
-        devices = []
-        
-        with self._database_connection.get_session() as session:
-            devices = list(session.exec(select(Device)).all())
-            
-            # Manually load relationships for each device
-            for device in devices:
-                _ = device.macs 
-                _ = device.category  
-                _ = device.owner
-                _ = device.location
-                for mac in device.macs:
-                    _ = mac.discoveries
-                    _ = mac.ports
-                    for discovery in mac.discoveries:
-                        _ = discovery.services
+        devices = self.get_all_devices()
             
         for device_data in scanned_devices:
             if device_data.mac_address:

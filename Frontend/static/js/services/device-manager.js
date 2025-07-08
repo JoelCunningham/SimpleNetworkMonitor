@@ -54,22 +54,15 @@ class DeviceManager {
       const data = await response.json();
 
       if (data.error) {
-        window.logger.addLogEntry(
-          `Failed to load devices: ${data.error}`,
-          "error"
-        );
+        console.error(`Failed to load devices: ${data.error}`);
         return;
       }
 
       await this.updateDeviceDisplay(data.devices);
 
-      window.logger.addLogEntry(
-        `Loaded ${data.devices.length} devices from database`,
-        "info"
-      );
+      console.log(`Loaded ${data.devices.length} devices from database`);
     } catch (error) {
       console.error("Error loading devices:", error);
-      window.logger.addLogEntry("Failed to load devices", "error");
     }
   }
 

@@ -9,7 +9,7 @@
   "ping_count": 1,
 
   "ping_timeout_ms": 300,
-  "arp_timeout_ms": 500,
+  "arp_timeout_ms": 1000,
   "hostname_timeout_ms": 1000,
   "port_scan_timeout_ms": 1000,
   "service_detection_timeout_ms": 2000,
