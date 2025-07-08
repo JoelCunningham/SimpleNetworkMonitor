@@ -118,7 +118,8 @@ class DataRepository(Injectable):
             
         for device_data in scanned_devices:
             if device_data.mac_address:
-                has_device = next((d for d in devices if d.macs and d.macs[0].address == device_data.mac_address), None)
+                # Check if the scanned MAC matches ANY MAC associated with existing devices
+                has_device = next((d for d in devices if any(mac.address == device_data.mac_address for mac in d.macs)), None)
                 
                 if not has_device:
                     mac_data = MacRepository(self._database_connection).get_mac_by_address(device_data.mac_address)

@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, List, Optional
 
 from sqlmodel import Field, Relationship
 
+from Backend.Constants import UNKNOWN_DEVICE_NAME
 from Backend.Entities.BaseModel import BaseModel
 
 if TYPE_CHECKING:
@@ -32,7 +33,7 @@ class Device(BaseModel, table=True):
         device_name += self.location.name + " " if self.location else ""
         device_name += self.category.name if self.category else ""
     
-        return device_name.strip() or "Unknown Device"
+        return device_name.strip() or UNKNOWN_DEVICE_NAME
         
     @property
     def primary_mac(self) -> Optional["Mac"]:

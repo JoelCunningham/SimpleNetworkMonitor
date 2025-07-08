@@ -108,7 +108,11 @@ class DeviceManager {
   async createDeviceCard(device, status) {
     const deviceCard = document.createElement("div");
     deviceCard.className = `device-card ${status}`;
-    deviceCard.setAttribute("data-device-id", device.id);
+
+    // Use MAC address as identifier
+    if (device.primary_mac && device.primary_mac.address) {
+      deviceCard.setAttribute("data-mac-address", device.primary_mac.address);
+    }
 
     // Add last seen time for hover tooltip
     const lastSeenText = this.getLastSeenText(device);

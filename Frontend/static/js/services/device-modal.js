@@ -34,19 +34,21 @@ class DeviceModal {
     document.addEventListener("click", (event) => {
       const deviceCard = event.target.closest(".device-card");
       if (deviceCard) {
-        const deviceId = deviceCard.getAttribute("data-device-id");
-        if (deviceId) {
-          this.showDeviceDetails(deviceId);
+        const macAddress = deviceCard.getAttribute("data-mac-address");
+        if (macAddress) {
+          this.showDeviceDetails(macAddress);
         }
       }
     });
   }
 
-  async showDeviceDetails(deviceId) {
+  async showDeviceDetails(macAddress) {
     try {
-      const device = window.deviceManager.devices.find((d) => d.id == deviceId);
+      const device = window.deviceManager.devices.find(
+        (d) => d.primary_mac && d.primary_mac.address === macAddress
+      );
       if (!device) {
-        console.error("Device not found:", deviceId);
+        console.error("Device not found with MAC address:", macAddress);
         return;
       }
 

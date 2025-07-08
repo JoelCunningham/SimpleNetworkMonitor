@@ -8,6 +8,9 @@ class ScanManager {
   startScan() {
     if (this.isScanning) return;
 
+    this.isScanning = true;
+    this.updateUI();
+
     fetch("/api/scan/start", { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
@@ -15,15 +18,21 @@ class ScanManager {
           alert(data.error);
           return;
         }
-        this.isScanning = true;
-        this.updateUI();
 
-        // Poll for completion
-        this.pollScanStatus();
+        // Update devices directly with scan results
+        if (data.devices) {
+          window.deviceManager.updateDeviceDisplay(data.devices);
+        }
+
+        this.setLastScanTime();
       })
       .catch((error) => {
-        console.error("Error starting scan:", error);
-        alert("Failed to start scan");
+        console.error("Error during scan:", error);
+        alert("Failed to complete scan");
+      })
+      .finally(() => {
+        this.isScanning = false;
+        this.updateUI();
       });
   }
 
@@ -47,30 +56,6 @@ class ScanManager {
         `;
       }
     }
-  }
-
-  pollScanStatus() {
-    const checkStatus = () => {
-      fetch("/api/scan/status")
-        .then((response) => response.json())
-        .then((data) => {
-          if (!data.scanning) {
-            this.isScanning = false;
-            this.updateUI();
-            this.setLastScanTime();
-            window.deviceManager.loadDevices(); // Refresh devices
-          } else {
-            setTimeout(checkStatus, 1000); // Check again in 1 second
-          }
-        })
-        .catch((error) => {
-          console.error("Error checking scan status:", error);
-          this.isScanning = false;
-          this.updateUI();
-          this.setLastScanTime();
-        });
-    };
-    checkStatus();
   }
 
   setLastScanTime() {
