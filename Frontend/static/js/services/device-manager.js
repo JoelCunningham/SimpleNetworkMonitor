@@ -48,6 +48,70 @@ class DeviceManager {
     }
   }
 
+  // Check if device has HTTP ports and return appropriate URL
+  getDeviceHttpUrl(device) {
+    if (!device.primary_mac || !device.primary_mac.last_ip) {
+      return null;
+    }
+
+    const ip = device.primary_mac.last_ip;
+    let httpPorts = [];
+
+    if (device.macs && Array.isArray(device.macs)) {
+      device.macs.forEach((mac) => {
+        if (mac.ports && Array.isArray(mac.ports)) {
+          mac.ports.forEach((port) => {
+            if (port && typeof port === "object") {
+              const portNumber = port.port;
+              const service = port.service?.toLowerCase() || "";
+
+              if (
+                portNumber === 80 ||
+                portNumber === 8080 ||
+                portNumber === 443 ||
+                portNumber === 8443 ||
+                service.includes("http")
+              ) {
+                httpPorts.push({
+                  port: portNumber,
+                  isHttps:
+                    portNumber === 443 ||
+                    portNumber === 8443 ||
+                    service.includes("https"),
+                });
+              }
+            }
+          });
+        }
+      });
+    }
+
+    if (httpPorts.length === 0) {
+      return null;
+    }
+
+    // Prefer HTTP, then HTTPS, then others
+    const sortedPorts = httpPorts.sort((a, b) => {
+      if (!a.isHttps && b.isHttps) return -1;
+      if (a.isHttps && !b.isHttps) return 1;
+      if (a.port === 80) return -1;
+      if (b.port === 80) return 1;
+      if (a.port === 443) return -1;
+      if (b.port === 443) return 1;
+      return a.port - b.port;
+    });
+
+    const selectedPort = sortedPorts[0];
+    const protocol = selectedPort.isHttps ? "https" : "http";
+    const portSuffix =
+      (selectedPort.port === 80 && !selectedPort.isHttps) ||
+      (selectedPort.port === 443 && selectedPort.isHttps)
+        ? ""
+        : `:${selectedPort.port}`;
+
+    return `${protocol}://${ip}${portSuffix}`;
+  }
+
   async loadDevices() {
     try {
       const response = await fetch("/api/devices");
@@ -150,6 +214,27 @@ class DeviceManager {
     deviceInfo.appendChild(iconElement);
     deviceInfo.appendChild(deviceName);
     deviceCard.appendChild(deviceInfo);
+
+    const httpUrl = this.getDeviceHttpUrl(device);
+    if (httpUrl) {
+      const linkButton = document.createElement("button");
+      linkButton.className = "device-link-btn";
+      linkButton.title = `Open ${httpUrl} in new tab`;
+      linkButton.innerHTML = `
+        <img
+          src="/static/icons/external-link.svg"
+          alt="Open device portal"
+          class="external-link-icon"
+        />
+      `;
+
+      linkButton.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent opening device modal
+        window.open(httpUrl, "_blank");
+      });
+
+      deviceCard.appendChild(linkButton);
+    }
 
     return deviceCard;
   }

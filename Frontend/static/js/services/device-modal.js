@@ -65,6 +65,24 @@ class DeviceModal {
     document.getElementById("modalDeviceName").textContent =
       device.name || "Unknown Device";
 
+    // Handle HTTP link button
+    const modalLinkBtn = document.getElementById("modalLinkBtn");
+    const httpUrl = window.deviceManager.getDeviceHttpUrl(device);
+    if (httpUrl && modalLinkBtn) {
+      modalLinkBtn.style.display = "flex";
+      modalLinkBtn.title = `Open ${httpUrl} in new tab`;
+
+      const newLinkBtn = modalLinkBtn.cloneNode(true);
+      modalLinkBtn.parentNode.replaceChild(newLinkBtn, modalLinkBtn);
+
+      newLinkBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.open(httpUrl, "_blank");
+      });
+    } else if (modalLinkBtn) {
+      modalLinkBtn.style.display = "none";
+    }
+
     // General Information
     document.getElementById("modalDeviceNameValue").textContent =
       device.name || "-";
