@@ -8,6 +8,7 @@ from Backend.Objects.AddressData import AddressData
 from Backend.Objects.DiscoveryInfo import DiscoveryInfo
 from Backend.Objects.Injectable import Injectable
 from Backend.Objects.PortInfo import PortInfo
+from Backend.Objects.ScanOptions import ScanOptions
 from Backend.Objects.ServiceInfo import ServiceInfo
 from Backend.Services.AppConfiguration import AppConfig
 from Backend.Services.Discovery.MdnsDiscoverer import MdnsDiscoverer
@@ -55,27 +56,50 @@ class NetworkScanner(Injectable):
         self._upnp_discoverer = upnp_discoverer
         self._mdns_discoverer = mdns_discoverer
     
-    def scan_network(self) -> List[AddressData]:
+    def scan_network(self, scan_options: Optional[ScanOptions] = None) -> List[AddressData]:
         """Scan the configured network range."""        
         subnet = self._config.network.subnet()
         min_ip = self._config.network.min_ip()
         max_ip = self._config.network.max_ip()
         max_threads = self._config.network.max_threads()
         
+        if scan_options is None:
+            scan_options = self._get_config_based_scan_options()
+        
         devices: List[AddressData] = []
         ip_range: List[str] = [f"{subnet}.{i}" for i in range(min_ip, max_ip + 1)]
 
         with ThreadPoolExecutor(max_workers=max_threads) as executor:
-            futures = [executor.submit(self.scan_ip, ip) for ip in ip_range]
+            futures = [executor.submit(self.scan_ip, ip, scan_options) for ip in ip_range]
             for future in as_completed(futures):
                 device: Optional[AddressData] = future.result()
                 if device is not None:
                     devices.append(device)
         return devices
     
-    def scan_ip(self, ip_address: str) -> Optional[AddressData]:
-        """Scan a specific IP address."""
+    def _get_config_based_scan_options(self) -> ScanOptions:
+        """Create scan options based on current configuration."""
         feature = self._config.feature
+        return ScanOptions(
+            mac_resolution=feature.mac_resolution_enabled(),
+            ttl_resolution=feature.ttl_resolution_enabled(),
+            hostname_resolution=feature.hostname_resolution_enabled(),
+            mac_vendor_lookup=feature.mac_vendor_lookup_enabled(),
+            os_detection=feature.os_detection_enabled(),
+            port_scan=feature.port_scan_enabled(),
+            detect_http=feature.detect_http_enabled(),
+            detect_ssh=feature.detect_ssh_enabled(),
+            detect_banners=feature.detect_banners_enabled(),
+            discover_netbios=feature.discover_netbios_enabled(),
+            discover_upnp=feature.discover_upnp_enabled(),
+            discover_mdns=feature.discover_mdns_enabled()
+        )
+    
+    def scan_ip(self, ip_address: str, scan_options: Optional[ScanOptions] = None) -> Optional[AddressData]:
+        """Scan a specific IP address."""
+        # Use provided scan options or default to config-based scanning
+        if scan_options is None:
+            scan_options = self._get_config_based_scan_options()
                 
         # Initialize data containers
         mac_address: Optional[str] = None
@@ -95,32 +119,32 @@ class NetworkScanner(Injectable):
             return None
                 
         # Step 2: MAC resolution
-        if feature.mac_resolution_enabled():
+        if scan_options.mac_resolution:
             print(f"{ip_address} MAC resolution started")
             arp_result = self._mac_resolver.resolve_mac_address(ip_address)
             if arp_result:
                 mac_address, arp_time_ms = arp_result
         
         # Step 3: Extract TTL from ping output
-        if feature.ttl_resolution_enabled() and ping_out:
+        if scan_options.ttl_resolution and ping_out:
             print(f"{ip_address} Extracting TTL from ping output")
             ttl = self._extract_ttl_from_ping_output(ping_out)
         
         # Step 4: Device enrichment (hostname, vendor, OS detection)
-        if feature.hostname_resolution_enabled():
+        if scan_options.hostname_resolution:
             print(f"{ip_address} Resolving hostname")
             hostname = self._hostname_resolver.resolve_hostname(ip_address)
         
-        if feature.mac_vendor_lookup_enabled() and mac_address:
+        if scan_options.mac_vendor_lookup and mac_address:
             print(f"{ip_address} Looking up MAC vendor")
             mac_vendor = self._vendor_lookup.get_vendor(mac_address)
         
-        if feature.os_detection_enabled() and ttl:
+        if scan_options.os_detection and ttl:
             print(f"{ip_address} Detecting OS from TTL")
             os_guess = self._os_lookup.detect_from_ttl(ttl)
         
         # Step 5: Port scanning
-        if feature.port_scan_enabled():
+        if scan_options.port_scan:
             print(f"{ip_address} Port scanning started")
             open_ports = self._port_scanner.scan_ports(ip_address, COMMON_PORTS)
         
@@ -131,17 +155,17 @@ class NetworkScanner(Injectable):
             service_name = port_info.service.lower() if port_info.service else "unknown"
         
             # HTTP detection
-            if feature.detect_http_enabled() and (port_info.port in HTTP_PORTS or HTTP_SERVICE_NAME in service_name):
+            if scan_options.detect_http and (port_info.port in HTTP_PORTS or HTTP_SERVICE_NAME in service_name):
                 print(f"{ip_address}:{port_info.port} Checking HTTP service")
                 service_info = self._http_detector.detect_service(ip_address, port_info.port)
             
             # SSH detection
-            if feature.detect_ssh_enabled() and (port_info.port == SSH_PORT or SSH_SERVICE_NAME in service_name):
+            if scan_options.detect_ssh and (port_info.port == SSH_PORT or SSH_SERVICE_NAME in service_name):
                 print(f"{ip_address}:{port_info.port} Checking SSH service")
                 service_info = self._ssh_detector.detect_service(ip_address, port_info.port)
             
             # Generic banner grabbing
-            if feature.detect_banners_enabled() and service_name in BANNER_SERVICE_NAMES:
+            if scan_options.detect_banners and service_name in BANNER_SERVICE_NAMES:
                 print(f"{ip_address}:{port_info.port} Checking banner")
                 banner = self._banner_detector.grab_banner(ip_address, port_info.port)
                 if banner:
@@ -154,19 +178,19 @@ class NetworkScanner(Injectable):
                 services_info[port_info.port] = service_info
         
         # Step 7: Device discovery
-        if feature.discover_netbios_enabled():
+        if scan_options.discover_netbios:
             print(f"{ip_address} Discovering NetBIOS devices")
             discovery_info = self._netbios_discoverer.discover(ip_address)
             if discovery_info:
                 discovered_info.append(discovery_info)
         
-        if feature.discover_upnp_enabled():
+        if scan_options.discover_upnp:
             print(f"{ip_address} Discovering UPnP devices")
             discovery_info = self._upnp_discoverer.discover(ip_address)
             if discovery_info:
                 discovered_info.append(discovery_info)
         
-        if feature.discover_mdns_enabled():
+        if scan_options.discover_mdns:
             print(f"{ip_address} Discovering mDNS devices")
             discovery_info = self._mdns_discoverer.discover(ip_address)
             if discovery_info:

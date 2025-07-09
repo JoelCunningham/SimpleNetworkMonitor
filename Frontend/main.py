@@ -8,13 +8,13 @@ from flask import Flask, jsonify, render_template
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from Backend.Constants import DEFAULT_CONFIG_PATH
+from Backend.Objects.ScanOptions import ScanOptions
 from Backend.Services.ServiceContainer import ServiceContainer
 from Backend.Utilities.ModelEncoder import ModelEncoder
 
 app = Flask(__name__)
 container = ServiceContainer(DEFAULT_CONFIG_PATH)
 scanning = False
-
 
 @app.route('/')
 def index():
@@ -33,27 +33,27 @@ def start_scan():
     scanning = True
     
     try:
-        # Perform scan synchronously
         scanner = container.network_scanner()
-        repository = container.data_repository()
+        mac_repository = container.mac_repository()
+        data_repository = container.data_repository()
         
-        scanned_devices = scanner.scan_network()
+        options = ScanOptions.mac_only()
+        #options = ScanOptions.full_scan()
+        scanned_devices = scanner.scan_network(options)
         
         if not scanned_devices:
             return jsonify({'devices': []})
-        
-        saved_count = 0
-        
+                
         for device in scanned_devices:
             if device.mac_address:
                 try:
-                    repository.save_scan_result(device)
-                    saved_count += 1
+                    mac_repository.save_mac(device)
+                    #data_repository.save_scan_result(device)
                 except Exception as e:
                     print(f'Failed to save device {device.ip_address}: {str(e)}')
        
         # Get all devices and prepare for frontend
-        all_devices = repository.get_known_unknown_devices(scanned_devices)  
+        all_devices = data_repository.get_known_unknown_devices(scanned_devices)  
         all_devices_raw: List[Any] = []
         for device in all_devices:
             device_raw = json.loads(json.dumps(device, cls=ModelEncoder))

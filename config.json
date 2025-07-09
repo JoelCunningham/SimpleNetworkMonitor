@@ -5,7 +5,7 @@
   "min_scan_ip": 1,
   "max_scan_ip": 254,
 
-  "max_threads": 50,
+  "max_threads": 254,
   "ping_count": 3,
 
   "ping_timeout_ms": 2000,
@@ -16,8 +16,8 @@
   "discovery_timeout_ms": 3000,
 
   "mac_resolution": true,
-  "hostname_resolution": true,
   "ttl_resolution": true,
+  "hostname_resolution": true,
   "mac_vendor_lookup": true,
   "os_detection": true,
   "port_scan": true,
