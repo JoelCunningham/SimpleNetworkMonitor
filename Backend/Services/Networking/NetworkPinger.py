@@ -55,7 +55,10 @@ class NetworkPinger(Injectable):
             success = result.returncode == SUCCESSFUL_PING_EXIT_CODE
             return (success, int(ping_time.value), result.stdout if success else None)
             
-        except (subprocess.TimeoutExpired, subprocess.SubprocessError) as e:
+        except (subprocess.TimeoutExpired) as e:
+           return None, 0, None
+       
+        except (subprocess.SubprocessError) as e:
             print(f"Ping error for {ip_address}: {e}")
             return None, 0, None
 
