@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-from typing import Any, List
+from typing import Any, Callable, List
 
 from flask import Flask, jsonify, render_template
 
@@ -21,58 +21,20 @@ def index():
     """Main dashboard page."""
     return render_template('index.html')
 
-
-@app.route('/api/scan/start', methods=['POST'])
-def start_scan():
-    """Start a network scan and return results."""
-    global scanning
-    
-    if scanning:
-        return jsonify({'error': 'Scan already in progress'}), 400
-    
-    scanning = True
-    
-    try:
-        scanner = container.network_scanner()
-        mac_repository = container.mac_repository()
-        data_repository = container.data_repository()
-        
-        options = ScanOptions.mac_only()
-        #options = ScanOptions.full_scan()
-        scanned_devices = scanner.scan_network(options)
-        
-        if not scanned_devices:
-            return jsonify({'devices': []})
-                
-        for device in scanned_devices:
-            if device.mac_address:
-                try:
-                    mac_repository.save_mac(device)
-                    #data_repository.save_scan_result(device)
-                except Exception as e:
-                    print(f'Failed to save device {device.ip_address}: {str(e)}')
-       
-        # Get all devices and prepare for frontend
-        all_devices = data_repository.get_known_unknown_devices(scanned_devices)  
-        all_devices_raw: List[Any] = []
-        for device in all_devices:
-            device_raw = json.loads(json.dumps(device, cls=ModelEncoder))
-            all_devices_raw.append(device_raw)
-        
-        return jsonify({'devices': all_devices_raw})
-        
-    except Exception as e:
-        print(f'Scan error: {str(e)}')
-        return jsonify({'error': f'Scan failed: {str(e)}'}), 500
-    finally:
-        scanning = False
+@app.route('/api/scan/basic', methods=['POST'])
+def start_basic_scan():
+    """Start a basic network scan and return results."""
+    options = ScanOptions.mac_only()
+    repository = container.mac_repository()
+    return _perform_scan(options, repository.save_mac)
 
 
-@app.route('/api/scan/status')
-def get_scan_status():
-    """Get current scan status."""
-    return jsonify({'scanning': scanning})
-
+@app.route('/api/scan/full', methods=['POST'])
+def start_full_scan():
+    """Start a full network scan and return results."""
+    options = ScanOptions.full_scan()
+    repository = container.data_repository()
+    return _perform_scan(options, repository.save_scan_result)
 
 @app.route('/api/scan/latest')
 def get_latest_scan():
@@ -84,7 +46,6 @@ def get_latest_scan():
         return jsonify({'latest_scan': latest_scan.isoformat()})
     else:
         return jsonify({'latest_scan': None})
-
 
 @app.route('/api/icons/devices')
 def get_device_icons():
@@ -103,17 +64,45 @@ def get_device_icons():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/api/devices')
-def get_devices():
-    """Get all devices from database."""
+def _perform_scan(scan_options: ScanOptions, save_device_func: Callable[[Any], Any]):
+    """Common logic for performing network scans."""
+    global scanning
+    
+    if scanning:
+        return jsonify({'error': 'Scan already in progress'}), 400
+    
+    scanning = True
+    
     try:
-        device_repo = container.data_repository()
-        devices = device_repo.get_all_devices()
-        devices_raw = json.loads(json.dumps(devices, cls=ModelEncoder))
-        return jsonify({'devices': devices_raw})
+        scanner = container.network_scanner()
+        data_repository = container.data_repository()
+        
+        scanned_devices = scanner.scan_network(scan_options)
+        
+        if not scanned_devices:
+            return jsonify({'devices': []})
+                
+        for device in scanned_devices:
+            if device.mac_address:
+                try:
+                    save_device_func(device)
+                except Exception as e:
+                    print(f'Failed to save device {device.ip_address}: {str(e)}')
+       
+        # Get all devices and prepare for frontend
+        all_devices = data_repository.get_known_unknown_devices(scanned_devices)  
+        all_devices_raw: List[Any] = []
+        for device in all_devices:
+            device_raw = json.loads(json.dumps(device, cls=ModelEncoder))
+            all_devices_raw.append(device_raw)
+        
+        return jsonify({'devices': all_devices_raw})
+        
     except Exception as e:
-        print(f"Failed to load devices: {str(e)}")
-        return jsonify({'error': f'Failed to load devices: {str(e)}'}), 500
+        print(f'Scan error: {str(e)}')
+        return jsonify({'error': f'Scan failed: {str(e)}'}), 500
+    finally:
+        scanning = False
 
 
 if __name__ == '__main__':

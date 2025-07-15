@@ -112,24 +112,6 @@ class DeviceManager {
     return `${protocol}://${ip}${portSuffix}`;
   }
 
-  async loadDevices() {
-    try {
-      const response = await fetch("/api/devices");
-      const data = await response.json();
-
-      if (data.error) {
-        console.error(`Failed to load devices: ${data.error}`);
-        return;
-      }
-
-      await this.updateDeviceDisplay(data.devices);
-
-      console.log(`Loaded ${data.devices.length} devices from database`);
-    } catch (error) {
-      console.error("Error loading devices:", error);
-    }
-  }
-
   async updateDeviceDisplay(devices = this.devices) {
     if (!devices || devices.length === 0) return;
 

@@ -5,13 +5,15 @@ class ScanManager {
     this.scanButton = document.getElementById("scanButton");
   }
 
-  startScan() {
+  startScan(full = false) {
     if (this.isScanning) return;
 
     this.isScanning = true;
     this.updateUI();
 
-    fetch("/api/scan/start", { method: "POST" })
+    const endpoint = full ? "/api/scan/full" : "/api/scan/basic";
+
+    fetch(endpoint, { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
@@ -19,7 +21,6 @@ class ScanManager {
           return;
         }
 
-        // Update devices directly with scan results
         if (data.devices) {
           window.deviceManager.updateDeviceDisplay(data.devices);
         }
@@ -71,3 +72,5 @@ class ScanManager {
       });
   }
 }
+
+window.scanManager = new ScanManager();
