@@ -67,13 +67,16 @@ class DataRepository(Injectable):
     def __init__(self, database_connection: DatabaseConnection) -> None:
         self._database_connection = database_connection
     
-    def save_scan_result(self, address_data: AddressData) -> None:
-        """Save or update device data."""
-        
-        saved_mac = None
-        
+    def save_mac_scan(self, address_data: AddressData) -> None:
+        """Save or update device data for mac only scan."""
         if address_data.mac_address:
-            saved_mac = MacRepository(self._database_connection).save_mac(address_data)
+             MacRepository(self._database_connection).save_mac(address_data, True)
+        
+    def save_full_scan(self, address_data: AddressData) -> None:
+        """Save or update device data for full scan."""
+        saved_mac = None
+        if address_data.mac_address:
+            saved_mac = MacRepository(self._database_connection).save_mac(address_data, False)
         if saved_mac and address_data.open_ports:
             PortRepository(self._database_connection).save_port(saved_mac, address_data.open_ports, address_data.services_info)      
         if saved_mac and address_data.discovered_info:
@@ -137,7 +140,8 @@ class MacRepository(Injectable):
     def __init__(self, database_connection: DatabaseConnection) -> None:
         self._database_connection = database_connection
 
-    def save_mac(self, address_data: AddressData) -> Mac:
+    def save_mac(self, address_data: AddressData, preserve: bool = False) -> Mac:
+        """Save or update MAC address data."""
         if address_data.mac_address is None:
             raise Exceptions.ValidationError("AddressData does not contain a MAC address.")
     
@@ -150,11 +154,18 @@ class MacRepository(Injectable):
                 mac.ping_time_ms = address_data.ping_time_ms
                 mac.arp_time_ms = address_data.arp_time_ms
                 mac.last_ip = address_data.ip_address
-                mac.last_seen = datetime.now(timezone.utc)      
-                mac.hostname = address_data.hostname
-                mac.vendor = address_data.mac_vendor 
-                mac.os_guess = address_data.os_guess
-                mac.ttl = address_data.ttl
+                mac.last_seen = datetime.now(timezone.utc)
+                
+                if preserve:
+                    mac.hostname = address_data.hostname or mac.hostname
+                    mac.vendor = address_data.mac_vendor or mac.vendor
+                    mac.os_guess = address_data.os_guess or mac.os_guess
+                    mac.ttl = address_data.ttl or mac.ttl
+                else:
+                    mac.hostname = address_data.hostname
+                    mac.vendor = address_data.mac_vendor
+                    mac.os_guess = address_data.os_guess
+                    mac.ttl = address_data.ttl
             else:
                 mac = Mac(
                     address=address_data.mac_address,
@@ -172,6 +183,7 @@ class MacRepository(Injectable):
             session.commit()
             session.refresh(mac)
             return mac
+    
     
     def get_mac_by_address(self, mac_address: str) -> Optional[Mac]:
         with self._database_connection.get_session() as session:

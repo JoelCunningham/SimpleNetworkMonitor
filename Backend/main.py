@@ -32,7 +32,7 @@ def main():
             print(f"IP: {device.ip_address}")
             
             if device.mac_address:
-                repository.save_scan_result(device)
+                repository.save_full_scan(device)
                 print(f"  MAC: {device.mac_address}")
             
             if device.hostname:

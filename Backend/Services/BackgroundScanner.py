@@ -97,10 +97,10 @@ class BackgroundScanner:
         
         if full_scan:
             scan_options = ScanOptions.full_scan()
-            save_func = self.data_repository.save_scan_result
+            save_func = self.data_repository.save_full_scan
         else:
             scan_options = ScanOptions.mac_only()
-            save_func = self.mac_repository.save_mac                
+            save_func = self.data_repository.save_mac_scan                
         
         scanned_devices = self.network_scanner.scan_network(scan_options)
         
