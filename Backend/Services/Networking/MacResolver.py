@@ -1,7 +1,8 @@
 import socket
+import threading
 from typing import Optional, Tuple
 
-from scapy.all import ARP, Ether, srp, get_if_list, get_if_addr # type: ignore
+from scapy.all import ARP, Ether, get_if_addr, get_if_list, srp  # type: ignore
 from scapy.packet import Packet
 
 from Backend.Constants import BROADCAST_MAC_ADDRESS, MAC_ADDRESS_ATTR
@@ -15,6 +16,7 @@ class MacResolver(Injectable):
     
     def __init__(self, config: AppConfig) -> None:
         self._config = config
+        self._lock = threading.Lock()
     
     def resolve_mac_address(self, ip_address: str) -> Optional[Tuple[str, int]]:
         """Resolve MAC address for IP."""        
@@ -25,12 +27,13 @@ class MacResolver(Injectable):
         iface = self._find_interface(self._get_local_ip())
 
         arp_time = Time()
-        with time_operation(arp_time):
-            try:
-                results = srp(packet, iface=iface, timeout=self._config.timeout.arp_timeout_s(), verbose=0)[0]   # type: ignore
-            except Exception as e:
-                print(f"ARP lookup error for {ip_address}: {e}")
-                return None
+        with self._lock:
+            with time_operation(arp_time):
+                try:
+                    results = srp(packet, iface=iface, timeout=self._config.timeout.arp_timeout_s(), verbose=0)[0]   # type: ignore
+                except Exception as e:
+                    print(f"ARP lookup error for {ip_address}: {e}")
+                    return None
 
         if results:
             received_pkt = results[0][1]
