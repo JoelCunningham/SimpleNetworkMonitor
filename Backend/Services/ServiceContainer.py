@@ -3,6 +3,7 @@ from typing import Any, Dict
 from mac_vendor_lookup import MacLookup  # type: ignore
 
 from Backend.Services.AppConfiguration import AppConfig
+from Backend.Services.BackgroundScanner import BackgroundScanner
 from Backend.Services.DataPersistence import DatabaseConnection, DataRepository, DiscoveryRepository, MacRepository, PortRepository
 from Backend.Services.Discovery.MdnsDiscoverer import MdnsDiscoverer
 from Backend.Services.Discovery.NetBiosDiscoverer import NetBiosDiscoverer
@@ -72,9 +73,15 @@ class ServiceContainer:
             netbios_discoverer, upnp_discoverer, mdns_discoverer
         )
         
+        # Background Scanner
+        background_scanner = BackgroundScanner(
+            config, network_scanner, data_repository, mac_repository
+        )
+        
         return {
             'config': config,
             'network_scanner': network_scanner,
+            'background_scanner': background_scanner,
             'database_connection': database_connection,
             'data_repository': data_repository,
             'discovery_repository': discovery_repository,
@@ -102,6 +109,8 @@ class ServiceContainer:
         return self._services['config']
     def network_scanner(self) -> NetworkScanner:
         return self._services['network_scanner']
+    def background_scanner(self) -> BackgroundScanner:
+        return self._services['background_scanner']
     def database_connection(self) -> DatabaseConnection:
         return self._services['database_connection']
     def data_repository(self) -> DataRepository:
@@ -140,5 +149,7 @@ class ServiceContainer:
     
     def close(self) -> None:
         """Clean up resources."""
+        if self.background_scanner():
+            self.background_scanner().stop()
         if self.database_connection():
             self.database_connection().close()

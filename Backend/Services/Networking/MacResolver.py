@@ -32,7 +32,7 @@ class MacResolver(Injectable):
                 try:
                     results = srp(packet, iface=iface, timeout=self._config.timeout.arp_timeout_s(), verbose=0)[0]   # type: ignore
                 except Exception as e:
-                    print(f"ARP lookup error for {ip_address}: {e}")
+                    print(f"WARN arp lookup error for {ip_address}: {e}")
                     return None
 
         if results:

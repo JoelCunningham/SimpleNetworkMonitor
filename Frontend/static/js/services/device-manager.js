@@ -8,6 +8,16 @@ class DeviceManager {
     this.gridSizes = [4, 5, 6];
   }
 
+  // Update devices
+  async refreshDevices() {
+    const response = await fetch("/api/devices");
+    const data = await response.json();
+
+    if (data.devices) {
+      window.deviceManager.updateDeviceDisplay(data.devices);
+    }
+  }
+
   // Device status calculation
   getDeviceStatus(device) {
     if (!device.primary_mac || !device.primary_mac.last_seen) {

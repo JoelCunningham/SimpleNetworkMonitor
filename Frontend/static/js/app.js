@@ -1,20 +1,29 @@
 document.addEventListener("DOMContentLoaded", async function () {
   await window.svgLoader.preloadCommonIcons();
 
-  window.scanManager.startScan(true);
+  // Load initial device data
+  await window.deviceManager.refreshDevices();
 
-  window.scanManager.setLastScanTime();
+  window.scanManager.updateScanStatus();
   window.deviceManager.initializeGridSize();
 
-  this.deviceUpdateInterval = setInterval(async () => {
-    await window.scanManager.startScan(false);
-  }, 60000); // Update every 60 seconds
-
-  this.deviceUpdateInterval = setInterval(async () => {
-    await window.scanManager.startScan(true);
-  }, 300000); // Update every 5 minutes
+  // Check scan status every 3 seconds
+  this.statusUpdateInterval = setInterval(async () => {
+    if (window.scanManager.isLiveMode()) {
+      newScan = await window.scanManager.updateScanStatus();
+      if (newScan) {
+        await window.deviceManager.refreshDevices();
+      }
+    } else {
+      window.deviceManager.updateDeviceDisplay();
+    }
+  }, 3000);
 });
 
-function startScan() {
-  new ScanManager().startScan();
+function toggleViewMode() {
+  window.scanManager.toggleViewMode();
+}
+
+function refreshDevices() {
+  window.deviceManager.refreshDevices();
 }

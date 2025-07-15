@@ -59,6 +59,6 @@ class NetworkPinger(Injectable):
            return None, 0, None
        
         except (subprocess.SubprocessError) as e:
-            print(f"Ping error for {ip_address}: {e}")
+            print(f"WARN ping error for {ip_address}: {e}")
             return None, 0, None
 

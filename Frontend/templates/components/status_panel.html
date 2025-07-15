@@ -4,14 +4,18 @@
       <div id="lastScanTime" class="last-scan-time">Last scan: Never</div>
     </div>
     <div class="scan-controls">
-      <button id="scanButton" class="scan-btn" onclick="startScan()">
+      <button
+        id="viewModeToggle"
+        class="toggle-btn active"
+        onclick="toggleViewMode()"
+      >
         <img
           src="/static/icons/refresh.svg"
           alt="Refresh"
           class="scan-icon"
           style="width: 1em; height: 1em; vertical-align: middle"
         />
-        Start Scan
+        Live view
       </button>
     </div>
   </div>
@@ -47,7 +51,7 @@
     align-items: center;
   }
 
-  .scan-btn {
+  .toggle-btn {
     background: var(--primary-gradient);
     color: var(--text-white);
     border: none;
@@ -56,26 +60,24 @@
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    line-height: 1.3rem;
   }
 
-  .scan-btn:hover {
+  .toggle-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
   }
 
-  .scan-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+  .toggle-btn.active {
+    background: var(--primary-gradient);
   }
 
-  .scan-icon {
-    font-size: 1.1rem;
+  .toggle-btn:not(.active) {
+    background: var(--grey-gradient);
   }
 
   @media (max-width: 768px) {
@@ -87,11 +89,13 @@
 
     .scan-controls {
       justify-content: center;
+      flex-wrap: wrap;
     }
 
-    .scan-btn {
-      width: 100%;
+    .toggle-btn {
+      flex: 1;
       justify-content: center;
+      min-width: 120px;
     }
   }
 </style>

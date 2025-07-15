@@ -1,76 +1,48 @@
 class ScanManager {
   constructor() {
-    this.isScanning = false;
+    this.previousScanTime = null;
     this.scanningStatus = document.getElementById("lastScanTime");
-    this.scanButton = document.getElementById("scanButton");
+    this.viewModeToggle = document.getElementById("viewModeToggle");
+    this.liveMode = true;
   }
 
-  startScan(full = false) {
-    if (this.isScanning) return;
+  async updateScanStatus() {
+    const BASE_TEXT = "Last scan: ";
 
-    this.isScanning = true;
-    this.updateUI();
+    const response = await fetch("/api/scan/status");
+    const scanStatus = await response.json();
 
-    const endpoint = full ? "/api/scan/full" : "/api/scan/basic";
-
-    fetch(endpoint, { method: "POST" })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          alert(data.error);
-          return;
-        }
-
-        if (data.devices) {
-          window.deviceManager.updateDeviceDisplay(data.devices);
-        }
-
-        this.setLastScanTime();
-      })
-      .catch((error) => {
-        console.error("Error during scan:", error);
-        alert("Failed to complete scan");
-      })
-      .finally(() => {
-        this.isScanning = false;
-        this.updateUI();
-      });
-  }
-
-  updateUI() {
-    if (this.isScanning) {
-      if (this.scanButton) {
-        this.scanButton.disabled = true;
-        this.scanButton.textContent = "Scanning...";
-      }
+    if (scanStatus.is_scanning) {
+      this.scanningStatus.textContent = BASE_TEXT + "Scanning now...";
+    } else if (scanStatus.last_scan_time) {
+      const dateText = new Date(scanStatus.last_scan_time).toLocaleString();
+      this.scanningStatus.textContent = BASE_TEXT + dateText;
     } else {
-      if (this.scanButton) {
-        this.scanButton.disabled = false;
-        this.scanButton.innerHTML = `
-          <img
-            src="/static/icons/refresh.svg"
-            alt="Refresh"
-            class="scan-icon"
-            style="width: 1em; height: 1em; vertical-align: middle"
-          />
-          Start Scan
-        `;
-      }
+      this.scanningStatus.textContent = BASE_TEXT + "Never";
+    }
+
+    if (this.previousScanTime !== scanStatus.last_scan_time) {
+      this.previousScanTime = scanStatus.last_scan_time;
+      return true;
+    }
+    return false;
+  }
+
+  toggleViewMode() {
+    this.liveMode = !this.liveMode;
+
+    if (this.liveMode) {
+      this.viewModeToggle.classList.add("active");
+      window.deviceManager.refreshDevices();
+    } else {
+      this.viewModeToggle.classList.remove("active");
     }
   }
 
-  setLastScanTime() {
-    fetch("/api/scan/latest")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.latest_scan) {
-          this.scanningStatus.textContent =
-            "Last scan: " + new Date(data.latest_scan).toLocaleString();
-        } else {
-          this.scanningStatus.textContent = "Last scan: Never";
-        }
-      });
+  isLiveMode() {
+    return this.liveMode;
   }
 }
 
+// Create a global instance
 window.scanManager = new ScanManager();

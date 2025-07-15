@@ -72,4 +72,5 @@ class SvgLoader {
   }
 }
 
+// Create a global instance
 window.svgLoader = new SvgLoader();
