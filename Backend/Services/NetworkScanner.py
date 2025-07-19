@@ -56,15 +56,12 @@ class NetworkScanner(Injectable):
         self._upnp_discoverer = upnp_discoverer
         self._mdns_discoverer = mdns_discoverer
     
-    def scan_network(self, scan_options: Optional[ScanOptions] = None) -> List[AddressData]:
+    def scan_network(self, scan_options: ScanOptions) -> List[AddressData]:
         """Scan the configured network range."""        
         subnet = self._config.network.subnet()
         min_ip = self._config.network.min_ip()
         max_ip = self._config.network.max_ip()
         max_threads = self._config.network.max_threads()
-        
-        if scan_options is None:
-            scan_options = self._get_config_based_scan_options()
         
         devices: List[AddressData] = []
         ip_range: List[str] = [f"{subnet}.{i}" for i in range(min_ip, max_ip + 1)]
@@ -77,31 +74,9 @@ class NetworkScanner(Injectable):
                     devices.append(device)
         return devices
     
-    def _get_config_based_scan_options(self) -> ScanOptions:
-        """Create scan options based on current configuration."""
-        feature = self._config.feature
-        return ScanOptions(
-            mac_resolution=feature.mac_resolution_enabled(),
-            ttl_resolution=feature.ttl_resolution_enabled(),
-            hostname_resolution=feature.hostname_resolution_enabled(),
-            mac_vendor_lookup=feature.mac_vendor_lookup_enabled(),
-            os_detection=feature.os_detection_enabled(),
-            port_scan=feature.port_scan_enabled(),
-            detect_http=feature.detect_http_enabled(),
-            detect_ssh=feature.detect_ssh_enabled(),
-            detect_banners=feature.detect_banners_enabled(),
-            discover_netbios=feature.discover_netbios_enabled(),
-            discover_upnp=feature.discover_upnp_enabled(),
-            discover_mdns=feature.discover_mdns_enabled()
-        )
-    
-    def scan_ip(self, ip_address: str, scan_options: Optional[ScanOptions] = None) -> Optional[AddressData]:
+    def scan_ip(self, ip_address: str, scan_options: ScanOptions) -> Optional[AddressData]:
         """Scan a specific IP address."""
-        # Use provided scan options or default to config-based scanning
-        if scan_options is None:
-            scan_options = self._get_config_based_scan_options()
-                
-        # Initialize data containers
+
         mac_address: Optional[str] = None
         arp_time_ms: int = 0
         ttl: Optional[int] = None

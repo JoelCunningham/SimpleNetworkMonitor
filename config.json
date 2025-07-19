@@ -13,18 +13,5 @@
   "hostname_timeout_ms": 1000,
   "port_scan_timeout_ms": 1000,
   "service_detection_timeout_ms": 2000,
-  "discovery_timeout_ms": 3000,
-
-  "mac_resolution": true,
-  "ttl_resolution": true,
-  "hostname_resolution": true,
-  "mac_vendor_lookup": true,
-  "os_detection": true,
-  "port_scan": true,
-  "detect_http": true,
-  "detect_ssh": true,
-  "detect_banners": true,
-  "discover_netbios": true,
-  "discover_upnp": true,
-  "discover_mdns": true
+  "discovery_timeout_ms": 3000
 }
