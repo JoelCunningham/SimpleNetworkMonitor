@@ -1,5 +1,4 @@
 import socket
-from typing import Optional
 
 from Backend.Constants import (DEFAULT_ENCODING, DEFAULT_SSH_PRODUCT,
                                DEFAULT_VERSION, ENCODING_ERROR_HANDLING,
@@ -16,7 +15,7 @@ class SshServiceDetector(Injectable):
     def __init__(self, config: AppConfig) -> None:
         self._config = config
     
-    def detect_service(self, ip_address: str, port: int) -> Optional[ServiceInfo]:
+    def detect_service(self, ip_address: str, port: int) -> ServiceInfo | None:
         """Detect SSH service and get version banner."""
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:

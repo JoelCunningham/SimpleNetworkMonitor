@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any, Dict
+from typing import Any
 
 from Backend import Exceptions
 from Backend.Constants import DEFAULT_ENCODING
@@ -16,7 +16,7 @@ class AppConfig(Injectable):
         self.timeout = self.Timeout(self._config_data)
         self.feature = self.Feature(self._config_data)
     
-    def _load_from_file(self, filepath: str) -> Dict[str, Any]:
+    def _load_from_file(self, filepath: str) -> dict[str, Any]:
         """Load configuration data from JSON file."""
         if not os.path.exists(filepath):
             raise Exceptions.ConfigurationError(f"AppConfig file {filepath} does not exist.")
@@ -32,7 +32,7 @@ class AppConfig(Injectable):
     
     class Network():
         """Network configuration settings."""
-        def __init__(self, config_data: Dict[str, Any]) -> None:
+        def __init__(self, config_data: dict[str, Any]) -> None:
             self._config_data = config_data
         
         def subnet(self) -> str:
@@ -48,7 +48,7 @@ class AppConfig(Injectable):
     
     class Timeout():
         """Timeout settings for various operations."""
-        def __init__(self, config_data: Dict[str, Any]) -> None:
+        def __init__(self, config_data: dict[str, Any]) -> None:
             self._config_data = config_data
         
         def ping_timeout_ms(self) -> int:
@@ -68,7 +68,7 @@ class AppConfig(Injectable):
 
     class Feature():
         """Feature flags for various functionalities."""
-        def __init__(self, config_data: Dict[str, Any]) -> None:
+        def __init__(self, config_data: dict[str, Any]) -> None:
             self._config_data = config_data
             
         def mac_resolution_enabled(self) -> bool:

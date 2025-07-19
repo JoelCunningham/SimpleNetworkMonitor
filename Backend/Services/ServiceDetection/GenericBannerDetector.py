@@ -1,5 +1,4 @@
 import socket
-from typing import Optional
 
 from Backend.Constants import (DEFAULT_ENCODING, ENCODING_ERROR_HANDLING,
                                MAX_BANNER_LENGTH, SOCKET_BUFFER_SIZE)
@@ -14,7 +13,7 @@ class GenericBannerDetector(Injectable):
     def __init__(self, config: AppConfig) -> None:
         self._config = config
     
-    def grab_banner(self, ip_address: str, port: int, service_name: str) -> Optional[ServiceInfo]:
+    def grab_banner(self, ip_address: str, port: int, service_name: str) -> ServiceInfo | None:
         """Generic banner grabbing for text-based services."""        
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:

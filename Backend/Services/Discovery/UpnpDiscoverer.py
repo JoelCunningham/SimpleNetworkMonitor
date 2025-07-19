@@ -1,5 +1,4 @@
 import socket
-from typing import Optional, Tuple
 
 from Backend.Constants import (CRLF, DEFAULT_ENCODING, DEFAULT_UPNP_DEVICE_TYPE,
                        ENCODING_ERROR_HANDLING, HTTP_OK_RESPONSE,
@@ -19,7 +18,7 @@ class UpnpDiscoverer(Injectable):
     def __init__(self, config: AppConfig) -> None:
         self._config = config
     
-    def discover(self, ip_address: str) -> Optional[DiscoveryInfo]:
+    def discover(self, ip_address: str) -> DiscoveryInfo | None:
         """Discover device information using UPnP/SSDP."""        
         try:
             ssdp_request = (
@@ -59,7 +58,7 @@ class UpnpDiscoverer(Injectable):
         
         return None
     
-    def _parse_upnp_response(self, response: str) -> Tuple[Optional[str], Optional[str]]:
+    def _parse_upnp_response(self, response: str) -> tuple[str | None, str | None]:
         """Parse UPnP response to extract device information."""
         try:
             device_name, device_type = None, None

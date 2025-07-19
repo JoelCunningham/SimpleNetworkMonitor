@@ -1,5 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Optional, Tuple
 
 from Backend.Constants import (BANNER_SERVICE_NAMES, COMMON_PORTS, HTTP_PORTS,
                                HTTP_SERVICE_NAME, SSH_PORT, SSH_SERVICE_NAME)
@@ -54,25 +53,25 @@ class NetworkScanner(Injectable):
         self._upnp_discoverer = upnp_discoverer
         self._mdns_discoverer = mdns_discoverer
     
-    def scan_network(self, scan_options: ScanOptions) -> List[AddressData]:
+    def scan_network(self, scan_options: ScanOptions) -> list[AddressData]:
         """Scan the configured network range."""        
         subnet = self._config.network.subnet()
         min_ip = self._config.network.min_ip()
         max_ip = self._config.network.max_ip()
         max_threads = self._config.network.max_threads()
         
-        devices: List[AddressData] = []
-        ip_range: List[str] = [f"{subnet}.{i}" for i in range(min_ip, max_ip + 1)]
+        devices: list[AddressData] = []
+        ip_range: list[str] = [f"{subnet}.{i}" for i in range(min_ip, max_ip + 1)]
 
         with ThreadPoolExecutor(max_workers=max_threads) as executor:
             futures = [executor.submit(self.scan_ip, ip, scan_options) for ip in ip_range]
             for future in as_completed(futures):
-                device: Optional[AddressData] = future.result()
+                device: AddressData | None = future.result()
                 if device is not None:
                     devices.append(device)
         return devices
     
-    def scan_ip(self, ip_address: str, scan_options: ScanOptions) -> Optional[AddressData]:
+    def scan_ip(self, ip_address: str, scan_options: ScanOptions) -> AddressData | None:
         """Scan a specific IP address."""
         scan_result = AddressData(ip_address=ip_address)
         
@@ -164,7 +163,7 @@ class NetworkScanner(Injectable):
         return scan_result
     
  
-    def get_scan_summary(self, address_data: AddressData) -> Tuple[Optional[List[str]], Optional[List[str]], Optional[List[str]]]:
+    def get_scan_summary(self, address_data: AddressData) -> tuple[list[str] | None, list[str] | None, list[str] | None]:
         """Get a summary of scan results for display."""  
         open_ports, services, discovered_info = None, None, None
         

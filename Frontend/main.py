@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-from typing import Any, List
+from typing import Any
 
 from flask import Flask, jsonify, render_template
 
@@ -26,7 +26,7 @@ def get_devices():
     try:
         background_scanner = container.background_scanner()
         all_devices = background_scanner.get_latest_devices()
-        all_devices_raw: List[Any] = []
+        all_devices_raw: list[Any] = []
         
         for device in all_devices:
             device_raw = json.loads(json.dumps(device, cls=ModelEncoder))

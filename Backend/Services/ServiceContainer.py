@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from mac_vendor_lookup import MacLookup  # type: ignore
 
@@ -29,7 +29,7 @@ class ServiceContainer:
         self._config_file_path = config_file_path
         self._services = self._initialize_services()
     
-    def _initialize_services(self) -> Dict[str, Any]:
+    def _initialize_services(self) -> dict[str, Any]:
         """Initialize all services with proper dependency injection."""
         
         # External Dependencies

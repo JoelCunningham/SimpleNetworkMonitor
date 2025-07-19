@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship
 
@@ -11,19 +11,20 @@ if TYPE_CHECKING:
     from Backend.Entities.MacModel import Mac
     from Backend.Entities.OwnerModel import Owner
 
+
 class Device(BaseModel, table=True):
-    model: Optional[str] = Field(default=None) 
+    model: str | None = Field(default=None) 
     
-    owner_id: Optional[int] = Field(default=None, foreign_key="owner.id")
-    owner: Optional["Owner"] = Relationship(back_populates="devices")
+    owner_id: int | None = Field(default=None, foreign_key="owner.id")
+    owner: "Owner" = Relationship(back_populates="devices")
     
-    location_id: Optional[int] = Field(default=None, foreign_key="location.id")
-    location: Optional["Location"] = Relationship(back_populates="devices")
+    location_id: int | None = Field(default=None, foreign_key="location.id")
+    location: "Location" = Relationship(back_populates="devices")
 
     category_id: int = Field(foreign_key="category.id") 
     category: "Category" = Relationship(back_populates="devices")
     
-    macs: List["Mac"] = Relationship(back_populates="device")
+    macs: list["Mac"] = Relationship(back_populates="device")
    
     @property
     def name(self) -> str:
@@ -36,7 +37,7 @@ class Device(BaseModel, table=True):
         return device_name.strip() or UNKNOWN_DEVICE_NAME
         
     @property
-    def primary_mac(self) -> Optional["Mac"]:
+    def primary_mac(self) -> "Mac | None":
         if not self.macs:
             return None
         return max(self.macs, key=lambda mac: mac.last_seen or 0)

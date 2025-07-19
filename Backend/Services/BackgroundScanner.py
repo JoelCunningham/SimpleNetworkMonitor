@@ -1,6 +1,5 @@
 import threading
 from datetime import datetime
-from typing import List, Optional
 
 from Backend.Entities.DeviceModel import Device
 from Backend.Objects.ScanOptions import ScanOptions
@@ -18,12 +17,12 @@ class BackgroundScanner:
         self.data_repository = data_repository
         self.mac_repository = mac_repository
         
-        self.scanning_thread: Optional[threading.Thread] = None
+        self.scanning_thread: threading.Thread | None = None
         self.stop_event = threading.Event()
         self.is_scanning = False
         
-        self.last_scan_time: Optional[datetime] = None
-        self.scan_error: Optional[str] = None
+        self.last_scan_time: datetime | None = None
+        self.scan_error: str | None = None
         self.last_scan_results = []
         
         self.basic_scan_interval = 60  # 1 minute
@@ -48,7 +47,7 @@ class BackgroundScanner:
             'last_scan_time': self.last_scan_time.isoformat() if self.last_scan_time else None,
         }
         
-    def get_latest_devices(self) -> List[Device]:
+    def get_latest_devices(self) -> list[Device]:
         """Get the latest scan results."""
         if not self.last_scan_results:
             return []

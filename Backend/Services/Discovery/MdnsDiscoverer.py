@@ -1,15 +1,15 @@
 import socket
 import struct
-from typing import Optional
 
 from Backend.Constants import (DEVICE_INFO_SERVICE_TYPE, HTTP_SERVICE_TYPE,
-                       IP_SEPARATOR, LAST_OCTET_INDEX, MDNS_ADDITIONAL_COUNT,
-                       MDNS_ANSWERS_COUNT, MDNS_AUTHORITY_COUNT,
-                       MDNS_DEVICE_NAME_PREFIX, MDNS_DEVICE_TYPE, MDNS_FLAGS,
-                       MDNS_HEADER_LENGTH, MDNS_PORT, MDNS_PROTOCOL_NAME,
-                       MDNS_QUESTIONS_COUNT, MDNS_SERVICE_QUERY,
-                       MDNS_TRANSACTION_ID, SOCKET_BUFFER_SIZE,
-                       STRUCT_PACK_FORMAT)
+                               IP_SEPARATOR, LAST_OCTET_INDEX,
+                               MDNS_ADDITIONAL_COUNT, MDNS_ANSWERS_COUNT,
+                               MDNS_AUTHORITY_COUNT, MDNS_DEVICE_NAME_PREFIX,
+                               MDNS_DEVICE_TYPE, MDNS_FLAGS,
+                               MDNS_HEADER_LENGTH, MDNS_PORT,
+                               MDNS_PROTOCOL_NAME, MDNS_QUESTIONS_COUNT,
+                               MDNS_SERVICE_QUERY, MDNS_TRANSACTION_ID,
+                               SOCKET_BUFFER_SIZE, STRUCT_PACK_FORMAT)
 from Backend.Objects.DiscoveryInfo import DiscoveryInfo
 from Backend.Objects.Injectable import Injectable
 from Backend.Services.AppConfiguration import AppConfig
@@ -21,7 +21,7 @@ class MdnsDiscoverer(Injectable):
     def __init__(self, config: AppConfig) -> None:
         self._config = config
         
-    def discover(self, ip_address: str) -> Optional[DiscoveryInfo]:
+    def discover(self, ip_address: str) -> DiscoveryInfo | None:
         """Discover device information using mDNS."""      
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

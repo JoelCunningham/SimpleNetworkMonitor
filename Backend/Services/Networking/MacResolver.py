@@ -1,6 +1,5 @@
 import socket
 import threading
-from typing import Optional, Tuple
 
 from scapy.all import ARP, Ether, get_if_addr, get_if_list, srp  # type: ignore
 from scapy.packet import Packet
@@ -18,7 +17,7 @@ class MacResolver(Injectable):
         self._config = config
         self._lock = threading.Lock()
     
-    def resolve_mac_address(self, ip_address: str) -> Optional[Tuple[str, int]]:
+    def resolve_mac_address(self, ip_address: str) -> tuple[str, int] | None:
         """Resolve MAC address for IP."""        
         arp: Packet = ARP(pdst=ip_address)  # type: ignore
         ether: Packet = Ether(dst=BROADCAST_MAC_ADDRESS)  # type: ignore

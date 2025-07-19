@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
 
 from sqlalchemy import Engine, text
 from sqlmodel import Session, SQLModel, create_engine, select
@@ -26,7 +25,7 @@ class DatabaseConnection(Injectable):
     """Service responsible for database connection management."""
     
     def __init__(self, config: AppConfig) -> None:
-        self._engine: Optional[Engine] = None
+        self._engine: Engine | None = None
         self._config = config
         self._initialize_database()
     
@@ -83,7 +82,7 @@ class DataRepository(Injectable):
             DiscoveryRepository(self._database_connection).save_discoveries(saved_mac, address_data.discovered_info)
         
     
-    def get_latest_scan_date(self) -> Optional[datetime]:
+    def get_latest_scan_date(self) -> datetime | None:
         """Get the date of the latest scan."""
         with self._database_connection.get_session() as session:
             latest_scan = session.exec(
@@ -95,7 +94,7 @@ class DataRepository(Injectable):
             
             return None
     
-    def get_all_devices(self) -> List[Device]:
+    def get_all_devices(self) -> list[Device]:
         """Get all devices from database."""
         with self._database_connection.get_session() as session:
             devices = list(session.exec(select(Device)).all())
@@ -114,7 +113,7 @@ class DataRepository(Injectable):
             
             return devices
 
-    def get_known_unknown_devices(self, scanned_devices: List[AddressData]) -> List[Device]:
+    def get_known_unknown_devices(self, scanned_devices: list[AddressData]) -> list[Device]:
         """Get all devices from database."""
         
         devices = self.get_all_devices()
@@ -146,7 +145,7 @@ class MacRepository(Injectable):
             raise Exceptions.ValidationError("AddressData does not contain a MAC address.")
     
         with self._database_connection.get_session() as session:
-            mac: Optional[Mac] = session.exec(
+            mac: Mac | None = session.exec(
                 select(Mac).where(Mac.address == address_data.mac_address)
             ).first()
 
@@ -185,7 +184,7 @@ class MacRepository(Injectable):
             return mac
     
     
-    def get_mac_by_address(self, mac_address: str) -> Optional[Mac]:
+    def get_mac_by_address(self, mac_address: str) -> Mac | None:
         with self._database_connection.get_session() as session:
             mac = session.exec(
                 select(Mac).where(Mac.address == mac_address)
@@ -206,7 +205,7 @@ class PortRepository(Injectable):
     def __init__(self, database_connection: DatabaseConnection) -> None:
         self._database_connection = database_connection
 
-    def save_port(self, mac: Mac, ports: List[PortInfo], services: Optional[Dict[int, ServiceInfo]]) -> None:
+    def save_port(self, mac: Mac, ports: list[PortInfo], services: dict[int, ServiceInfo] | None) -> None:
         if not ports:
             raise Exceptions.ValidationError("AddressData does not contain open ports.")
 
@@ -246,7 +245,7 @@ class DiscoveryRepository(Injectable):
     def __init__(self, database_connection: DatabaseConnection) -> None:
         self._database_connection = database_connection
 
-    def save_discoveries(self, mac: Mac, discoveries: List[DiscoveryInfo]) -> None:
+    def save_discoveries(self, mac: Mac, discoveries: list[DiscoveryInfo]) -> None:
         if not discoveries:
             raise Exceptions.ValidationError("AddressData does not contain discovery information.")
 

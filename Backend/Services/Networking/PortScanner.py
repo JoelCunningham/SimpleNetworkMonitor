@@ -1,7 +1,6 @@
 import socket
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Optional
 
 from Backend.Constants import (MAX_WORKERS, OPEN_PORT_RESULT, PORT_SERVICE_MAP,
                        UNKNOWN_PORT_TEMPLATE)
@@ -17,9 +16,9 @@ class PortScanner(Injectable):
         self._config = config
         self._lock = threading.Lock()
     
-    def scan_ports(self, ip_address: str, ports: List[int]) -> List[PortInfo]:
+    def scan_ports(self, ip_address: str, ports: list[int]) -> list[PortInfo]:
         """Scan specified ports on the given IP address."""        
-        open_ports: List[PortInfo] = []
+        open_ports: list[PortInfo] = []
         
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             futures = [
@@ -34,7 +33,7 @@ class PortScanner(Injectable):
         
         return open_ports
     
-    def _scan_single_port(self, ip_address: str, port: int, timeout: float) -> Optional[PortInfo]:
+    def _scan_single_port(self, ip_address: str, port: int, timeout: float) -> PortInfo | None:
         """Scan a single port on the target IP."""
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:

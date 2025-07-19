@@ -1,16 +1,15 @@
 from dataclasses import dataclass
-from typing import List, Optional
 
 
 @dataclass
 class DiscoveryInfo:
     """Information discovered through network discovery protocols."""
     protocol: str
-    device_name: Optional[str] = None
-    device_type: Optional[str] = None
-    manufacturer: Optional[str] = None
-    model: Optional[str] = None
-    services: Optional[List[str]] = None
+    device_name: str | None = None
+    device_type: str | None = None
+    manufacturer: str | None = None
+    model: str | None = None
+    services: list[str] | None = None
     
     def __post_init__(self):
         if self.services is None:

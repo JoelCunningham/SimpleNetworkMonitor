@@ -1,7 +1,6 @@
 import socket
 import urllib.error
 import urllib.request
-from typing import Optional
 
 from Backend.Constants import (DEFAULT_HTTP_SERVER, HTTP_INFO_TEMPLATE,
                                HTTP_SCHEME, HTTP_SERVICE_NAME,
@@ -19,7 +18,7 @@ class HttpServiceDetector(Injectable):
     def __init__(self, config: AppConfig) -> None:
         self._config = config
     
-    def detect_service(self, ip_address: str, port: int) -> Optional[ServiceInfo]:
+    def detect_service(self, ip_address: str, port: int) -> ServiceInfo | None:
         """Detect HTTP service and get server information."""        
         try:
             protocol_scheme = HTTPS_SCHEME if port == HTTPS_PORT else HTTP_SCHEME

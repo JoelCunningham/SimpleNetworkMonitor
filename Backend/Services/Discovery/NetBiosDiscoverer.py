@@ -1,6 +1,5 @@
 import socket
 import struct
-from typing import Optional
 
 from Backend.Constants import (ASCII_ENCODING, ENCODING_ERROR_HANDLING,
                        NETBIOS_ADDITIONAL_COUNT, NETBIOS_ANSWERS_COUNT,
@@ -23,7 +22,7 @@ class NetBiosDiscoverer(Injectable):
     def __init__(self, config: AppConfig) -> None:
         self._config = config
 
-    def discover(self, ip_address: str) -> Optional[DiscoveryInfo]:
+    def discover(self, ip_address: str) -> DiscoveryInfo | None:
         """Discover device information using NetBIOS Name Service."""      
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -66,7 +65,7 @@ class NetBiosDiscoverer(Injectable):
         
         return None
     
-    def _parse_netbios_response(self, response: bytes) -> Optional[str]:
+    def _parse_netbios_response(self, response: bytes) -> str | None:
         """Parse NetBIOS response to extract device name."""
         try:
             if len(response) > NETBIOS_MIN_RESPONSE_LENGTH:

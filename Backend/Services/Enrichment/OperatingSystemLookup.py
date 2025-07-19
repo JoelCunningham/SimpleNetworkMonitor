@@ -1,5 +1,4 @@
 """Device enrichment services."""
-from typing import Optional
 
 from Backend.Constants import ROUTER_TTL_TEMPLATE, TTL_OS_MAPPING, UNKNOWN_OS_TEMPLATE
 from Backend.Objects.Injectable import Injectable
@@ -8,7 +7,7 @@ from Backend.Objects.Injectable import Injectable
 class OperatingSystemLookup(Injectable):
     """Service responsible for OS detection from TTL values."""
     
-    def detect_from_ttl(self, ttl: int) -> Optional[str]:
+    def detect_from_ttl(self, ttl: int) -> str | None:
         """Detect operating system based on TTL value."""
         if ttl in TTL_OS_MAPPING:
             return TTL_OS_MAPPING[ttl]
