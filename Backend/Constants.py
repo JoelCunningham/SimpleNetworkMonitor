@@ -1,3 +1,5 @@
+from Backend.Objects.PingCommand import PingCommand
+
 # ============================================================================
 # SYSTEM & PLATFORM CONSTANTS
 # ============================================================================
@@ -151,9 +153,9 @@ MDNS_DEVICE_TYPE = "mDNS/Bonjour Device"
 # Ping Configuration
 SUCCESSFUL_PING_EXIT_CODE = 0
 PING_COMMANDS = {
-    PLATFORM_WINDOWS: {"cmd": "ping", "count_flag": "-n", "timeout_flag": "-w"},
-    PLATFORM_LINUX: {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"},
-    PLATFORM_MACOS: {"cmd": "ping", "count_flag": "-c", "timeout_flag": "-W"}, 
+    PLATFORM_WINDOWS: PingCommand("ping", "-n", "-w"),
+    PLATFORM_LINUX: PingCommand("ping", "-c", "-W"),
+    PLATFORM_MACOS: PingCommand("ping", "-c", "-W"),
 }
 
 # TTL (Time To Live) Constants

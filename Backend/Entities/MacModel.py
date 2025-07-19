@@ -10,12 +10,12 @@ from Backend.Entities.DeviceModel import Device
 class Mac(BaseModel, table=True):
     address: str = Field(unique=True)
 
-    ping_time_ms: int = Field(ge=0)
-    arp_time_ms: int = Field(ge=0)
-
     last_ip: str
     last_seen: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    
+
+    ping_time_ms: Optional[int] = Field(ge=0, default=None)
+    arp_time_ms: Optional[int] = Field(ge=0, default=None)
+
     hostname: Optional[str] = Field(default=None)
     vendor: Optional[str] = Field(default=None)
     os_guess: Optional[str] = Field(default=None)

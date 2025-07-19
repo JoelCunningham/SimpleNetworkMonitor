@@ -1,9 +1,10 @@
 import socket
 from typing import Optional
 
-from Backend.Constants import (DEFAULT_ENCODING, DEFAULT_SSH_PRODUCT, DEFAULT_VERSION,
-                       ENCODING_ERROR_HANDLING, SOCKET_BUFFER_SIZE,
-                       SSH_BANNER_PREFIX, SSH_SERVICE_NAME)
+from Backend.Constants import (DEFAULT_ENCODING, DEFAULT_SSH_PRODUCT,
+                               DEFAULT_VERSION, ENCODING_ERROR_HANDLING,
+                               SOCKET_BUFFER_SIZE, SSH_BANNER_PREFIX,
+                               SSH_SERVICE_NAME)
 from Backend.Objects.Injectable import Injectable
 from Backend.Objects.ServiceInfo import ServiceInfo
 from Backend.Services.AppConfiguration import AppConfig

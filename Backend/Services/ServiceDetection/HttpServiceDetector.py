@@ -3,10 +3,11 @@ import urllib.error
 import urllib.request
 from typing import Optional
 
-from Backend.Constants import (DEFAULT_HTTP_SERVER, HTTP_INFO_TEMPLATE, HTTP_SCHEME,
-                       HTTP_SERVICE_NAME, HTTP_URL_TEMPLATE, HTTPS_PORT,
-                       HTTPS_SCHEME, SERVER_HEADER, USER_AGENT_HEADER,
-                       USER_AGENT_VALUE)
+from Backend.Constants import (DEFAULT_HTTP_SERVER, HTTP_INFO_TEMPLATE,
+                               HTTP_SCHEME, HTTP_SERVICE_NAME,
+                               HTTP_URL_TEMPLATE, HTTPS_PORT, HTTPS_SCHEME,
+                               SERVER_HEADER, USER_AGENT_HEADER,
+                               USER_AGENT_VALUE)
 from Backend.Objects.Injectable import Injectable
 from Backend.Objects.ServiceInfo import ServiceInfo
 from Backend.Services.AppConfiguration import AppConfig

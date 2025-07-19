@@ -1,8 +1,9 @@
 import platform
+import re
 import subprocess
 from typing import Optional, Tuple
 
-from Backend.Constants import PING_COMMANDS, PLATFORM_WINDOWS, SUCCESSFUL_PING_EXIT_CODE
+from Backend.Constants import PING_COMMANDS, PLATFORM_WINDOWS, SUCCESSFUL_PING_EXIT_CODE, TTL_REGEX
 from Backend import Exceptions
 from Backend.Objects.Injectable import Injectable
 from Backend.Services.AppConfiguration import AppConfig
@@ -13,25 +14,20 @@ class NetworkPinger(Injectable):
     """Service responsible for ping operations."""
     
     def __init__(self, config: AppConfig) -> None:
-        self._config = config
-        self._ping_cmd, self._ping_count_flag, self._ping_timeout_flag = self._setup_ping_command()
-        
-    def _setup_ping_command(self) -> Tuple[str, str, str]:
-        """Setup ping command based on operating system."""
         system = platform.system()
         if system not in PING_COMMANDS:
             raise Exceptions.NetworkScanError(f"Unsupported operating system: {system}")
         
-        cmd_info = PING_COMMANDS[system]
-        return cmd_info["cmd"], cmd_info["count_flag"], cmd_info["timeout_flag"]
+        command = PING_COMMANDS[system]
+    
+        self._config = config
+        self._ping_instruction = command.instruction
+        self._ping_count_flag = command.count_flag
+        self._ping_timeout_flag = command.timeout_flag
     
     def ping(self, ip_address: str) -> Tuple[Optional[bool], int, Optional[str]]:
-        """
-        Ping an IP address.
-        Returns: (success, response_time_ms, stdout) or None if error
-        """
-        system = platform.system()
-        if system == PLATFORM_WINDOWS:
+        """Ping an IP address."""
+        if platform.system() == PLATFORM_WINDOWS:
             timeout_value = self._config.timeout.ping_timeout_ms()
         else:
             timeout_value = self._config.timeout.ping_timeout_s()
@@ -42,7 +38,7 @@ class NetworkPinger(Injectable):
             with time_operation(ping_time):
                 result = subprocess.run(
                     [
-                        self._ping_cmd,
+                        self._ping_instruction,
                         self._ping_count_flag, str(self._config.network.ping_count()),
                         self._ping_timeout_flag, str(timeout_value),
                         ip_address
@@ -62,3 +58,12 @@ class NetworkPinger(Injectable):
             print(f"WARN ping error for {ip_address}: {e}")
             return None, 0, None
 
+    def get_ttl_from_ping_result(self, ping_result: str) -> Optional[int]:
+        """Extract TTL value from ping output."""
+        try:
+            ttl_match = re.search(TTL_REGEX, ping_result)
+            if ttl_match:
+                return int(ttl_match.group(1))
+        except (ValueError, AttributeError):
+            pass
+        return None
