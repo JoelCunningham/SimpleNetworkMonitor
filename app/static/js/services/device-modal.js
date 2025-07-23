@@ -168,8 +168,8 @@ class DeviceModal {
   }
 
   getStatusText(device) {
-    const status = window.deviceManager.getDeviceStatus(device);
-    return STATUS_LABELS[status] || UNK_STATUS;
+    const status = window.deviceManager.getDeviceStatusText(device);
+    return status || UNK_STATUS;
   }
 
   formatDateTime(dateTimeString) {
@@ -214,6 +214,7 @@ class DeviceModal {
       const tag = tagTemplate.cloneNode(true);
       tag.textContent = getTagText(item);
       tag.style.display = "";
+      tag.id = "";
       container.appendChild(tag);
     });
   }
@@ -229,5 +230,4 @@ import {
   UNK_SERVICE,
   UNK_STATUS,
   HTTP_LINK_TITLE,
-  STATUS_LABELS,
 } from "../constants.js";

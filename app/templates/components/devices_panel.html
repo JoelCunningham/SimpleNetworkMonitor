@@ -13,7 +13,23 @@
     </button>
   </div>
   <div id="devicesContainer" class="devices-container">
-    <div class="device-grid" id="devicesGrid"></div>
+    <div class="device-grid" id="devicesGrid">
+      <div class="device-card" id="deviceCardTemplate" style="display: none">
+        <div class="device-info">
+          <div class="device-icon">
+            <div class="unknown-device" style="display: none">?</div>
+          </div>
+          <div class="device-name"><strong></strong></div>
+        </div>
+        <button class="device-link-btn" title="" style="display: none">
+          <img
+            src="/static/icons/external-link.svg"
+            alt="Open device portal"
+            class="external-link-icon"
+          />
+        </button>
+      </div>
+    </div>
     <div class="empty-state" id="emptyState" style="display: none">
       <svg fill="currentColor" viewBox="0 0 20 20">
         <path
