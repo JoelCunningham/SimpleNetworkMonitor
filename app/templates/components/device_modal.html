@@ -91,6 +91,11 @@
         <div class="detail-section">
           <h4>Open Ports</h4>
           <div class="ports-container" id="modalPorts">
+            <span
+              class="port-tag"
+              id="portTagTemplate"
+              style="display: none"
+            ></span>
             <p class="no-data">No open ports found</p>
           </div>
         </div>
@@ -98,6 +103,11 @@
         <div class="detail-section">
           <h4>Discovered Services</h4>
           <div class="services-container" id="modalServices">
+            <span
+              class="service-tag"
+              id="serviceTagTemplate"
+              style="display: none"
+            ></span>
             <p class="no-data">No services discovered</p>
           </div>
         </div>
@@ -263,10 +273,9 @@
     margin-top: 0.5rem;
   }
 
-  .port-tag,
-  .service-tag {
-    background: var(--primary-color);
-    color: var(--text-white);
+  .port-tag {
+    background: #17a2b8;
+    color: white;
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
     font-size: 0.85rem;
@@ -276,6 +285,12 @@
 
   .service-tag {
     background: var(--success-color);
+    color: var(--text-white);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
   }
 
   .no-data {

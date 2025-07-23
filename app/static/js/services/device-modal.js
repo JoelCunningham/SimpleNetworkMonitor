@@ -4,10 +4,6 @@ class DeviceModal {
     this.modalClose = document.getElementById("modalClose");
     this.currentDevice = null;
 
-    this.initializeModal();
-  }
-
-  initializeModal() {
     // Close modal when clicking the X button
     this.modalClose.addEventListener("click", () => {
       this.closeModal();
@@ -27,10 +23,7 @@ class DeviceModal {
       }
     });
 
-    this.initializeDeviceCardListeners();
-  }
-
-  initializeDeviceCardListeners() {
+    // Initialize device card click listeners
     document.addEventListener("click", (event) => {
       const deviceCard = event.target.closest(".device-card");
       if (deviceCard) {
@@ -43,34 +36,25 @@ class DeviceModal {
   }
 
   async showDeviceDetails(macAddress) {
-    try {
-      const device = window.deviceManager.devices.find(
-        (d) => d.primary_mac && d.primary_mac.address === macAddress
-      );
-      if (!device) {
-        console.error("Device not found with MAC address:", macAddress);
-        return;
-      }
-
-      this.currentDevice = device;
-      this.populateModal(device);
-      this.openModal();
-    } catch (error) {
-      console.error("Error showing device details:", error);
-    }
+    const device = window.deviceManager.devices.find(
+      (d) => d.primary_mac && d.primary_mac.address === macAddress
+    );
+    this.currentDevice = device;
+    this.populateModal(device);
+    this.openModal();
   }
 
   populateModal(device) {
-    // Update modal title
+    // Set modal title
     document.getElementById("modalDeviceName").textContent =
-      device.name || "Unknown Device";
+      device.name || UNK_DEVICE;
 
     // Handle HTTP link button
     const modalLinkBtn = document.getElementById("modalLinkBtn");
     const httpUrl = window.deviceManager.getDeviceHttpUrl(device);
     if (httpUrl && modalLinkBtn) {
       modalLinkBtn.style.display = "flex";
-      modalLinkBtn.title = `Open ${httpUrl} in new tab`;
+      modalLinkBtn.title = HTTP_LINK_TITLE(httpUrl);
 
       const newLinkBtn = modalLinkBtn.cloneNode(true);
       modalLinkBtn.parentNode.replaceChild(newLinkBtn, modalLinkBtn);
@@ -85,188 +69,120 @@ class DeviceModal {
 
     // General Information
     document.getElementById("modalDeviceNameValue").textContent =
-      device.name || "-";
+      device.name || UNK_FIELD;
     document.getElementById("modalCategory").textContent =
-      device.category?.name || "-";
+      device.category?.name || UNK_FIELD;
     document.getElementById("modalOwner").textContent =
-      device.owner?.name || "-";
+      device.owner?.name || UNK_FIELD;
     document.getElementById("modalLocation").textContent =
-      device.location?.name || "-";
-    document.getElementById("modalModel").textContent = device.model || "-";
+      device.location?.name || UNK_FIELD;
+    document.getElementById("modalModel").textContent =
+      device.model || UNK_FIELD;
     document.getElementById("modalStatus").textContent =
       this.getStatusText(device);
 
     // Network Information
     const primaryMac = device.primary_mac;
-    if (primaryMac) {
-      document.getElementById("modalMacAddress").textContent =
-        primaryMac.address || "-";
-      document.getElementById("modalIpAddress").textContent =
-        primaryMac.last_ip || "-";
-      document.getElementById("modalHostname").textContent =
-        primaryMac.hostname || "-";
-      document.getElementById("modalVendor").textContent =
-        primaryMac.vendor || "-";
-      document.getElementById("modalOsGuess").textContent =
-        primaryMac.os_guess || "-";
-      document.getElementById("modalTtl").textContent = primaryMac.ttl || "-";
-      document.getElementById("modalLastSeen").textContent =
-        this.formatDateTime(primaryMac.last_seen);
-      document.getElementById("modalPingTime").textContent =
-        primaryMac.ping_time_ms ? `${primaryMac.ping_time_ms}ms` : "-";
-    } else {
-      document.getElementById("modalMacAddress").textContent = "-";
-      document.getElementById("modalIpAddress").textContent = "-";
-      document.getElementById("modalHostname").textContent = "-";
-      document.getElementById("modalVendor").textContent = "-";
-      document.getElementById("modalOsGuess").textContent = "-";
-      document.getElementById("modalTtl").textContent = "-";
-      document.getElementById("modalLastSeen").textContent = "-";
-      document.getElementById("modalPingTime").textContent = "-";
-    }
+    document.getElementById("modalMacAddress").textContent =
+      primaryMac.address || UNK_FIELD;
+    document.getElementById("modalIpAddress").textContent =
+      primaryMac.last_ip || UNK_FIELD;
+    document.getElementById("modalHostname").textContent =
+      primaryMac.hostname || UNK_FIELD;
+    document.getElementById("modalVendor").textContent =
+      primaryMac.vendor || UNK_FIELD;
+    document.getElementById("modalOsGuess").textContent =
+      primaryMac.os_guess || UNK_FIELD;
+    document.getElementById("modalTtl").textContent =
+      primaryMac.ttl || UNK_FIELD;
+    document.getElementById("modalLastSeen").textContent =
+      this.formatDateTime(primaryMac.last_seen) || UNK_FIELD;
+    document.getElementById("modalPingTime").textContent =
+      this.formatPingTime(primaryMac.ping_time) || UNK_FIELD;
 
+    // Ports and Services
     this.populatePorts(device);
     this.populateServices(device);
   }
 
   populatePorts(device) {
-    const portsContainer = document.getElementById("modalPorts");
+    const container = document.getElementById("modalPorts");
+    const tempalte = document.getElementById("portTagTemplate");
+    const message = container.querySelector(".no-data");
 
-    const allPorts = [];
+    const data = [];
     if (device.macs && Array.isArray(device.macs)) {
       device.macs.forEach((mac) => {
         if (mac.ports && Array.isArray(mac.ports)) {
-          allPorts.push(...mac.ports);
+          data.push(...mac.ports);
         }
       });
     }
+    data.sort(
+      (a, b) =>
+        (a.protocol || "").localeCompare(b.protocol || "") ||
+        (a.port || 0) - (b.port || 0)
+    );
 
-    if (allPorts.length === 0) {
-      portsContainer.innerHTML = '<p class="no-data">No open ports found</p>';
-      return;
-    }
-
-    const portsByProtocol = {};
-    allPorts.forEach((port) => {
-      if (!port || typeof port !== "object") return;
-
-      const protocol = port.protocol || "tcp";
-      if (!portsByProtocol[protocol]) {
-        portsByProtocol[protocol] = [];
-      }
-      portsByProtocol[protocol].push(port);
-    });
-
-    Object.keys(portsByProtocol).forEach((protocol) => {
-      portsByProtocol[protocol].sort((a, b) => (a.port || 0) - (b.port || 0));
-    });
-
-    let portsHtml = "";
-
-    Object.keys(portsByProtocol)
-      .sort()
-      .forEach((protocol) => {
-        const ports = portsByProtocol[protocol];
-
-        if (Object.keys(portsByProtocol).length > 1) {
-          portsHtml += `<div class="protocol-section">`;
-          portsHtml += `<h5 style="margin: 1rem 0 0.5rem 0; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">${protocol.toUpperCase()} Ports</h5>`;
-          portsHtml += `<div class="ports-container">`;
-        }
-
-        ports.forEach((port) => {
-          if (!port || typeof port !== "object") return;
-
-          const portNumber = port.port || "Unknown";
-          const service = port.service ? ` (${port.service})` : "";
-
-          portsHtml += `<span class="port-tag" style="background: #17a2b8; color: white;">${portNumber}${service}</span>`;
-        });
-
-        if (Object.keys(portsByProtocol).length > 1) {
-          portsHtml += `</div></div>`;
-        }
-      });
-
-    if (Object.keys(portsByProtocol).length === 1) {
-      portsHtml = `<div class="ports-container">${portsHtml}</div>`;
-    }
-
-    portsContainer.innerHTML = portsHtml;
+    this.populateTags(data, container, tempalte, message, this.getPortName);
   }
 
   populateServices(device) {
-    const servicesContainer = document.getElementById("modalServices");
+    const container = document.getElementById("modalServices");
+    const template = document.getElementById("serviceTagTemplate");
+    const message = container.querySelector(".no-data");
+    const data = [];
 
-    const allServices = [];
     if (device.macs && Array.isArray(device.macs)) {
       device.macs.forEach((mac) => {
         if (mac.discoveries && Array.isArray(mac.discoveries)) {
-          allServices.push(...mac.discoveries);
+          data.push(...mac.discoveries);
         }
       });
     }
 
-    if (allServices.length === 0) {
-      servicesContainer.innerHTML =
-        '<p class="no-data">No services discovered</p>';
-      return;
+    this.populateTags(data, container, template, message, this.getServiceName);
+  }
+
+  getPortName(port) {
+    const portNumber = port.port || UNK_PORT;
+    const service = port.service ? ` (${port.service})` : "";
+    return `${portNumber}${service}`;
+  }
+
+  getServiceName(service) {
+    const name = service.device_name || service.device_type || UNK_SERVICE;
+    let serviceDetails = [];
+    if (service.manufacturer) {
+      serviceDetails.push(`Mfg: ${service.manufacturer}`);
     }
-
-    let servicesHtml = '<div class="services-container">';
-
-    allServices.forEach((service) => {
-      if (!service || typeof service !== "object") return;
-
-      const serviceName =
-        service.device_name || service.device_type || "Unknown Service";
-      let serviceDetails = [];
-
-      if (service.manufacturer) {
-        serviceDetails.push(`Mfg: ${service.manufacturer}`);
-      }
-      if (service.model) {
-        serviceDetails.push(`Model: ${service.model}`);
-      }
-      if (service.protocol) {
-        serviceDetails.push(`via ${service.protocol}`);
-      }
-
-      const serviceText =
-        serviceDetails.length > 0
-          ? `${serviceName} (${serviceDetails.join(", ")})`
-          : serviceName;
-
-      servicesHtml += `<span class="service-tag">${serviceText}</span>`;
-    });
-
-    servicesHtml += "</div>";
-    servicesContainer.innerHTML = servicesHtml;
+    if (service.model) {
+      serviceDetails.push(`Model: ${service.model}`);
+    }
+    if (service.protocol) {
+      serviceDetails.push(`via ${service.protocol}`);
+    }
+    return serviceDetails.length > 0
+      ? `${name} (${serviceDetails.join(", ")})`
+      : name;
   }
 
   getStatusText(device) {
     const status = window.deviceManager.getDeviceStatus(device);
-    switch (status) {
-      case "online":
-        return "Online";
-      case "away":
-        return "Away";
-      case "offline":
-        return "Offline";
-      default:
-        return "Unknown";
-    }
+    return STATUS_LABELS[status] || UNK_STATUS;
   }
 
   formatDateTime(dateTimeString) {
-    if (!dateTimeString) return "-";
-
     try {
       const date = new Date(dateTimeString);
       return date.toLocaleString();
     } catch (error) {
-      return dateTimeString;
+      return false;
     }
+  }
+
+  formatPingTime(pingTimeMs) {
+    return pingTimeMs ? `${pingTimeMs}ms` : false;
   }
 
   openModal() {
@@ -279,7 +195,46 @@ class DeviceModal {
     document.body.style.overflow = ""; // Restore scrolling
     this.currentDevice = null;
   }
+
+  populateTags(items, container, tagTemplate, noDataElem, getTagText) {
+    // Remove old tags except the template and no-data
+    const tagTemplateSelector = `.${tagTemplate.className}:not(#${tagTemplate.id})`;
+    container.querySelectorAll(tagTemplateSelector).forEach((e) => e.remove());
+    container.querySelectorAll(".protocol-section").forEach((e) => e.remove());
+
+    // If no items, show no-data message
+    if (!items || items.length === 0) {
+      if (noDataElem) noDataElem.style.display = "";
+      return;
+    }
+    if (noDataElem) noDataElem.style.display = "none";
+
+    // Create tags for each item
+    items.forEach((item) => {
+      const tag = tagTemplate.cloneNode(true);
+      tag.textContent = getTagText(item);
+      container.appendChild(tag);
+    });
+  }
 }
 
 // Create global instance
 window.deviceModal = new DeviceModal();
+
+const UNK_FIELD = "-";
+const UNK_DEVICE = "Unknown Device";
+const UNK_PORT = "Unknown Port";
+const UNK_SERVICE = "Unknown Service";
+const UNK_STATUS = "Unknown";
+
+const HTTP_LINK_TITLE = (url) => `Open ${url} in new tab`;
+
+const STATUS_ONLINE = "Online";
+const STATUS_AWAY = "Away";
+const STATUS_OFFLINE = "Offline";
+
+const STATUS_LABELS = {
+  online: STATUS_ONLINE,
+  away: STATUS_AWAY,
+  offline: STATUS_OFFLINE,
+};
