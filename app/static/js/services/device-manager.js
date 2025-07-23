@@ -35,27 +35,6 @@ class DeviceManager {
     }
   }
 
-  // Format last seen time for display
-  getLastSeenText(device) {
-    if (!device.primary_mac || !device.primary_mac.last_seen) {
-      return STATUS_NEVER;
-    }
-
-    const now = new Date();
-    const lastSeen = new Date(device.primary_mac.last_seen);
-    const minutesSinceLastSeen = (now - lastSeen) / 60000;
-
-    if (minutesSinceLastSeen < 1) {
-      return STATUS_NOW;
-    } else if (minutesSinceLastSeen < 60) {
-      return `${Math.floor(minutesSinceLastSeen)}${STATUS_MINUTE}`;
-    } else if (minutesSinceLastSeen < 1440) {
-      return `${Math.floor(minutesSinceLastSeen / 60)}${STATUS_HOUR}`;
-    } else {
-      return `${Math.floor(minutesSinceLastSeen / 1440)}${STATUS_DAY}`;
-    }
-  }
-
   // Check if device has HTTP ports and return appropriate URL
   getDeviceHttpUrl(device) {
     if (!device.primary_mac || !device.primary_mac.last_ip) {
@@ -137,7 +116,7 @@ class DeviceManager {
     // Add all devices to the single grid
     for (const device of sortedDevices) {
       const status = this.getDeviceStatusText(device);
-      const deviceCard = await this.createDeviceCard(device, status);
+      const deviceCard = await this._createDeviceCard(device, status);
       this.devicesGrid.appendChild(deviceCard);
     }
 
@@ -154,7 +133,34 @@ class DeviceManager {
     }
   }
 
-  async createDeviceCard(device, status) {
+  initializeGridSize() {
+    const gridSizeBtn = document.getElementById("gridSizeBtn");
+
+    if (!gridSizeBtn) return;
+
+    const updateButtonTitle = () => {
+      gridSizeBtn.title = GRID_SIZE_TITLE(this.currentGridSize);
+    };
+    updateButtonTitle();
+
+    gridSizeBtn.addEventListener("click", () => {
+      const currentIndex = DEVICE_GRID_SIZES.indexOf(this.currentGridSize);
+      const nextIndex = (currentIndex + 1) % DEVICE_GRID_SIZES.length;
+      this.currentGridSize = DEVICE_GRID_SIZES[nextIndex];
+
+      updateButtonTitle();
+
+      const gridClass = `device-grid grid-${this.currentGridSize}`;
+      this.devicesGrid.className = gridClass;
+
+      gridSizeBtn.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        gridSizeBtn.style.transform = "";
+      }, 100);
+    });
+  }
+
+  async _createDeviceCard(device, status) {
     const template = document.getElementById("deviceCardTemplate");
     const deviceCard = template.cloneNode(true);
     deviceCard.style.display = "";
@@ -165,7 +171,7 @@ class DeviceManager {
     if (device.primary_mac && device.primary_mac.address) {
       deviceCard.setAttribute("data-mac-address", device.primary_mac.address);
     }
-    const lastSeenText = this.getLastSeenText(device);
+    const lastSeenText = this._getLastSeenText(device);
     deviceCard.setAttribute("data-last-seen", lastSeenText);
 
     // Device icon
@@ -204,37 +210,25 @@ class DeviceManager {
     return deviceCard;
   }
 
-  clearDevices() {
-    this.devices = [];
-    this.devicesGrid.innerHTML = "";
-    this.deviceCount.textContent = "0";
-  }
+  // Format last seen time for display
+  _getLastSeenText(device) {
+    if (!device.primary_mac || !device.primary_mac.last_seen) {
+      return STATUS_NEVER;
+    }
 
-  initializeGridSize() {
-    const gridSizeBtn = document.getElementById("gridSizeBtn");
+    const now = new Date();
+    const lastSeen = new Date(device.primary_mac.last_seen);
+    const minutesSinceLastSeen = (now - lastSeen) / 60000;
 
-    if (!gridSizeBtn) return;
-
-    const updateButtonTitle = () => {
-      gridSizeBtn.title = GRID_SIZE_TITLE(this.currentGridSize);
-    };
-    updateButtonTitle();
-
-    gridSizeBtn.addEventListener("click", () => {
-      const currentIndex = DEVICE_GRID_SIZES.indexOf(this.currentGridSize);
-      const nextIndex = (currentIndex + 1) % DEVICE_GRID_SIZES.length;
-      this.currentGridSize = DEVICE_GRID_SIZES[nextIndex];
-
-      updateButtonTitle();
-
-      const gridClass = `device-grid grid-${this.currentGridSize}`;
-      this.devicesGrid.className = gridClass;
-
-      gridSizeBtn.style.transform = "scale(0.95)";
-      setTimeout(() => {
-        gridSizeBtn.style.transform = "";
-      }, 100);
-    });
+    if (minutesSinceLastSeen < 1) {
+      return STATUS_NOW;
+    } else if (minutesSinceLastSeen < 60) {
+      return `${Math.floor(minutesSinceLastSeen)}${STATUS_MINUTE}`;
+    } else if (minutesSinceLastSeen < 1440) {
+      return `${Math.floor(minutesSinceLastSeen / 60)}${STATUS_HOUR}`;
+    } else {
+      return `${Math.floor(minutesSinceLastSeen / 1440)}${STATUS_DAY}`;
+    }
   }
 }
 

@@ -6,20 +6,20 @@ class DeviceModal {
 
     // Close modal when clicking the X button
     this.modalClose.addEventListener("click", () => {
-      this.closeModal();
+      this._closeModal();
     });
 
     // Close modal when clicking outside the modal content
     this.modal.addEventListener("click", (event) => {
       if (event.target === this.modal) {
-        this.closeModal();
+        this._closeModal();
       }
     });
 
     // Close modal when pressing ESC key
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && this.modal.classList.contains("show")) {
-        this.closeModal();
+        this._closeModal();
       }
     });
 
@@ -40,11 +40,11 @@ class DeviceModal {
       (d) => d.primary_mac && d.primary_mac.address === macAddress
     );
     this.currentDevice = device;
-    this.populateModal(device);
-    this.openModal();
+    this._populateModal(device);
+    this._openModal();
   }
 
-  populateModal(device) {
+  _populateModal(device) {
     // Set modal title
     document.getElementById("modalDeviceName").textContent =
       device.name || UNK_DEVICE;
@@ -79,7 +79,7 @@ class DeviceModal {
     document.getElementById("modalModel").textContent =
       device.model || UNK_FIELD;
     document.getElementById("modalStatus").textContent =
-      this.getStatusText(device);
+      this._getStatusText(device);
 
     // Network Information
     const primaryMac = device.primary_mac;
@@ -96,16 +96,16 @@ class DeviceModal {
     document.getElementById("modalTtl").textContent =
       primaryMac.ttl || UNK_FIELD;
     document.getElementById("modalLastSeen").textContent =
-      this.formatDateTime(primaryMac.last_seen) || UNK_FIELD;
+      this._formatDateTime(primaryMac.last_seen) || UNK_FIELD;
     document.getElementById("modalPingTime").textContent =
-      this.formatPingTime(primaryMac.ping_time) || UNK_FIELD;
+      this._formatPingTime(primaryMac.ping_time) || UNK_FIELD;
 
     // Ports and Services
-    this.populatePorts(device);
-    this.populateServices(device);
+    this._populatePorts(device);
+    this._populateServices(device);
   }
 
-  populatePorts(device) {
+  _populatePorts(device) {
     const container = document.getElementById("modalPorts");
     const template = document.getElementById("portTagTemplate");
     const message = container.querySelector(".no-data");
@@ -124,10 +124,10 @@ class DeviceModal {
         (a.port || 0) - (b.port || 0)
     );
 
-    this._populateTags(data, container, template, message, this.getPortName);
+    this._populateTags(data, container, template, message, this._getPortName);
   }
 
-  populateServices(device) {
+  _populateServices(device) {
     const container = document.getElementById("modalServices");
     const template = document.getElementById("serviceTagTemplate");
     const message = container.querySelector(".no-data");
@@ -141,16 +141,33 @@ class DeviceModal {
       });
     }
 
-    this._populateTags(data, container, template, message, this.getServiceName);
+    this._populateTags(
+      data,
+      container,
+      template,
+      message,
+      this._getServiceName
+    );
   }
 
-  getPortName(port) {
+  _openModal() {
+    this.modal.classList.add("show");
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
+  }
+
+  _closeModal() {
+    this.modal.classList.remove("show");
+    document.body.style.overflow = ""; // Restore scrolling
+    this.currentDevice = null;
+  }
+
+  _getPortName(port) {
     const portNumber = port.port || UNK_PORT;
     const service = port.service ? ` (${port.service})` : "";
     return `${portNumber}${service}`;
   }
 
-  getServiceName(service) {
+  _getServiceName(service) {
     const name = service.device_name || service.device_type || UNK_SERVICE;
     let serviceDetails = [];
     if (service.manufacturer) {
@@ -167,12 +184,12 @@ class DeviceModal {
       : name;
   }
 
-  getStatusText(device) {
+  _getStatusText(device) {
     const status = window.deviceManager.getDeviceStatusText(device);
     return status || UNK_STATUS;
   }
 
-  formatDateTime(dateTimeString) {
+  _formatDateTime(dateTimeString) {
     try {
       const date = new Date(dateTimeString);
       return date.toLocaleString();
@@ -181,19 +198,8 @@ class DeviceModal {
     }
   }
 
-  formatPingTime(pingTimeMs) {
+  _formatPingTime(pingTimeMs) {
     return pingTimeMs ? `${pingTimeMs}ms` : false;
-  }
-
-  openModal() {
-    this.modal.classList.add("show");
-    document.body.style.overflow = "hidden"; // Prevent background scrolling
-  }
-
-  closeModal() {
-    this.modal.classList.remove("show");
-    document.body.style.overflow = ""; // Restore scrolling
-    this.currentDevice = null;
   }
 
   _populateTags(items, container, tagTemplate, noDataElem, getTagText) {

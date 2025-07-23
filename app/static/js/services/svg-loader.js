@@ -12,13 +12,25 @@ class SvgLoader {
 
     const loadPromises = data.icons.map((filename) => {
       const fullPath = `${DIRECTORY_DEVICES}${filename}`;
-      return this.loadSvg(fullPath);
+      return this._loadSvg(fullPath);
     });
 
     await Promise.all(loadPromises);
   }
 
-  async loadSvg(path) {
+  getDeviceIcon(deviceType) {
+    return this.cache.get(this._getIconPath(deviceType)) || null;
+  }
+
+  async getDeviceIconAsync(deviceType) {
+    return await this._loadSvg(this._getIconPath(deviceType));
+  }
+
+  isIconCached(deviceType) {
+    return this.cache.has(this._getIconPath(deviceType));
+  }
+
+  async _loadSvg(path) {
     if (this.cache.has(path)) {
       return this.cache.get(path);
     }
@@ -36,18 +48,6 @@ class SvgLoader {
     } finally {
       this.loadingPromises.delete(path);
     }
-  }
-
-  getDeviceIcon(deviceType) {
-    return this.cache.get(this._getIconPath(deviceType)) || null;
-  }
-
-  async getDeviceIconAsync(deviceType) {
-    return await this.loadSvg(this._getIconPath(deviceType));
-  }
-
-  isIconCached(deviceType) {
-    return this.cache.has(this._getIconPath(deviceType));
   }
 
   async _fetchSvg(path) {
