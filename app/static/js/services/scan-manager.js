@@ -50,4 +50,4 @@ import {
   SCANNING_TEXT,
   NO_SCAN_TEXT,
   ENDPOINT_SCAN_STATUS,
-} from "../constants.js";
+} from "./constants.js";

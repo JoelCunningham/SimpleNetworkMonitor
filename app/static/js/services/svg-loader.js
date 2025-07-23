@@ -71,4 +71,4 @@ class SvgLoader {
 // Create a global instance
 window.svgLoader = new SvgLoader();
 
-import { DIRECTORY_DEVICES, ENDPOINT_DEVICE_ICONS } from "../constants.js";
+import { DIRECTORY_DEVICES, ENDPOINT_DEVICE_ICONS } from "./constants.js";
