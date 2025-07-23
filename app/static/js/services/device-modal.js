@@ -107,7 +107,7 @@ class DeviceModal {
 
   populatePorts(device) {
     const container = document.getElementById("modalPorts");
-    const tempalte = document.getElementById("portTagTemplate");
+    const template = document.getElementById("portTagTemplate");
     const message = container.querySelector(".no-data");
 
     const data = [];
@@ -124,7 +124,7 @@ class DeviceModal {
         (a.port || 0) - (b.port || 0)
     );
 
-    this.populateTags(data, container, tempalte, message, this.getPortName);
+    this._populateTags(data, container, template, message, this.getPortName);
   }
 
   populateServices(device) {
@@ -141,7 +141,7 @@ class DeviceModal {
       });
     }
 
-    this.populateTags(data, container, template, message, this.getServiceName);
+    this._populateTags(data, container, template, message, this.getServiceName);
   }
 
   getPortName(port) {
@@ -196,7 +196,7 @@ class DeviceModal {
     this.currentDevice = null;
   }
 
-  populateTags(items, container, tagTemplate, noDataElem, getTagText) {
+  _populateTags(items, container, tagTemplate, noDataElem, getTagText) {
     // Remove old tags except the template and no-data
     const tagTemplateSelector = `.${tagTemplate.className}:not(#${tagTemplate.id})`;
     container.querySelectorAll(tagTemplateSelector).forEach((e) => e.remove());
@@ -213,6 +213,7 @@ class DeviceModal {
     items.forEach((item) => {
       const tag = tagTemplate.cloneNode(true);
       tag.textContent = getTagText(item);
+      tag.style.display = "";
       container.appendChild(tag);
     });
   }
@@ -221,20 +222,12 @@ class DeviceModal {
 // Create global instance
 window.deviceModal = new DeviceModal();
 
-const UNK_FIELD = "-";
-const UNK_DEVICE = "Unknown Device";
-const UNK_PORT = "Unknown Port";
-const UNK_SERVICE = "Unknown Service";
-const UNK_STATUS = "Unknown";
-
-const HTTP_LINK_TITLE = (url) => `Open ${url} in new tab`;
-
-const STATUS_ONLINE = "Online";
-const STATUS_AWAY = "Away";
-const STATUS_OFFLINE = "Offline";
-
-const STATUS_LABELS = {
-  online: STATUS_ONLINE,
-  away: STATUS_AWAY,
-  offline: STATUS_OFFLINE,
-};
+import {
+  UNK_FIELD,
+  UNK_DEVICE,
+  UNK_PORT,
+  UNK_SERVICE,
+  UNK_STATUS,
+  HTTP_LINK_TITLE,
+  STATUS_LABELS,
+} from "../constants.js";

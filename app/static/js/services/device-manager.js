@@ -4,13 +4,12 @@ class DeviceManager {
     this.devicesGrid = document.getElementById("devicesGrid");
     this.emptyState = document.getElementById("emptyState");
     this.deviceCount = document.getElementById("deviceCount");
-    this.currentGridSize = 4;
-    this.gridSizes = [4, 5, 6];
+    this.currentGridSize = DEFAULT_GRID_SIZE;
   }
 
   // Update devices
   async refreshDevices() {
-    const response = await fetch("/api/devices");
+    const response = await fetch(ENDPOINT_DEVICES);
     const data = await response.json();
 
     if (data.devices) {
@@ -26,7 +25,7 @@ class DeviceManager {
 
     const lastSeen = new Date(device.primary_mac.last_seen);
     const now = new Date();
-    const minutesSinceLastSeen = (now - lastSeen) / (1000 * 60);
+    const minutesSinceLastSeen = (now - lastSeen) / 60000;
 
     if (minutesSinceLastSeen < 5) {
       return "online";
@@ -213,11 +212,11 @@ class DeviceManager {
       linkButton.className = "device-link-btn";
       linkButton.title = `Open ${httpUrl} in new tab`;
       linkButton.innerHTML = `
-        <img
-          src="/static/icons/external-link.svg"
-          alt="Open device portal"
-          class="external-link-icon"
-        />
+      <img
+      src="/static/icons/external-link.svg"
+      alt="Open device portal"
+      class="external-link-icon"
+      />
       `;
 
       linkButton.addEventListener("click", (e) => {
@@ -251,9 +250,9 @@ class DeviceManager {
     // Add click event listener
     gridSizeBtn.addEventListener("click", () => {
       // Cycle to next grid size
-      const currentIndex = this.gridSizes.indexOf(this.currentGridSize);
-      const nextIndex = (currentIndex + 1) % this.gridSizes.length;
-      this.currentGridSize = this.gridSizes[nextIndex];
+      const currentIndex = DEVICE_GRID_SIZES.indexOf(this.currentGridSize);
+      const nextIndex = (currentIndex + 1) % DEVICE_GRID_SIZES.length;
+      this.currentGridSize = DEVICE_GRID_SIZES[nextIndex];
 
       // Update button title
       updateButtonTitle();
@@ -273,3 +272,9 @@ class DeviceManager {
 
 // Create global instance
 window.deviceManager = new DeviceManager();
+
+import {
+  DEFAULT_GRID_SIZE,
+  DEVICE_GRID_SIZES,
+  ENDPOINT_DEVICES,
+} from "../constants.js";

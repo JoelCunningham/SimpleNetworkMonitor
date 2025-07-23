@@ -7,18 +7,16 @@ class ScanManager {
   }
 
   async updateScanStatus() {
-    const BASE_TEXT = "Last scan: ";
-
-    const response = await fetch("/api/scan/status");
+    const response = await fetch(ENDPOINT_SCAN_STATUS);
     const scanStatus = await response.json();
 
     if (scanStatus.is_scanning) {
-      this.scanningStatus.textContent = BASE_TEXT + "Scanning now...";
+      this.scanningStatus.textContent = BASE_SCAN_TEXT + SCANNING_TEXT;
     } else if (scanStatus.last_scan_time) {
       const dateText = new Date(scanStatus.last_scan_time).toLocaleString();
-      this.scanningStatus.textContent = BASE_TEXT + dateText;
+      this.scanningStatus.textContent = BASE_SCAN_TEXT + dateText;
     } else {
-      this.scanningStatus.textContent = BASE_TEXT + "Never";
+      this.scanningStatus.textContent = BASE_SCAN_TEXT + NO_SCAN_TEXT;
     }
 
     if (this.previousScanTime !== scanStatus.last_scan_time) {
@@ -46,3 +44,10 @@ class ScanManager {
 
 // Create a global instance
 window.scanManager = new ScanManager();
+
+import {
+  BASE_SCAN_TEXT,
+  SCANNING_TEXT,
+  NO_SCAN_TEXT,
+  ENDPOINT_SCAN_STATUS,
+} from "../constants.js";

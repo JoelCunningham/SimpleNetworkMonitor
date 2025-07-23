@@ -1,26 +1,21 @@
 class SvgLoader {
   constructor() {
-    this.DEVICE_DIR = "/static/icons/devices/";
     this.cache = new Map();
     this.loadingPromises = new Map();
   }
 
   async preloadCommonIcons() {
-    try {
-      const response = await fetch("/api/icons/devices");
-      if (!response.ok) return;
+    const response = await fetch(ENDPOINT_DEVICE_ICONS);
+    if (!response.ok) return;
 
-      const data = await response.json();
+    const data = await response.json();
 
-      const loadPromises = data.icons.map((filename) => {
-        const fullPath = `${this.DEVICE_DIR}${filename}`;
-        return this.loadSvg(fullPath);
-      });
+    const loadPromises = data.icons.map((filename) => {
+      const fullPath = `${DIRECTORY_DEVICES}${filename}`;
+      return this.loadSvg(fullPath);
+    });
 
-      await Promise.all(loadPromises);
-    } catch (error) {
-      console.error("Failed to preload icons:", error);
-    }
+    await Promise.all(loadPromises);
   }
 
   async loadSvg(path) {
@@ -43,6 +38,18 @@ class SvgLoader {
     }
   }
 
+  getDeviceIcon(deviceType) {
+    return this.cache.get(this._getIconPath(deviceType)) || null;
+  }
+
+  async getDeviceIconAsync(deviceType) {
+    return await this.loadSvg(this._getIconPath(deviceType));
+  }
+
+  isIconCached(deviceType) {
+    return this.cache.has(this._getIconPath(deviceType));
+  }
+
   async _fetchSvg(path) {
     try {
       const response = await fetch(path);
@@ -56,21 +63,12 @@ class SvgLoader {
     }
   }
 
-  getDeviceIcon(deviceType) {
-    const path = `${this.DEVICE_DIR}${deviceType.toLowerCase()}.svg`;
-    return this.cache.get(path) || null;
-  }
-
-  async getDeviceIconAsync(deviceType) {
-    const path = `${this.DEVICE_DIR}${deviceType.toLowerCase()}.svg`;
-    return await this.loadSvg(path);
-  }
-
-  isIconCached(deviceType) {
-    const path = `${this.DEVICE_DIR}${deviceType.toLowerCase()}.svg`;
-    return this.cache.has(path);
+  _getIconPath(deviceType) {
+    return `${DIRECTORY_DEVICES}${deviceType.toLowerCase()}${ICON_EXT}`;
   }
 }
 
 // Create a global instance
 window.svgLoader = new SvgLoader();
+
+import { DIRECTORY_DEVICES, ENDPOINT_DEVICE_ICONS } from "../constants.js";
