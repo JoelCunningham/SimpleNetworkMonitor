@@ -1,8 +1,8 @@
-<div id="deviceModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
+<dialog id="deviceModal" class="modal">
+  <main class="modal-content">
+    <header class="modal-header">
       <div class="modal-title-section">
-        <h3 id="modalDeviceName">Device Details</h3>
+        <h1 id="modalDeviceName">Device Details</h1>
         <button
           class="modal-link-btn"
           id="modalLinkBtn"
@@ -16,17 +16,20 @@
           />
         </button>
       </div>
-      <button class="modal-close" id="modalClose">&times;</button>
-    </div>
+      <button class="modal-close" id="modalClose">
+        <img src="/static/icons/close.svg" alt="Close modal" />
+      </button>
+    </header>
+
     <div class="modal-body">
-      <div class="device-details">
-        <div class="detail-section">
-          <div class="detail-head">
+      <article class="device-details">
+        <section class="detail-section">
+          <header>
             <button
               class="collapse-toggle"
               onclick="toggleSectionCollapse('General')"
             >
-              <h4>General Information</h4>
+              <h2>General Information</h2>
               <img
                 id="arrow-General"
                 src="/static/icons/collapse.svg"
@@ -34,8 +37,9 @@
                 class="collapse-icon"
               />
             </button>
-          </div>
+          </header>
           <div class="detail-grid collapsible" id="General">
+            <div class="gap"></div>
             <div class="detail-item">
               <span class="detail-label">Device Name:</span>
               <span class="detail-value" id="modalDeviceNameValue">-</span>
@@ -61,15 +65,15 @@
               <span class="detail-value" id="modalStatus">-</span>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="detail-section">
-          <div class="detail-head">
+        <section class="detail-section">
+          <header>
             <button
               class="collapse-toggle"
               onclick="toggleSectionCollapse('Network')"
             >
-              <h4>Network Information</h4>
+              <h2>Network Information</h2>
               <img
                 id="arrow-Network"
                 src="/static/icons/collapse.svg"
@@ -77,8 +81,9 @@
                 class="collapse-icon closed"
               />
             </button>
-          </div>
+          </header>
           <div class="detail-grid collapsible closed" id="Network">
+            <div class="gap"></div>
             <div class="detail-item">
               <span class="detail-label">MAC Address:</span>
               <span class="detail-value" id="modalMacAddress">-</span>
@@ -112,12 +117,12 @@
               <span class="detail-value" id="modalPingTime">-</span>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="detail-section">
-          <div class="detail-head">
-            <h4>Open Ports</h4>
-          </div>
+        <section class="detail-section">
+          <header>
+            <h2>Open Ports</h2>
+          </header>
           <div class="tags-container" id="modalPorts">
             <span
               class="port-tag"
@@ -126,12 +131,12 @@
             ></span>
             <p class="no-data">No open ports found</p>
           </div>
-        </div>
+        </section>
 
-        <div class="detail-section">
-          <div class="detail-head">
-            <h4>Discovered Services</h4>
-          </div>
+        <section class="detail-section">
+          <header>
+            <h2>Discovered Services</h2>
+          </header>
           <div class="tags-container" id="modalServices">
             <span
               class="service-tag"
@@ -140,11 +145,11 @@
             ></span>
             <p class="no-data">No services discovered</p>
           </div>
-        </div>
-      </div>
+        </section>
+      </article>
     </div>
-  </div>
-</div>
+  </main>
+</dialog>
 
 <style>
   .modal {
@@ -173,6 +178,7 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     width: 90%;
     max-width: 800px;
+    padding: 0;
     min-height: fit-content;
     animation: slideUp 0.1s ease-out;
   }
@@ -187,7 +193,7 @@
     color: var(--text-white);
     border-radius: 12px 12px 0 0;
   }
-  .modal-header h3 {
+  .modal-header h1 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
@@ -231,7 +237,6 @@
     color: var(--text-white);
     font-size: 2rem;
     cursor: pointer;
-    padding: 0;
     width: 40px;
     height: 40px;
     display: flex;
@@ -239,10 +244,15 @@
     justify-content: center;
     border-radius: 50%;
     transition: all 0.2s ease;
+    margin-right: -8px;
   }
   .modal-close:hover {
     background-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
+  }
+  .modal-close img {
+    width: 25px;
+    height: 25px;
   }
 
   .modal-body {
@@ -258,13 +268,10 @@
   .detail-section {
     background: var(--page-background);
     border-radius: 8px;
-    padding: 0.5rem;
+    padding: 1.5rem;
     border-left: 4px solid var(--primary-color);
   }
-  .detail-section .detail-head {
-    padding: 1rem;
-  }
-  .detail-section .detail-head h4 {
+  .detail-section h2 {
     color: var(--primary-color);
     font-size: 1.2rem;
     font-weight: 600;
@@ -274,7 +281,10 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
-    padding: 0rem 1rem;
+  }
+  .detail-grid .gap {
+    grid-column: span 2;
+    height: 0.5rem;
   }
 
   .detail-item {
@@ -302,7 +312,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    padding: 0rem 1rem 0.5rem 1rem;
+    margin-top: 1rem;
   }
 
   .port-tag {
@@ -390,7 +400,7 @@
       padding: 1rem 1.5rem;
     }
 
-    .modal-header h3 {
+    .modal-header h1 {
       font-size: 1.3rem;
     }
 
