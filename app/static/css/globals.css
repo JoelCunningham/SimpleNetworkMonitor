@@ -1,15 +1,17 @@
 :root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --grey-gradient: linear-gradient(135deg, #6c757d 0%, #495057 100%);
     --primary-color: #667eea;
     --success-color: #28a745;
     --warning-color: #ffc107;
     --danger-color: #dc3545;
+
     --text-black: #1d1d1f;
     --text-white: #f8f9fa;
     --text-muted: #6c757d;
-    --background-color: #f2f0f0;
+    --page-background: #f2f0f0;
     --section-background: #f8f9fa;
+
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --grey-gradient: linear-gradient(135deg, #6c757d 0%, #495057 100%);
 
     /* Colours used for SVG files */
     --svg_dark_purple: #645d89;
@@ -29,7 +31,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: var(--background-color);
+    background-color: var(--page-background);
     color: var(--text-black);
     line-height: 1.6;
 }

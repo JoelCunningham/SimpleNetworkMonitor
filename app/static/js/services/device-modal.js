@@ -44,6 +44,16 @@ class DeviceModal {
     this._openModal();
   }
 
+  toggleSectionCollapse(sectionId) {
+    const section = document.getElementById(sectionId);
+    const arrow = document.getElementById(`arrow-${sectionId}`);
+
+    const isClosed = section.classList.contains("closed");
+
+    arrow.classList.toggle("closed", !isClosed);
+    section.classList.toggle("closed", !isClosed);
+  }
+
   _populateModal(device) {
     // Set modal title
     document.getElementById("modalDeviceName").textContent =

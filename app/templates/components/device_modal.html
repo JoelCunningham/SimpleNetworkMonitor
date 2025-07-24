@@ -21,8 +21,21 @@
     <div class="modal-body">
       <div class="device-details">
         <div class="detail-section">
-          <h4>General Information</h4>
-          <div class="detail-grid">
+          <div class="detail-head">
+            <button
+              class="collapse-toggle"
+              onclick="toggleSectionCollapse('General')"
+            >
+              <h4>General Information</h4>
+              <img
+                id="arrow-General"
+                src="/static/icons/collapse.svg"
+                alt="Toggle section"
+                class="collapse-icon"
+              />
+            </button>
+          </div>
+          <div class="detail-grid collapsible" id="General">
             <div class="detail-item">
               <span class="detail-label">Device Name:</span>
               <span class="detail-value" id="modalDeviceNameValue">-</span>
@@ -51,8 +64,21 @@
         </div>
 
         <div class="detail-section">
-          <h4>Network Information</h4>
-          <div class="detail-grid">
+          <div class="detail-head">
+            <button
+              class="collapse-toggle"
+              onclick="toggleSectionCollapse('Network')"
+            >
+              <h4>Network Information</h4>
+              <img
+                id="arrow-Network"
+                src="/static/icons/collapse.svg"
+                alt="Toggle section"
+                class="collapse-icon closed"
+              />
+            </button>
+          </div>
+          <div class="detail-grid collapsible closed" id="Network">
             <div class="detail-item">
               <span class="detail-label">MAC Address:</span>
               <span class="detail-value" id="modalMacAddress">-</span>
@@ -89,8 +115,10 @@
         </div>
 
         <div class="detail-section">
-          <h4>Open Ports</h4>
-          <div class="ports-container" id="modalPorts">
+          <div class="detail-head">
+            <h4>Open Ports</h4>
+          </div>
+          <div class="tags-container" id="modalPorts">
             <span
               class="port-tag"
               id="portTagTemplate"
@@ -101,8 +129,10 @@
         </div>
 
         <div class="detail-section">
-          <h4>Discovered Services</h4>
-          <div class="services-container" id="modalServices">
+          <div class="detail-head">
+            <h4>Discovered Services</h4>
+          </div>
+          <div class="tags-container" id="modalServices">
             <span
               class="service-tag"
               id="serviceTagTemplate"
@@ -226,13 +256,15 @@
   }
 
   .detail-section {
-    background: var(--background-color);
+    background: var(--page-background);
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 0.5rem;
     border-left: 4px solid var(--primary-color);
   }
-  .detail-section h4 {
-    margin: 0 0 1rem 0;
+  .detail-section .detail-head {
+    padding: 1rem;
+  }
+  .detail-section .detail-head h4 {
     color: var(--primary-color);
     font-size: 1.2rem;
     font-weight: 600;
@@ -242,6 +274,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
+    padding: 0rem 1rem;
   }
 
   .detail-item {
@@ -265,12 +298,11 @@
     word-break: break-all;
   }
 
-  .ports-container,
-  .services-container {
+  .tags-container {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: 0.5rem;
+    padding: 0rem 1rem 0.5rem 1rem;
   }
 
   .port-tag {
@@ -298,6 +330,34 @@
     font-style: italic;
     margin: 0;
     padding: 0.5rem 0;
+  }
+
+  .collapse-toggle {
+    border: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .collapse-icon {
+    width: 20px;
+    height: 20px;
+    transform: rotate(180deg);
+    transition: transform 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
+    display: inline-block;
+  }
+  .collapse-icon.closed {
+    transform: rotate(0deg);
+  }
+
+  .collapsible {
+    transition: max-height 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
+    max-height: 300px;
+    overflow: hidden;
+  }
+  .collapsible.closed {
+    max-height: 0px;
   }
 
   @keyframes fadeIn {

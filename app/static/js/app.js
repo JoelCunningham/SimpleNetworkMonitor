@@ -27,3 +27,7 @@ function toggleViewMode() {
 function refreshDevices() {
   window.deviceManager.refreshDevices();
 }
+
+function toggleSectionCollapse(sectionId) {
+  window.deviceModal.toggleSectionCollapse(sectionId);
+}
