@@ -77,6 +77,9 @@ class DeviceModal {
       modalLinkBtn.style.display = "none";
     }
 
+    // Adjust sections for unknown devices
+    if (!device.id) this._formatUnknownDevice();
+
     // General Information
     document.getElementById("modalDeviceNameValue").textContent =
       device.name || UNK_FIELD;
@@ -233,6 +236,18 @@ class DeviceModal {
       tag.id = "";
       container.appendChild(tag);
     });
+  }
+
+  _formatUnknownDevice() {
+    const actionsBar = document.querySelector(".actions-bar");
+    const generalSection = document.getElementById("generalSection");
+    const networkSection = document.getElementById("Network");
+    const networkArrow = document.getElementById("arrow-Network");
+
+    actionsBar.style.display = "";
+    generalSection.style.display = "none";
+    networkSection.classList.remove("closed");
+    networkArrow.classList.remove("closed");
   }
 }
 

@@ -22,8 +22,19 @@
     </header>
 
     <div class="modal-body">
+      <div class="actions-bar" style="display: none">
+        <button class="new-device" id="newDeviceBtn" title="New Device">
+          <img src="/static/icons/create.svg" alt="Add to device" />
+          New device
+        </button>
+        <button class="add-device" id="addDeviceBtn" title="Add to Device">
+          <img src="/static/icons/add.svg" alt="Add to device" />
+          Add to device
+        </button>
+      </div>
+
       <article class="device-details">
-        <section class="detail-section">
+        <section class="detail-section" id="generalSection">
           <header>
             <button
               class="collapse-toggle"
@@ -67,7 +78,7 @@
           </div>
         </section>
 
-        <section class="detail-section">
+        <section class="detail-section" id="networkSection">
           <header>
             <button
               class="collapse-toggle"
@@ -119,7 +130,7 @@
           </div>
         </section>
 
-        <section class="detail-section">
+        <section class="detail-section" id="portsSection">
           <header>
             <h2>Open Ports</h2>
           </header>
@@ -133,7 +144,7 @@
           </div>
         </section>
 
-        <section class="detail-section">
+        <section class="detail-section" id="servicesSection">
           <header>
             <h2>Discovered Services</h2>
           </header>
@@ -368,6 +379,45 @@
   }
   .collapsible.closed {
     max-height: 0px;
+  }
+
+  .actions-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .actions-bar img {
+    width: 20px;
+    height: 20px;
+    margin-bottom: -3px;
+  }
+  .actions-bar #newDeviceBtn img {
+    margin-right: 5px;
+  }
+
+  .new-device {
+    background: var(--primary-color);
+    color: var(--text-white);
+    border: var(--primary-color) 2px solid;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .add-device {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: var(--primary-color) 2px solid;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .new-device:hover,
+  .add-device:hover {
+    transform: scale(1.05);
   }
 
   @keyframes fadeIn {
