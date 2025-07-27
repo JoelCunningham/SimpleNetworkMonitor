@@ -29,8 +29,8 @@ export const STATUS_DAY = "d ago";
 export const STATUS_NEVER = "Never seen";
 
 // Device grid
-export const DEVICE_GRID_SIZES = [4, 5, 6];
-export const DEFAULT_GRID_SIZE = DEVICE_GRID_SIZES[0];
+export const DEVICE_GRID_SIZES = [3, 4, 5];
+export const DEFAULT_GRID_SIZE = DEVICE_GRID_SIZES[1];
 
 // HTTP
 export const HTTP = "http";

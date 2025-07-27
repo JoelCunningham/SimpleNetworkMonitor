@@ -1,4 +1,4 @@
-{% macro select(id) %} {% include 'inputs/base.html' %}
+{% macro select(id) %}
 
 <div class="input secondary select" id="{{ id }}" tabindex="0">
   <span class="select-text"></span>
@@ -29,29 +29,21 @@
   }
   .open .select-dropdown {
     max-height: 100px;
-    border: 2px solid var(--primary-color);
+    border: 2px solid var(--colour-primary);
     transition: max-height 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
   }
 
   .select-option {
     padding: 0.4rem 1rem;
-    color: var(--text-black, #222);
-    background: var(--page-background, #fff);
+    color: var(--colour-black);
+    background: var(--colour-page-background);
     cursor: pointer;
     transition: 0.15s;
   }
   .select-option:hover,
   .select-option.selected {
-    background: var(--primary-color, #007bff);
-    color: var(--text-white, #fff);
-  }
-
-  .select.select-disabled {
-    background: #f3f3f3;
-    color: #aaa;
-    border-color: #ddd;
-    pointer-events: none;
-    cursor: not-allowed;
+    background: var(--colour-primary);
+    color: var(--colour-white);
   }
 
   .select-icon {

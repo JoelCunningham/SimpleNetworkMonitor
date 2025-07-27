@@ -6,7 +6,7 @@ export function initSelect(select, options, onChange, placeholder) {
   dropdown.innerHTML = ""; // Remove existing options
 
   if (!options || options.length === 0) {
-    select.classList.add("select-disabled");
+    select.classList.add("disabled");
     select.setAttribute("aria-disabled", "true");
     select.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -14,7 +14,7 @@ export function initSelect(select, options, onChange, placeholder) {
     });
     return;
   }
-  select.classList.remove("select-disabled");
+  select.classList.remove("disabled");
   select.removeAttribute("aria-disabled");
 
   options.forEach((option) => {
@@ -39,12 +39,12 @@ export function initSelect(select, options, onChange, placeholder) {
 
   // Open/close logic
   select.addEventListener("click", (e) => {
-    if (select.classList.contains("select-disabled")) return;
+    if (select.classList.contains("disabled")) return;
     select.classList.toggle("open");
   });
   // Keyboard navigation
   select.addEventListener("keydown", (e) => {
-    if (select.classList.contains("select-disabled")) return;
+    if (select.classList.contains("disabled")) return;
     if (e.key === "Enter" || e.key === " ") {
       select.classList.toggle("open");
       e.preventDefault();

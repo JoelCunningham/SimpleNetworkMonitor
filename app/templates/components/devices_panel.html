@@ -47,7 +47,7 @@
 
 <style>
   .devices-panel {
-    background: var(--section-background);
+    background: var(--colour-section-background);
     border-radius: var(--radius-panel);
     padding: 2rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -89,8 +89,8 @@
   }
 
   .device-count {
-    background: var(--primary-color);
-    color: var(--text-white);
+    background: var(--colour-primary);
+    color: var(--colour-white);
     padding: 0.3rem 0.8rem;
     border-radius: var(--radius-circle);
     font-size: 0.9rem;
@@ -108,18 +108,18 @@
     display: grid;
     gap: 1.5rem;
   }
+  .device-grid.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
   .device-grid.grid-4 {
     grid-template-columns: repeat(4, 1fr);
   }
   .device-grid.grid-5 {
     grid-template-columns: repeat(5, 1fr);
   }
-  .device-grid.grid-6 {
-    grid-template-columns: repeat(6, 1fr);
-  }
 
   .device-card {
-    background: var(--page-background);
+    background: var(--colour-page-background);
     position: relative;
     border-radius: var(--radius-panel);
     padding: 1.5rem;
@@ -163,13 +163,13 @@
   }
 
   .device-card.online::before {
-    background-color: var(--success-color);
+    background-color: var(--colour-success);
   }
   .device-card.away::before {
-    background-color: var(--warning-color);
+    background-color: var(--colour-warning);
   }
   .device-card.offline::before {
-    background-color: var(--danger-color);
+    background-color: var(--colour-danger);
   }
 
   .device-info {
@@ -201,8 +201,8 @@
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background: var(--primary-color);
-    color: var(--text-white);
+    background: var(--colour-primary);
+    color: var(--colour-white);
     border: none;
     border-radius: var(--radius-circle);
     width: 32px;
@@ -237,8 +237,8 @@
     width: 40px;
     height: 40px;
     border-radius: var(--radius-circle);
-    background: var(--text-muted);
-    color: var(--text-white);
+    background: var(--colour-light-grey);
+    color: var(--colour-white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -249,7 +249,7 @@
   .empty-state {
     text-align: center;
     padding: 3rem 1rem;
-    color: var(--text-muted);
+    color: var(--colour-light-grey);
   }
   .empty-state svg {
     width: 64px;
@@ -261,62 +261,28 @@
     font-size: 1.1rem;
   }
 
-  .device-grid.grid-5 .device-card {
-    padding: 1.2rem;
-  }
-  .device-grid.grid-6 .device-card {
-    padding: 1rem;
-  }
-  .device-grid.grid-6 .device-name {
-    font-size: 1rem;
-  }
-  .device-grid.grid-6 .device-icon {
-    width: min(60px, 50%);
-    height: min(60px, 50%);
-  }
-  .device-grid.grid-6 .device-icon svg {
-    max-width: 48px;
-    max-height: 48px;
-  }
-  .device-grid.grid-6 .device-link-btn {
-    width: 28px;
-    height: 28px;
-  }
-  .device-grid.grid-6 .device-link-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-  .device-grid.grid-6 .device-link-btn .external-link-icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 1400px) {
-    .device-grid.grid-6 {
-      grid-template-columns: repeat(5, 1fr);
-    }
-  }
-
   @media (max-width: 1200px) {
-    .device-grid.grid-5,
-    .device-grid.grid-6 {
+    .device-grid.grid-4,
+    .device-grid.grid-5 {
       grid-template-columns: repeat(4, 1fr);
     }
   }
 
   @media (max-width: 1024px) {
+    .device-grid.grid-3,
     .device-grid.grid-4,
-    .device-grid.grid-5,
-    .device-grid.grid-6 {
+    .device-grid.grid-5 {
       grid-template-columns: repeat(3, 1fr);
+    }
+    .grid-size-btn {
+      display: none;
     }
   }
 
   @media (max-width: 768px) {
+    .device-grid.grid-3,
     .device-grid.grid-4,
-    .device-grid.grid-5,
-    .device-grid.grid-6 {
+    .device-grid.grid-5 {
       grid-template-columns: repeat(2, 1fr);
     }
 
@@ -338,9 +304,9 @@
   }
 
   @media (max-width: 480px) {
+    .device-grid.grid-3,
     .device-grid.grid-4,
-    .device-grid.grid-5,
-    .device-grid.grid-6 {
+    .device-grid.grid-5 {
       grid-template-columns: 1fr;
     }
   }

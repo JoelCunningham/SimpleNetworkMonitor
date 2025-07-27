@@ -1,17 +1,21 @@
 :root {
-    --primary-color: #667eea;
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-    --danger-color: #dc3545;
+    --colour-primary: #667eea;
+    --colour-secondary: #764ba2;
 
-    --text-black: #1d1d1f;
-    --text-white: #f8f9fa;
-    --text-muted: #6c757d;
-    --page-background: #f2f0f0;
-    --section-background: #f8f9fa;
+    --colour-success: #28a745;
+    --colour-warning: #ffc107;
+    --colour-danger: #dc3545;
 
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --grey-gradient: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    --colour-white: #f8f9fa;
+    --colour-light-grey: #6c757d;
+    --colour-dark-grey: #495057;
+    --colour-black: #1d1d1f;
+
+    --colour-page-background: #f2f0f0;
+    --colour-section-background: #f8f9fa;
+
+    --gradient-primary: linear-gradient(135deg, var(--colour-primary) 0%, var(--colour-secondary) 100%);
+    --gradient-grey: linear-gradient(135deg, var(--colour-light-grey) 0%, var(--colour-dark-grey) 100%);
 
     --radius-input: 14px;
     --radius-panel: 12px;
@@ -37,8 +41,8 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: var(--page-background);
-    color: var(--text-black);
+    background-color: var(--colour-page-background);
+    color: var(--colour-black);
     line-height: 1.6;
 }
 
@@ -48,7 +52,6 @@ main {
     padding: 2rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     main {
         padding: 1rem;

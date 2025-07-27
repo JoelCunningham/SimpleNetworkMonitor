@@ -23,7 +23,7 @@
 
 <style>
   .scan-status-panel {
-    background: var(--section-background);
+    background: var(--colour-section-background);
     border-radius: var(--radius-panel);
     padding: 1.5rem;
     margin-bottom: 2rem;
@@ -43,7 +43,7 @@
 
   .last-scan-time {
     font-size: 1rem;
-    color: var(--text-muted);
+    color: var(--colour-light-grey);
   }
 
   .scan-controls {
@@ -52,8 +52,8 @@
   }
 
   .toggle-btn {
-    background: var(--primary-gradient);
-    color: var(--text-white);
+    background: var(--gradient-primary);
+    color: var(--colour-white);
     border: none;
     padding: 0.8rem 1.5rem;
     border-radius: var(--radius-input);
@@ -73,11 +73,11 @@
   }
 
   .toggle-btn.active {
-    background: var(--primary-gradient);
+    background: var(--gradient-primary);
   }
 
   .toggle-btn:not(.active) {
-    background: var(--grey-gradient);
+    background: var(--gradient-grey);
   }
 
   @media (max-width: 768px) {
