@@ -1,5 +1,5 @@
-{% from 'inputs/button.html' import button %} {% from 'inputs/select.html'
-import select %}
+{% from 'inputs/button.html' import button %} 
+{% from 'inputs/select.html' import select %}
 
 <dialog id="deviceModal" class="modal">
   <main class="modal-content">
@@ -26,8 +26,8 @@ import select %}
 
     <div class="modal-body">
       <div class="actions-bar" style="display: none">
-        {{ button('newDeviceButton', 'Create device', 'create') }} {{
-        select('addDeviceSelect') }}
+        {{ button('newDeviceButton', 'Create device', 'create') }} 
+        {{ select('addDeviceSelect') }}
       </div>
 
       <article class="device-details">
