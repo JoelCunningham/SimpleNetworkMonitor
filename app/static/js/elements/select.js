@@ -1,9 +1,14 @@
-export function initSelect(select, options, onChange, placeholder) {
+export function initSelect(select, options, onChange, placeholder, action) {
   const text = select.querySelector(".select-text");
   const dropdown = select.querySelector(".select-dropdown");
 
-  text.textContent = placeholder;
   dropdown.innerHTML = ""; // Remove existing options
+
+  if (placeholder) {
+    text.textContent = placeholder;
+  }
+
+  console.log(options, onChange, placeholder, action);
 
   if (!options || options.length === 0) {
     select.classList.add("disabled");
@@ -17,8 +22,8 @@ export function initSelect(select, options, onChange, placeholder) {
   select.classList.remove("disabled");
   select.removeAttribute("aria-disabled");
 
+  // Add options
   options.forEach((option) => {
-    console.log("Adding option:", option);
     const div = document.createElement("div");
     div.className = "select-option";
     div.textContent = option.label;
@@ -28,7 +33,7 @@ export function initSelect(select, options, onChange, placeholder) {
     div.addEventListener("click", () => {
       currentValue = option.value;
       text.textContent = option.label;
-      select.classList.remove("open");
+      select.classList.add("closed");
       dropdown
         .querySelectorAll(".select-option")
         .forEach((o) => o.classList.remove("selected"));
@@ -37,25 +42,49 @@ export function initSelect(select, options, onChange, placeholder) {
     });
   });
 
+  // Add action
+  if (action) {
+    const div = document.createElement("div");
+    div.className = "select-option";
+    div.textContent = action.label;
+    div.dataset.value = 0;
+    dropdown.appendChild(div);
+
+    div.addEventListener("click", () => {
+      currentValue = 0;
+      select.classList.add("closed");
+      dropdown
+        .querySelectorAll(".select-option")
+        .forEach((o) => o.classList.remove("selected"));
+      action.run();
+    });
+  }
+
+  dropdown.style.maxHeight = `${options.length * 39}px`;
+  if (action) {
+    dropdown.classList.add("actionable");
+    dropdown.style.maxHeight = `${(options.length + 1) * 39 + 2}px`;
+  }
+
   // Open/close logic
   select.addEventListener("click", (e) => {
     if (select.classList.contains("disabled")) return;
-    select.classList.toggle("open");
+    select.classList.toggle("closed");
   });
   // Keyboard navigation
   select.addEventListener("keydown", (e) => {
     if (select.classList.contains("disabled")) return;
     if (e.key === "Enter" || e.key === " ") {
-      select.classList.toggle("open");
+      select.classList.toggle("closed");
       e.preventDefault();
     } else if (e.key === "Escape") {
-      select.classList.remove("open");
+      select.classList.add("closed");
     }
   });
   // Close on outside click
   document.addEventListener("click", (e) => {
     if (!select.contains(e.target)) {
-      select.classList.remove("open");
+      select.classList.add("closed");
     }
   });
 }

@@ -1,24 +1,13 @@
 {% from 'inputs/button.html' import button %} 
 {% from 'inputs/select.html' import select %}
+{% from 'inputs/textbox.html' import textbox %}
+{% from 'components/external_button.html' import external_button %}
 
 <dialog id="deviceModal" class="modal">
   <main class="modal-content">
     <header class="modal-header">
-      <div class="modal-title-section">
-        <h1 id="modalDeviceName">Device Details</h1>
-        <button
-          class="modal-link-btn"
-          id="modalLinkBtn"
-          style="display: none"
-          title="Open device portal in new tab"
-        >
-          <img
-            src="/static/icons/external-link.svg"
-            alt="Open device portal"
-            class="external-link-icon"
-          />
-        </button>
-      </div>
+      <h1 id="modalDeviceName">Device Details</h1>
+      {{ external_button('modalLinkBtn', 'Open device portal', 'secondary') }}
       <button class="modal-close" id="modalClose">
         <img src="/static/icons/close.svg" alt="Close modal" />
       </button>
@@ -26,9 +15,40 @@
 
     <div class="modal-body">
       <div class="actions-bar" style="display: none">
-        {{ button('newDeviceButton', 'Create device', 'create') }} 
+        {{ button('newDeviceButton', 'Create device', 'create', 'primary', 'createDevice()') }} 
         {{ select('addDeviceSelect') }}
       </div>
+
+      <form class="device-form" id="deviceForm" style="display: none">
+        <section class="detail-section" id="formSection">
+          <div class="detail-grid"/>
+            <div class="detail-item">
+              <label class="detail-label">Device Name</label>
+              {{ textbox('deviceNameInput', 'Enter the device\'s name') }}
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">Category</label>
+              {{ select('deviceCategorySelect', 'Select a category', 'left') }}
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">Owner</label>
+              {{ select('deviceOwnerSelect', 'Select an owner', 'left') }}
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">Location</label>
+              {{ select('deviceLocationSelect', 'Select a location', 'left') }}
+            </div>
+            <div class="detail-item gridless">
+              <label class="detail-label">Model</label>
+              {{ textbox('deviceModelInput', 'Enter the model of the device') }}
+            </div>
+          </div>  
+          <div class="add-device-actions">
+            {{ button('cancelDeviceButton', 'Cancel', '', 'secondary', 'cancelDevice()') }}
+            {{ button('saveDeviceButton', 'Save Device', '', 'primary', 'saveDevice()', 'submit') }}
+          </div>
+        </section>
+      </form>
 
       <article class="device-details">
         <section class="detail-section" id="generalSection">
@@ -109,8 +129,8 @@
               <span class="detail-value" id="modalVendor">-</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">OS Guess:</span>
-              <span class="detail-value" id="modalOsGuess">-</span>
+              <span class="detail-label">OS Group:</span>
+              <span class="detail-value" id="modalOsGroup">-</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">TTL:</span>
@@ -162,7 +182,7 @@
 <style>
   .modal {
     position: fixed;
-    z-index: 1000;
+    z-index: 2;
     left: 0;
     top: 0;
     width: 100%;
@@ -193,7 +213,7 @@
 
   .modal-header {
     display: flex;
-    justify-content: space-between;
+    gap: 1rem;
     align-items: center;
     padding: 1.5rem 2rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -205,38 +225,6 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-  }
-
-  .modal-title-section {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .modal-link-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: var(--colour-white);
-    border: none;
-    border-radius: var(--radius-circle);
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .modal-link-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
-  }
-  .modal-link-btn:active {
-    transform: scale(0.95);
-  }
-  .modal-link-btn .external-link-icon {
-    width: 16px;
-    height: 16px;
-    filter: brightness(0) invert(1);
   }
 
   .modal-close {
@@ -252,7 +240,7 @@
     justify-content: center;
     border-radius: var(--radius-circle);
     transition: all 0.2s ease;
-    margin-right: -8px;
+    margin-left: auto;
   }
   .modal-close:hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -279,6 +267,9 @@
     padding: 1.5rem;
     border-left: 4px solid var(--colour-primary);
   }
+  .detail-section#formSection {
+    border: 4px solid var(--colour-primary);
+  }
   .detail-section h2 {
     color: var(--colour-primary);
     font-size: 1.2rem;
@@ -288,7 +279,7 @@
   .detail-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
+    gap: 1rem 2.5rem;
   }
   .detail-grid .gap {
     grid-column: span 2;
@@ -299,6 +290,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+  }
+  .detail-item.gridless {
+    grid-column: span 2;
   }
 
   .detail-label {
@@ -382,6 +376,18 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
+  }
+
+  .device-form {
+    margin-bottom: 2rem;
+  }
+
+  .add-device-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-left: auto;
+    justify-content: end;
   }
 
   @keyframes fadeIn {

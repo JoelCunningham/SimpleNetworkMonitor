@@ -1,3 +1,5 @@
+{% from 'components/external_button.html' import external_button %}
+
 <div class="devices-panel">
   <div class="devices-header">
     <h2>
@@ -21,13 +23,7 @@
           </div>
           <div class="device-name"><strong></strong></div>
         </div>
-        <button class="device-link-btn" title="" style="display: none">
-          <img
-            src="/static/icons/external-link.svg"
-            alt="Open device portal"
-            class="external-link-icon"
-          />
-        </button>
+        {{ external_button('', 'Open device portal') }}
       </div>
     </div>
     <div class="empty-state" id="emptyState" style="display: none">
@@ -172,6 +168,12 @@
     background-color: var(--colour-danger);
   }
 
+  .device-card .external-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+
   .device-info {
     display: flex;
     flex-direction: column;
@@ -195,42 +197,6 @@
   .device-name {
     text-align: center;
     font-size: 1.1rem;
-  }
-
-  .device-link-btn {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: var(--colour-primary);
-    color: var(--colour-white);
-    border: none;
-    border-radius: var(--radius-circle);
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 2;
-  }
-  .device-link-btn:hover {
-    background: #5a6fcf;
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-  .device-link-btn:active {
-    transform: scale(0.95);
-  }
-  .device-link-btn svg {
-    width: 14px;
-    height: 14px;
-  }
-  .device-link-btn .external-link-icon {
-    width: 16px;
-    height: 16px;
-    filter: brightness(0) invert(1); /* Makes the icon white */
   }
 
   .unknown-device {

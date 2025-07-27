@@ -1,5 +1,8 @@
 from app import database
+from app.models.category import Category
 from app.models.device import Device
+from app.models.location import Location
+from app.models.owner import Owner
 from app.objects.address_data import AddressData
 from app.services.mac_service import MacService
 
@@ -27,3 +30,16 @@ class DeviceService:
                         devices.append(device)
         
         return devices
+    
+    def get_device_locations(self) -> list[Location]:
+        """Get all device locations."""
+        return database.session.query(Location).all()
+    
+    def get_device_categories(self) -> list[Category]:
+        """Get all device categories."""
+        return database.session.query(Category).all()
+    
+    def get_device_owners(self) -> list[Owner]:
+        """Get all device owners."""
+        return database.session.query(Owner).all()
+        

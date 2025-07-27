@@ -1,0 +1,55 @@
+{% macro external_button(id, title, style) %}
+
+<button
+  class="external-button {{ style }}"
+  id="{{ id }}"
+  style="display: none"
+  title="{{ title }}"
+>
+  <img
+    src="/static/icons/external-link.svg"
+    alt="Open in new tab"
+    class="external-link-icon"
+  />
+</button>
+
+<style>
+      .external-button {
+    color: var(--colour-white);
+    background: var(--colour-primary);
+    border: none;
+    border-radius: var(--radius-circle);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  .external-button:hover {
+    background: #5a6fcf;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  .external-button:active {
+    transform: scale(0.95);
+  }
+
+  .external-button .external-link-icon {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+  }
+
+  .external-button.secondary {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .external-button.secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+</style>
+
+{% endmacro %}

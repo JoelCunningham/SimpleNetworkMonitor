@@ -28,6 +28,18 @@ function refreshDevices() {
   window.deviceManager.refreshDevices();
 }
 
+function createDevice() {
+  window.deviceModal.createDevice();
+}
+
+function cancelDevice() {
+  window.deviceModal.cancelDevice();
+}
+
+function saveDevice() {
+  window.deviceModal.saveDevice();
+}
+
 function toggleSectionCollapse(sectionId) {
   window.deviceModal.toggleSectionCollapse(sectionId);
 }

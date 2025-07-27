@@ -56,3 +56,48 @@ def get_devices():
         return jsonify({'devices': devices_raw})
     except Exception as e:
         return jsonify({'error': f'Failed to get devices: {str(e)}'}), 500
+    
+@api_bp.route('/locations', methods=['GET'])
+def get_device_locations():
+    """Get all locations for devices."""
+    try:
+        controller = container.device_controller()
+        locations = controller.get_device_locations()
+        
+        locations_raw: list[Any] = []
+        for location in locations:
+            locations_raw.append({"id": location.id, "name": location.name})
+
+        return jsonify({'items': locations_raw})
+    except Exception as e:
+        return jsonify({'error': f'Failed to get device locations: {str(e)}'}), 500
+    
+@api_bp.route('/categories', methods=['GET'])
+def get_device_categories():
+    """Get all categories for devices."""
+    try:
+        controller = container.device_controller()
+        categories = controller.get_device_categories()
+
+        categories_raw: list[Any] = []
+        for category in categories:
+            categories_raw.append({"id": category.id, "name": category.name})
+
+        return jsonify({'items': categories_raw})
+    except Exception as e:
+        return jsonify({'error': f'Failed to get device categories: {str(e)}'}), 500
+    
+@api_bp.route('/owners', methods=['GET'])
+def get_device_owners():
+    """Get all owners for devices."""
+    try:
+        controller = container.device_controller()
+        owners = controller.get_device_owners()
+
+        owners_raw: list[Any] = []
+        for owner in owners:
+            owners_raw.append({"id": owner.id, "name": owner.name})
+
+        return jsonify({'items': owners_raw})
+    except Exception as e:
+        return jsonify({'error': f'Failed to get device owners: {str(e)}'}), 500

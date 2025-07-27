@@ -2,7 +2,7 @@
   background: var(--colour-primary);
   color: var(--colour-white);
   border: var(--colour-primary) 2px solid;
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1rem;
   border-radius: var(--radius-input);
   font-size: 1.2rem;
   cursor: pointer;
@@ -10,7 +10,9 @@
   text-align: center;
 }
 
-.input:hover {
+.input:hover,
+.input:focus {
+  outline: none;
   transform: scale(1.05);
 }
 
@@ -25,6 +27,10 @@
   border-color: var(--colour-light-grey);
   pointer-events: none;
   cursor: not-allowed;
+}
+
+.input.left {
+  text-align: left;
 }
 
 .input img {

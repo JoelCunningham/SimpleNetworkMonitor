@@ -1,0 +1,21 @@
+{% macro textbox(id, placeholder, required) %}
+
+<input
+  type="text"
+  id="{{ id }}"
+  class="input textbox"
+  placeholder="{{ placeholder }}"
+  {% if required %}required{% endif %}
+/>
+
+<style>
+.textbox {
+    color: var(--colour-black);
+    text-align: left;
+    background-color: transparent;
+    cursor: text;
+    padding: 0.5rem 1rem;
+}
+</style>
+
+{% endmacro %}

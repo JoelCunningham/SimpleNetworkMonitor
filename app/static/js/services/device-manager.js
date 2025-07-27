@@ -190,12 +190,12 @@ class DeviceManager {
     }
 
     // Device name
-    const deviceName = deviceCard.querySelector(".device-name strong");
+    const deviceName = deviceCard.querySelector(".device-name");
     deviceName.textContent = device.name;
 
     // Device link button
     const httpUrl = this.getDeviceHttpUrl(device);
-    const linkButton = deviceCard.querySelector(".device-link-btn");
+    const linkButton = deviceCard.querySelector(".external-button");
     if (httpUrl) {
       linkButton.style.display = "";
       linkButton.title = HTTP_LINK_TITLE(httpUrl);

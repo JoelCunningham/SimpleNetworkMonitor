@@ -41,30 +41,6 @@ class DeviceModal {
     this._open();
   }
 
-  _populateAddDeviceDropdown() {
-    const select = document.getElementById("addDeviceSelect");
-    const devices = window.deviceManager.devices || [];
-
-    let options = [
-      ...devices
-        .filter((device) => device.id && device.name)
-        .map((device) => ({ value: device.id, label: device.name })),
-    ];
-
-    options = [
-      { value: "1", label: "Device 1" },
-      { value: "2", label: "Device 2" },
-    ];
-
-    const onChange = (value) => {
-      if (value) {
-        // TODO: Implement logic for adding to device
-      }
-    };
-
-    this.select = initSelect(select, options, onChange, "Add to device");
-  }
-
   toggleSectionCollapse(sectionId) {
     const section = document.getElementById(sectionId);
     const arrow = document.getElementById(`arrow-${sectionId}`);
@@ -73,6 +49,39 @@ class DeviceModal {
 
     arrow.classList.toggle("closed", !isClosed);
     section.classList.toggle("closed", !isClosed);
+  }
+
+  async createDevice() {
+    const actionsBar = document.querySelector(".actions-bar");
+    actionsBar.style.display = "none";
+    
+    const form = document.getElementById("deviceForm");
+    form.style.display = "block";
+
+    const categorySelect = document.getElementById("deviceCategorySelect");
+    const ownerSelect = document.getElementById("deviceOwnerSelect");
+    const locationSelect = document.getElementById("deviceLocationSelect");
+
+    const redirectToAddOwner = () => {
+      window.deviceModal._closeForm();
+      // TODO: Implement redirect to add owner page
+    };
+
+    this._populateFormSelect(categorySelect, ENDPOINT_CATEGORIES, "category");
+    this._populateFormSelect(ownerSelect, ENDPOINT_OWNERS, "owner", true, redirectToAddOwner);
+    this._populateFormSelect(locationSelect, ENDPOINT_LOCATIONS, "location", true);
+  }
+
+  async cancelDevice() {
+    const actionsBar = document.querySelector(".actions-bar");
+    actionsBar.style.display = "";
+
+    this._closeForm();
+  }
+
+  async saveDevice() {
+    // TODO: Implement save logic
+    this._closeForm();
   }
 
   _populateModal(device) {
@@ -125,7 +134,7 @@ class DeviceModal {
       primaryMac.hostname || UNK_FIELD;
     document.getElementById("modalVendor").textContent =
       primaryMac.vendor || UNK_FIELD;
-    document.getElementById("modalOsGuess").textContent =
+    document.getElementById("modalOsGroup").textContent =
       primaryMac.os_guess || UNK_FIELD;
     document.getElementById("modalTtl").textContent =
       primaryMac.ttl || UNK_FIELD;
@@ -190,12 +199,29 @@ class DeviceModal {
   }
 
   _close() {
+    this._closeForm();
+
     const select = document.getElementById("addDeviceSelect");
     cleanSelect(select);
 
     this.modal.classList.remove("show");
-    document.body.style.overflow = ""; // Restore scrolling
     this.currentDevice = null;
+
+    document.body.style.overflow = ""; // Restore scrolling
+  }
+
+  _closeForm() {
+    const categorySelect = document.getElementById("deviceCategorySelect");
+    const ownerSelect = document.getElementById("deviceOwnerSelect");
+    const locationSelect = document.getElementById("deviceLocationSelect");
+
+    cleanSelect(categorySelect);
+    cleanSelect(ownerSelect);
+    cleanSelect(locationSelect);
+
+    const form = document.getElementById("deviceForm");
+    form.reset();
+    form.style.display = "none";
   }
 
   _getPortName(port) {
@@ -273,6 +299,53 @@ class DeviceModal {
     networkSection.classList.remove("closed");
     networkArrow.classList.remove("closed");
   }
+
+  _populateAddDeviceDropdown() {
+    const select = document.getElementById("addDeviceSelect");
+    const devices = window.deviceManager.devices || [];
+
+    let options = [
+      ...devices
+        .filter((device) => device.id && device.name)
+        .map((device) => ({ value: device.id, label: device.name })),
+    ];
+
+    const onChange = (value) => {
+      if (value) {
+        // TODO: Implement logic for adding to device
+      }
+    };
+
+    initSelect(select, options, onChange, "Add to device");
+  }
+
+  async _populateFormSelect(select, endpoint, field, nullable, addMethod) {
+    try {
+      const response = await fetch(endpoint);
+      const data = await response.json();
+      const options = data.items.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+      if (nullable) {
+        options.push({
+          value: "",
+          label: `No ${field}`,
+        });
+      }
+      if (addMethod) {
+        const action = {
+          label: `Add new ${field}`,
+          run: addMethod,
+        };``
+        initSelect(select, options, null, '', action);
+      } else {
+        initSelect(select, options, null, '');
+      }
+    } catch (e) {
+      initSelect(select, [], null, '');
+    }
+  }
 }
 
 // Create global instance
@@ -285,4 +358,7 @@ import {
   UNK_SERVICE,
   UNK_STATUS,
   HTTP_LINK_TITLE,
+  ENDPOINT_LOCATIONS,
+  ENDPOINT_CATEGORIES,
+  ENDPOINT_OWNERS,
 } from "./constants.js";

@@ -46,6 +46,9 @@ export const ICON_EXT = ".svg";
 
 // API Endpoints
 export const ENDPOINT_DEVICES = "/api/devices";
+export const ENDPOINT_LOCATIONS = "/api/locations";
+export const ENDPOINT_CATEGORIES = "/api/categories";
+export const ENDPOINT_OWNERS = "/api/owners";
 export const ENDPOINT_SCAN_STATUS = "/api/scan/status";
 export const ENDPOINT_DEVICE_ICONS = "/api/icons/devices";
 

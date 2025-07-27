@@ -12,7 +12,6 @@ class Location(BaseModel):
     __tablename__ = 'location'
     
     name = database.Column(database.String(100), nullable=False, unique=True)
-    description = database.Column(database.Text, nullable=True)
     
     # Relationships
     devices = database.relationship('Device', back_populates='location')

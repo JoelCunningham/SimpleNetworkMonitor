@@ -12,7 +12,6 @@ class Owner(BaseModel):
     __tablename__ = 'owner'
     
     name = database.Column(database.String(100), nullable=False, unique=True)
-    email = database.Column(database.String(255), nullable=True)
     
     # Relationships
     devices = database.relationship('Device', back_populates='owner')
