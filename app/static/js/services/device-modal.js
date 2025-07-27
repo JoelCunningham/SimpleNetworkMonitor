@@ -1,25 +1,23 @@
+import { initSelect, cleanSelect } from "../elements/select.js";
+
 class DeviceModal {
   constructor() {
     this.modal = document.getElementById("deviceModal");
     this.modalClose = document.getElementById("modalClose");
     this.currentDevice = null;
 
-    // Close modal when clicking the X button
+    // Initialize the modal close listeners
     this.modalClose.addEventListener("click", () => {
-      this._closeModal();
+      this._close();
     });
-
-    // Close modal when clicking outside the modal content
     this.modal.addEventListener("click", (event) => {
       if (event.target === this.modal) {
-        this._closeModal();
+        this._close();
       }
     });
-
-    // Close modal when pressing ESC key
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && this.modal.classList.contains("show")) {
-        this._closeModal();
+        this._close();
       }
     });
 
@@ -28,20 +26,43 @@ class DeviceModal {
       const deviceCard = event.target.closest(".device-card");
       if (deviceCard) {
         const macAddress = deviceCard.getAttribute("data-mac-address");
-        if (macAddress) {
-          this.showDeviceDetails(macAddress);
-        }
+        this.initDeviceModal(macAddress);
       }
     });
   }
 
-  async showDeviceDetails(macAddress) {
+  async initDeviceModal(macAddress) {
     const device = window.deviceManager.devices.find(
       (d) => d.primary_mac && d.primary_mac.address === macAddress
     );
     this.currentDevice = device;
     this._populateModal(device);
-    this._openModal();
+    this._populateAddDeviceDropdown();
+    this._open();
+  }
+
+  _populateAddDeviceDropdown() {
+    const select = document.getElementById("addDeviceSelect");
+    const devices = window.deviceManager.devices || [];
+
+    let options = [
+      ...devices
+        .filter((device) => device.id && device.name)
+        .map((device) => ({ value: device.id, label: device.name })),
+    ];
+
+    options = [
+      { value: "1", label: "Device 1" },
+      { value: "2", label: "Device 2" },
+    ];
+
+    const onChange = (value) => {
+      if (value) {
+        // TODO: Implement logic for adding to device
+      }
+    };
+
+    this.select = initSelect(select, options, onChange, "Add to device");
   }
 
   toggleSectionCollapse(sectionId) {
@@ -163,12 +184,15 @@ class DeviceModal {
     );
   }
 
-  _openModal() {
+  _open() {
     this.modal.classList.add("show");
     document.body.style.overflow = "hidden"; // Prevent background scrolling
   }
 
-  _closeModal() {
+  _close() {
+    const select = document.getElementById("addDeviceSelect");
+    cleanSelect(select);
+
     this.modal.classList.remove("show");
     document.body.style.overflow = ""; // Restore scrolling
     this.currentDevice = null;

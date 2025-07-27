@@ -16,10 +16,13 @@
 
     <main>{% block content %}{% endblock %}</main>
 
+    <script type="module" src="{{ url_for('static', filename='js/elements/select.js') }}"></script>
+
     <script type="module" src="{{ url_for('static', filename='js/services/svg-loader.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/services/device-manager.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/services/device-modal.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/services/scan-manager.js') }}"></script>
+
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   </body>
 </html>

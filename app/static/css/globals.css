@@ -13,6 +13,12 @@
     --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --grey-gradient: linear-gradient(135deg, #6c757d 0%, #495057 100%);
 
+    --radius-input: 14px;
+    --radius-panel: 12px;
+    --radius-circle: 50%;
+    --radius-status: 4px;
+    --radius-tag: 20px;
+
     /* Colours used for SVG files */
     --svg_dark_purple: #645d89;
     --svg_light_purple: #968fbb;

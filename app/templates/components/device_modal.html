@@ -1,3 +1,6 @@
+{% from 'inputs/button.html' import button %} {% from 'inputs/select.html'
+import select %}
+
 <dialog id="deviceModal" class="modal">
   <main class="modal-content">
     <header class="modal-header">
@@ -23,14 +26,8 @@
 
     <div class="modal-body">
       <div class="actions-bar" style="display: none">
-        <button class="new-device" id="newDeviceBtn" title="New Device">
-          <img src="/static/icons/create.svg" alt="Add to device" />
-          New device
-        </button>
-        <button class="add-device" id="addDeviceBtn" title="Add to Device">
-          <img src="/static/icons/add.svg" alt="Add to device" />
-          Add to device
-        </button>
+        {{ button('newDeviceButton', 'Create device', 'create') }} {{
+        select('addDeviceSelect') }}
       </div>
 
       <article class="device-details">
@@ -185,7 +182,7 @@
 
   .modal-content {
     background: var(--section-background);
-    border-radius: 12px;
+    border-radius: var(--radius-panel);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     width: 90%;
     max-width: 800px;
@@ -202,7 +199,7 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     background: var(--primary-gradient);
     color: var(--text-white);
-    border-radius: 12px 12px 0 0;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
   }
   .modal-header h1 {
     margin: 0;
@@ -220,7 +217,7 @@
     background: rgba(255, 255, 255, 0.2);
     color: var(--text-white);
     border: none;
-    border-radius: 50%;
+    border-radius: var(--radius-circle);
     width: 36px;
     height: 36px;
     display: flex;
@@ -253,7 +250,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: var(--radius-circle);
     transition: all 0.2s ease;
     margin-right: -8px;
   }
@@ -278,7 +275,7 @@
 
   .detail-section {
     background: var(--page-background);
-    border-radius: 8px;
+    border-radius: var(--radius-panel);
     padding: 1.5rem;
     border-left: 4px solid var(--primary-color);
   }
@@ -330,7 +327,7 @@
     background: #17a2b8;
     color: white;
     padding: 0.4rem 0.8rem;
-    border-radius: 20px;
+    border-radius: var(--radius-tag);
     font-size: 0.85rem;
     font-weight: 500;
     white-space: nowrap;
@@ -340,7 +337,7 @@
     background: var(--success-color);
     color: var(--text-white);
     padding: 0.4rem 0.8rem;
-    border-radius: 20px;
+    border-radius: var(--radius-tag);
     font-size: 0.85rem;
     font-weight: 500;
     white-space: nowrap;
@@ -385,39 +382,6 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
-  }
-  .actions-bar img {
-    width: 20px;
-    height: 20px;
-    margin-bottom: -3px;
-  }
-  .actions-bar #newDeviceBtn img {
-    margin-right: 5px;
-  }
-
-  .new-device {
-    background: var(--primary-color);
-    color: var(--text-white);
-    border: var(--primary-color) 2px solid;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .add-device {
-    background-color: transparent;
-    color: var(--primary-color);
-    border: var(--primary-color) 2px solid;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .new-device:hover,
-  .add-device:hover {
-    transform: scale(1.05);
   }
 
   @keyframes fadeIn {
