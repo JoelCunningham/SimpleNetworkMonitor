@@ -7,7 +7,7 @@ import json
 import os
 from typing import Any
 
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, current_app, jsonify, request
 
 from app import container
 from app.utilities.model_encoder import ModelEncoder
@@ -53,9 +53,45 @@ def get_devices():
             device_raw = json.loads(json.dumps(device, cls=ModelEncoder))
             devices_raw.append(device_raw)
         
-        return jsonify({'devices': devices_raw})
+        return jsonify(devices_raw)
     except Exception as e:
         return jsonify({'error': f'Failed to get devices: {str(e)}'}), 500
+
+@api_bp.route('/devices/save', methods=['POST'])
+def save_device():
+    """Save a device to the database."""
+    try:
+        data = json.loads(request.data)
+        
+        model = data.get('model')
+        category_id = data.get('category_id')
+        location_id = data.get('location_id')
+        owner_id = data.get('owner_id')
+        mac_ids = data.get('mac_ids')
+
+        controller = container.device_controller()
+        device = controller.add_device(model, category_id, location_id, owner_id, mac_ids)
+        
+        device_raw = json.loads(json.dumps(device, cls=ModelEncoder))
+        
+        return device_raw, 201
+    except Exception as e:
+        return jsonify({'error': f'Failed to save device: {str(e)}'}), 500
+
+@api_bp.route('/devices/<mac_address>', methods=['GET'])
+def get_device(mac_address: str):
+    """Get a device by its MAC address."""
+    try:
+        controller = container.device_controller()
+        device = controller.get_device(mac_address)
+        
+        if device:
+            device_raw = json.loads(json.dumps(device, cls=ModelEncoder))
+            return jsonify(device_raw)
+        else:
+            return jsonify({'error': 'Device not found'}), 404
+    except Exception as e:
+        return jsonify({'error': f'Failed to get device: {str(e)}'}), 500
     
 @api_bp.route('/locations', methods=['GET'])
 def get_device_locations():

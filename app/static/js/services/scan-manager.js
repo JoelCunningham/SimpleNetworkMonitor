@@ -1,3 +1,10 @@
+import {
+  BASE_SCAN_TEXT,
+  ENDPOINT,
+  NO_SCAN_TEXT,
+  SCANNING_TEXT,
+} from "./constants.js";
+
 class ScanManager {
   constructor() {
     this.previousScanTime = null;
@@ -7,7 +14,7 @@ class ScanManager {
   }
 
   async updateScanStatus() {
-    const response = await fetch(ENDPOINT_SCAN_STATUS);
+    const response = await fetch(ENDPOINT.SCAN_STATUS);
     const scanStatus = await response.json();
 
     if (scanStatus.is_scanning) {
@@ -44,10 +51,3 @@ class ScanManager {
 
 // Create a global instance
 window.scanManager = new ScanManager();
-
-import {
-  BASE_SCAN_TEXT,
-  SCANNING_TEXT,
-  NO_SCAN_TEXT,
-  ENDPOINT_SCAN_STATUS,
-} from "./constants.js";

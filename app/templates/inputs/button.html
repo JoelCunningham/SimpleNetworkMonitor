@@ -1,10 +1,9 @@
-{% macro button(id, text, icon, style, onClick, type) %}
+{% macro button(id, text, icon, style) %}
 
 <button
   class="input {{ style }} button"
   id="{{ id }}"
-  onclick="{{ onClick }}"
-  type="{{ type if type else 'button' }}"
+  type="button"
 >
   {% if icon %}
   <img

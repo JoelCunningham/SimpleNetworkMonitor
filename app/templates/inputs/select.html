@@ -1,6 +1,10 @@
 {% macro select(id, placeholder, style) %}
 
-<div class="input secondary {{ style }} select closed" id="{{ id }}" tabindex="0">
+<div
+  class="input secondary {{ style }} select closed"
+  id="{{ id }}"
+  tabindex="0"
+>
   <span class="select-text">{{ placeholder }}</span>
   <img
     class="select-icon"
@@ -19,14 +23,15 @@
   }
   .closed.select {
     z-index: 0;
+    transition: z-index 0s ease 0.3s;
   }
 
   .select-dropdown {
     max-height: 100px;
     position: absolute;
-    left: 0;
+    left: -2px;
     top: 110%;
-    width: 100%;
+    min-width: 100%;
     border: 2px solid var(--colour-primary);
     border-radius: var(--radius-input);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -34,10 +39,13 @@
     transition: max-height 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
   }
   .closed .select-dropdown {
-    border: none;
-    transition: border;
-    transition-delay: 0.3s;
     max-height: 0 !important;
+    border-width: 0 !important;
+    transition: max-height 0.3s cubic-bezier(0.4, 0.2, 0.2, 1) 0s,
+      border-width 0s ease-out 0.25s;
+  }
+  .disabled .select-dropdown {
+    display: none;
   }
 
   .select-option {
@@ -48,6 +56,7 @@
     cursor: pointer;
     transition: 0.15s;
     position: relative;
+    white-space: nowrap;
   }
   .select-option:hover,
   .select-option.selected {
@@ -57,15 +66,21 @@
   .actionable .select-option:last-child {
     border-top: 2px solid var(--colour-primary);
   }
+  .select-option.action {
+    padding-left: 2rem;
+    background-repeat: no-repeat;
+    background-position: 0.5rem center;
+    background-size: 1.3rem;
+  }
 
   .select-icon {
     margin: 0 0 -2px 8px;
     pointer-events: none;
     transition: transform 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
-    transform: rotate(0deg);
-  }
-  .open .select-icon {
     transform: rotate(180deg);
+  }
+  .closed .select-icon {
+    transform: rotate(0deg);
   }
 
   .select.left {

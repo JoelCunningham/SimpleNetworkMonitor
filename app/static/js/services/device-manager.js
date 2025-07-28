@@ -1,22 +1,53 @@
+import { getElement } from "./common.js";
+import {
+  DEFAULT_GRID_SIZE,
+  DEVICE_GRID_SIZES,
+  ENDPOINT,
+  GRID_SIZE_TITLE,
+  HTTP,
+  HTTP_LINK_TITLE,
+  HTTP_PORT,
+  HTTP_PORTS,
+  HTTPS,
+  HTTPS_PORT,
+  HTTPS_PORTS,
+  SCHEME_DELIM,
+  STATUS_AWAY,
+  STATUS_DAY,
+  STATUS_HOUR,
+  STATUS_MINUTE,
+  STATUS_NEVER,
+  STATUS_NOW,
+  STATUS_OFFLINE,
+  STATUS_ONLINE,
+} from "./constants.js";
+
 class DeviceManager {
   constructor() {
     this.devices = [];
-    this.devicesGrid = document.getElementById("devicesGrid");
-    this.emptyState = document.getElementById("emptyState");
-    this.deviceCount = document.getElementById("deviceCount");
+    this.devicesGrid = getElement("#devicesGrid");
+    this.emptyState = getElement("#emptyState");
+    this.deviceCount = getElement("#deviceCount");
     this.currentGridSize = DEFAULT_GRID_SIZE;
   }
 
-  // Update devices
+  getCurrentDevices() {
+    return this.devices || [];
+  }
+
+  setCurrentDevices(devices) {
+    this.devices = devices;
+    this.updateDeviceDisplay();
+  }
+
   async refreshDevices() {
-    const response = await fetch(ENDPOINT_DEVICES);
-    const data = await response.json();
-    if (data.devices) {
-      window.deviceManager.updateDeviceDisplay(data.devices);
+    const response = await fetch(ENDPOINT.DEVICES);
+    const devices = await response.json();
+    if (devices) {
+      this.setCurrentDevices(devices);
     }
   }
 
-  // Device status calculation
   getDeviceStatusText(device) {
     if (!device.primary_mac || !device.primary_mac.last_seen) {
       return STATUS_OFFLINE;
@@ -45,9 +76,9 @@ class DeviceManager {
     let httpPorts = [];
 
     if (device.macs) {
-      device.macs.forEach((mac) => {
+      device.macs.forEach(mac => {
         if (mac.ports) {
-          mac.ports.forEach((port) => {
+          mac.ports.forEach(port => {
             if (port) {
               const portNumber = port.port;
               const service = port.service?.toLowerCase() || "";
@@ -90,11 +121,10 @@ class DeviceManager {
     return `${protocol}${SCHEME_DELIM}${ip}${portSuffix}`;
   }
 
-  async updateDeviceDisplay(devices = this.devices) {
-    if (!devices || devices.length === 0) return;
+  async updateDeviceDisplay() {
+    if (!this.devices || this.devices.length === 0) return;
 
-    this.devices = devices;
-    const template = document.getElementById("deviceCardTemplate");
+    const template = getElement("#deviceCardTemplate");
     this.devicesGrid.innerHTML = "";
     if (template) {
       this.devicesGrid.appendChild(template);
@@ -103,7 +133,7 @@ class DeviceManager {
     const gridClass = `device-grid grid-${this.currentGridSize}`;
     this.devicesGrid.className = gridClass;
 
-    const sortedDevices = [...devices].sort((a, b) => {
+    const sortedDevices = [...this.devices].sort((a, b) => {
       const lastSeenA = a.primary_mac?.last_seen
         ? new Date(a.primary_mac.last_seen)
         : new Date(0);
@@ -121,10 +151,10 @@ class DeviceManager {
     }
 
     // Update total device count
-    this.deviceCount.textContent = devices.length;
+    this.deviceCount.textContent = this.devices.length;
 
     // Show/hide empty state
-    if (devices.length === 0) {
+    if (this.devices.length === 0) {
       this.emptyState.style.display = "block";
       this.devicesGrid.style.display = "none";
     } else {
@@ -134,7 +164,7 @@ class DeviceManager {
   }
 
   initializeGridSize() {
-    const gridSizeBtn = document.getElementById("gridSizeBtn");
+    const gridSizeBtn = getElement("#gridSizeBtn");
 
     if (!gridSizeBtn) return;
 
@@ -161,7 +191,7 @@ class DeviceManager {
   }
 
   async _createDeviceCard(device, status) {
-    const template = document.getElementById("deviceCardTemplate");
+    const template = getElement("#deviceCardTemplate");
     const deviceCard = template.cloneNode(true);
     deviceCard.style.display = "";
     deviceCard.id = "";
@@ -175,8 +205,8 @@ class DeviceManager {
     deviceCard.setAttribute("data-last-seen", lastSeenText);
 
     // Device icon
-    const iconElement = deviceCard.querySelector(".device-icon");
-    const unknownIcon = iconElement.querySelector(".unknown-device");
+    const iconElement = getElement(".device-icon", deviceCard);
+    const unknownIcon = getElement(".unknown-device", iconElement);
     if (device.category && device.category.name) {
       let icon = null;
       if (window.svgLoader.isIconCached(device.category.name)) {
@@ -190,22 +220,26 @@ class DeviceManager {
     }
 
     // Device name
-    const deviceName = deviceCard.querySelector(".device-name");
+    const deviceName = getElement(".device-name", deviceCard);
     deviceName.textContent = device.name;
 
     // Device link button
     const httpUrl = this.getDeviceHttpUrl(device);
-    const linkButton = deviceCard.querySelector(".external-button");
+    const linkButton = getElement(".external-button", deviceCard);
     if (httpUrl) {
       linkButton.style.display = "";
       linkButton.title = HTTP_LINK_TITLE(httpUrl);
-      linkButton.onclick = (e) => {
+      linkButton.onclick = e => {
         e.stopPropagation();
         window.open(httpUrl, "_blank");
       };
     } else {
       linkButton.style.display = "none";
     }
+
+    deviceCard.addEventListener("click", () => {
+      window.deviceModal.init(device);
+    });
 
     return deviceCard;
   }
@@ -234,26 +268,3 @@ class DeviceManager {
 
 // Create global instance
 window.deviceManager = new DeviceManager();
-
-import {
-  DEFAULT_GRID_SIZE,
-  DEVICE_GRID_SIZES,
-  ENDPOINT_DEVICES,
-  GRID_SIZE_TITLE,
-  HTTP,
-  HTTP_LINK_TITLE,
-  HTTP_PORT,
-  HTTP_PORTS,
-  HTTPS,
-  HTTPS_PORT,
-  HTTPS_PORTS,
-  SCHEME_DELIM,
-  STATUS_AWAY,
-  STATUS_DAY,
-  STATUS_HOUR,
-  STATUS_MINUTE,
-  STATUS_NEVER,
-  STATUS_NOW,
-  STATUS_OFFLINE,
-  STATUS_ONLINE,
-} from "./constants.js";

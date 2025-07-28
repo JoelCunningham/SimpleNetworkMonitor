@@ -1,3 +1,5 @@
+import { DIRECTORY_DEVICES, ENDPOINT, ICON_EXT } from "./constants.js";
+
 class SvgLoader {
   constructor() {
     this.cache = new Map();
@@ -5,12 +7,12 @@ class SvgLoader {
   }
 
   async preloadCommonIcons() {
-    const response = await fetch(ENDPOINT_DEVICE_ICONS);
+    const response = await fetch(ENDPOINT.DEVICE_ICONS);
     if (!response.ok) return;
 
     const data = await response.json();
 
-    const loadPromises = data.icons.map((filename) => {
+    const loadPromises = data.icons.map(filename => {
       const fullPath = `${DIRECTORY_DEVICES}${filename}`;
       return this._loadSvg(fullPath);
     });
@@ -70,5 +72,3 @@ class SvgLoader {
 
 // Create a global instance
 window.svgLoader = new SvgLoader();
-
-import { DIRECTORY_DEVICES, ENDPOINT_DEVICE_ICONS } from "./constants.js";

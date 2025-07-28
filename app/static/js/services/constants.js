@@ -45,12 +45,18 @@ export const HTTPS_PORTS = [HTTPS_PORT, 8443];
 export const ICON_EXT = ".svg";
 
 // API Endpoints
-export const ENDPOINT_DEVICES = "/api/devices";
-export const ENDPOINT_LOCATIONS = "/api/locations";
-export const ENDPOINT_CATEGORIES = "/api/categories";
-export const ENDPOINT_OWNERS = "/api/owners";
-export const ENDPOINT_SCAN_STATUS = "/api/scan/status";
-export const ENDPOINT_DEVICE_ICONS = "/api/icons/devices";
+export const ENDPOINT = {
+  DEVICES: "/api/devices",
+  ADD_DEVICE: "/api/devices/save",
+  GET_DEVICE: (mac_address) => `/api/devices/${mac_address}`,
+
+  LOCATIONS: "/api/locations",
+  CATEGORIES: "/api/categories",
+  OWNERS: "/api/owners",
+
+  SCAN_STATUS: "/api/scan/status",
+  DEVICE_ICONS: "/api/icons/devices",
+};
 
 // Directories
 export const DIRECTORY_DEVICES = "/static/icons/devices/";

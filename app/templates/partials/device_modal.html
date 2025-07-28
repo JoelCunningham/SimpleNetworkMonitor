@@ -3,7 +3,7 @@
 {% from 'inputs/textbox.html' import textbox %}
 {% from 'components/external_button.html' import external_button %}
 
-<dialog id="deviceModal" class="modal">
+<dialog class="modal" id="deviceModal">
   <main class="modal-content">
     <header class="modal-header">
       <h1 id="modalDeviceName">Device Details</h1>
@@ -15,37 +15,33 @@
 
     <div class="modal-body">
       <div class="actions-bar" style="display: none">
-        {{ button('newDeviceButton', 'Create device', 'create', 'primary', 'createDevice()') }} 
-        {{ select('addDeviceSelect') }}
+        {{ button('newDeviceButton', 'Create device', 'create', 'primary') }} 
+        {{ select('addDeviceSelect', 'Add to device') }}
       </div>
 
       <form class="device-form" id="deviceForm" style="display: none">
         <section class="detail-section" id="formSection">
           <div class="detail-grid"/>
             <div class="detail-item">
-              <label class="detail-label">Device Name</label>
-              {{ textbox('deviceNameInput', 'Enter the device\'s name') }}
+              <span class="detail-label">Category</span>
+              {{ select('categorySelect', 'Select a category', 'left') }}
             </div>
             <div class="detail-item">
-              <label class="detail-label">Category</label>
-              {{ select('deviceCategorySelect', 'Select a category', 'left') }}
+              <span class="detail-label">Owner</span>
+              {{ select('ownerSelect', 'Select an owner', 'left') }}
             </div>
             <div class="detail-item">
-              <label class="detail-label">Owner</label>
-              {{ select('deviceOwnerSelect', 'Select an owner', 'left') }}
+              <span class="detail-label">Location</span>
+              {{ select('locationSelect', 'Select a location', 'left') }}
             </div>
             <div class="detail-item">
-              <label class="detail-label">Location</label>
-              {{ select('deviceLocationSelect', 'Select a location', 'left') }}
-            </div>
-            <div class="detail-item gridless">
-              <label class="detail-label">Model</label>
+              <span class="detail-label">Model</span>
               {{ textbox('deviceModelInput', 'Enter the model of the device') }}
             </div>
           </div>  
           <div class="add-device-actions">
-            {{ button('cancelDeviceButton', 'Cancel', '', 'secondary', 'cancelDevice()') }}
-            {{ button('saveDeviceButton', 'Save Device', '', 'primary', 'saveDevice()', 'submit') }}
+            {{ button('cancelDeviceButton', 'Cancel', '', 'secondary') }}
+            {{ button('submitDeviceButton', 'Save Device', '', 'primary') }}
           </div>
         </section>
       </form>
@@ -291,9 +287,6 @@
     flex-direction: column;
     gap: 0.25rem;
   }
-  .detail-item.gridless {
-    grid-column: span 2;
-  }
 
   .detail-label {
     font-weight: 500;
@@ -385,7 +378,7 @@
   .add-device-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     margin-left: auto;
     justify-content: end;
   }

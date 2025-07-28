@@ -29,6 +29,11 @@
   cursor: not-allowed;
 }
 
+.input.error {
+  border: 2px solid var(--colour-error);
+  animation: inputErrorPulse 0.3s ease;
+}
+
 .input.left {
   text-align: left;
 }
@@ -41,5 +46,19 @@
 @media (max-width: 768px) {
   .input {
     width: 100%;
+  }
+}
+
+@keyframes inputErrorPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }

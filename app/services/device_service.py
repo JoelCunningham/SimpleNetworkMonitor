@@ -2,6 +2,7 @@ from app import database
 from app.models.category import Category
 from app.models.device import Device
 from app.models.location import Location
+from app.models.mac import Mac
 from app.models.owner import Owner
 from app.objects.address_data import AddressData
 from app.services.mac_service import MacService
@@ -30,7 +31,28 @@ class DeviceService:
                         devices.append(device)
         
         return devices
-    
+
+    def add_device(self, model:str, category_id: int, location_id: int, owner_id: int, mac_ids: list[int]) -> Device:
+        """Save a device to the database."""
+        new_device = Device()
+        
+        new_device.model = model
+        new_device.category_id = category_id
+        new_device.location_id = location_id
+        new_device.owner_id = owner_id
+        
+        existing_macs = database.session.query(Mac).filter(Mac.id.in_(mac_ids)).all()
+        new_device.macs.extend(existing_macs)
+        
+        database.session.add(new_device)
+        database.session.commit()
+        
+        return new_device
+
+    def get_device(self, mac_address: str) -> Device | None:
+        """Get a device by its MAC address."""
+        return database.session.query(Device).join(Mac).filter(Mac.address == mac_address).first()
+
     def get_device_locations(self) -> list[Location]:
         """Get all device locations."""
         return database.session.query(Location).all()
