@@ -49,11 +49,8 @@ export const ENDPOINT = {
   DEVICES: "/api/devices",
   ADD_DEVICE: "/api/devices/save",
   GET_DEVICE: (mac_address) => `/api/devices/${mac_address}`,
-
-  LOCATIONS: "/api/locations",
-  CATEGORIES: "/api/categories",
-  OWNERS: "/api/owners",
-
+  OPTIONS: "/api/devices/options",
+  
   SCAN_STATUS: "/api/scan/status",
   DEVICE_ICONS: "/api/icons/devices",
 };

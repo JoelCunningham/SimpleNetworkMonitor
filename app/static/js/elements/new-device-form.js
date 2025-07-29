@@ -50,11 +50,11 @@ class NewDeviceForm {
       }
     };
 
-    const [categories, locations, owners] = await Promise.all([
-      this.getOptions(ENDPOINT.CATEGORIES, "category"),
-      this.getOptions(ENDPOINT.LOCATIONS, "location", true),
-      this.getOptions(ENDPOINT.OWNERS, "owner", true)
-    ]);
+    const options = await fetch(ENDPOINT.OPTIONS).then(res => res.json());
+
+    const categories = this.getOptions(options.categories, "category");
+    const locations = this.getOptions(options.locations, "location", true);
+    const owners = this.getOptions(options.owners, "owner", true);
 
     this.categorySelect.init(categories, null);
     this.locationSelect.init(locations, null);
@@ -66,10 +66,8 @@ class NewDeviceForm {
     this.show();
   }
 
-  async getOptions(endpoint, fieldName, nullable) {
-    const response = await fetch(endpoint);
-    const data = await response.json();
-    const options = data.items.map(item => ({
+  getOptions(items, fieldName, nullable) {
+    const options = items.map(item => ({
       value: item.id,
       label: item.name,
     }));
