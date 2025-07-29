@@ -234,7 +234,7 @@
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-circle);
-    transition: all 0.2s ease;
+    transition: all var(--duration-fast) ease;
     margin-left: auto;
   }
   .modal-close:hover {
@@ -348,7 +348,7 @@
     width: 20px;
     height: 20px;
     transform: rotate(180deg);
-    transition: transform 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transition: transform var(--duration-fast) cubic-bezier(0.4, 0.2, 0.2, 1);
     display: inline-block;
   }
   .collapse-icon.closed {
@@ -356,7 +356,7 @@
   }
 
   .collapsible {
-    transition: max-height 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transition: max-height var(--duration-fast) cubic-bezier(0.4, 0.2, 0.2, 1);
     max-height: 300px;
     overflow: hidden;
   }

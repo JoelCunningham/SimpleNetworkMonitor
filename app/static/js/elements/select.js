@@ -13,6 +13,7 @@ class Select {
     this.elementOnClick = () => {
       if (this.getState() === SelectState.OPEN) {
         this.setState(SelectState.CLOSED);
+        this.unfocus(150);
       } else {
         this.setState(SelectState.OPEN);
       }
@@ -105,6 +106,8 @@ class Select {
     this.value = value;
     this.text.textContent = label;
 
+    this.unfocus(150);
+
     const selected = getElement(".selected", this.dropdown);
     if (selected) selected.classList.remove("selected");
     if (option) option.classList.add("selected");
@@ -158,6 +161,12 @@ class Select {
     return this.initialised;
   }
 
+  unfocus(timeout) {
+    setTimeout(() => {
+      this.element.blur();
+    }, timeout);
+  }
+
   clean() {
     this.element.classList.add("closed");
     this.element.classList.remove("error");
@@ -188,4 +197,3 @@ const SelectState = {
 export default Select;
 
 export { SelectState };
-

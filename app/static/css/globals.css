@@ -25,6 +25,8 @@
     --radius-status: 4px;
     --radius-tag: 20px;
 
+    --duration-fast: 0.15s;
+
     /* Colours used for SVG files */
     --svg_dark_purple: #645d89;
     --svg_light_purple: #968fbb;
