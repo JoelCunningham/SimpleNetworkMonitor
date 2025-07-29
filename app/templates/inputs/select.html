@@ -1,7 +1,7 @@
 {% macro select(id, placeholder, style) %}
 
 <div
-  class="input secondary {{ style }} select closed"
+  class="input secondary placeholder {{ style }} select closed"
   id="{{ id }}"
   tabindex="0"
 >
@@ -86,7 +86,17 @@
 
   .select.left {
     padding: 0.5rem 1rem;
-    color: var(--colour-placeholder);
+  }
+
+  .select.secondary {
+    color: var(--colour-black);
+  }
+  .select.secondary:not(.left) {
+    color: var(--colour-primary);
+  }
+
+  .select.hidden {
+    display: none;
   }
 </style>
 

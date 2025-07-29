@@ -90,9 +90,9 @@ class Select {
     this.dropdown.appendChild(action);
 
     action.addEventListener("click", () => {
-      this.unsetValue();
       this.setState(SelectState.CLOSED);
       runAction();
+      this.unsetValue();
     });
   }
 
@@ -105,6 +105,7 @@ class Select {
   setValue(value, label, option) {
     this.value = value;
     this.text.textContent = label;
+    this.element.classList.remove("placeholder");
 
     this.unfocus(150);
 
@@ -116,6 +117,7 @@ class Select {
   unsetValue() {
     this.value = null;
     this.text.textContent = this.placeholder;
+    this.element.classList.add("placeholder");
 
     const selected = getElement(".selected", this.dropdown);
     if (selected) selected.classList.remove("selected");
@@ -124,6 +126,7 @@ class Select {
   /* State management methods ----------------------------------------------- */
 
   setState(state) {
+    console.log(`Current state: ${this.getState()}, New state: ${state}`);
     if (this.getState() === state) return;
     this.clearState();
 
@@ -138,6 +141,9 @@ class Select {
         this.element.setAttribute("disabled", "true");
         this.element.setAttribute("aria-disabled", "true");
         break;
+      case SelectState.HIDDEN:
+        this.element.classList.add("hidden");
+        break;
     }
   }
 
@@ -146,6 +152,7 @@ class Select {
     if (classes.contains("error")) return SelectState.ERROR;
     if (classes.contains("closed")) return SelectState.CLOSED;
     if (classes.contains("disabled")) return SelectState.DISABLED;
+    if (classes.contains("hidden")) return SelectState.HIDDEN;
     return SelectState.OPEN;
   }
 
@@ -175,6 +182,7 @@ class Select {
     this.element.removeAttribute("aria-disabled");
 
     this.text.textContent = this.placeholder;
+    this.element.classList.add("placeholder");
 
     // Clean the dropdown and remove event listeners
     this.dropdown.innerHTML = "";
@@ -192,6 +200,7 @@ const SelectState = {
   CLOSED: "CLOSED",
   DISABLED: "DISABLED",
   ERROR: "ERROR",
+  HIDDEN: "HIDDEN",
 };
 
 export default Select;

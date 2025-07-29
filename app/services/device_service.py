@@ -64,4 +64,12 @@ class DeviceService:
     def get_device_owners(self) -> list[Owner]:
         """Get all device owners."""
         return database.session.query(Owner).all()
+    
+    def add_owner(self, name: str) -> Owner:
+        """Add a new owner to the database."""
+        new_owner = Owner()
+        new_owner.name = name
+        database.session.add(new_owner)
+        database.session.commit()
+        return new_owner
         

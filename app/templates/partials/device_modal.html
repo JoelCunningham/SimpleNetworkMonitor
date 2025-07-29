@@ -29,6 +29,7 @@
             <div class="detail-item">
               <span class="detail-label">Owner</span>
               {{ select('ownerSelect', 'Select an owner', 'left') }}
+              {{ textbox('ownerInput', 'Enter owner name', 'none') }}
             </div>
             <div class="detail-item">
               <span class="detail-label">Location</span>
@@ -36,7 +37,7 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">Model</span>
-              {{ textbox('deviceModelInput', 'Enter the model of the device') }}
+              {{ textbox('modelInput', 'Enter the model of the device') }}
             </div>
           </div>  
           <div class="add-device-actions">

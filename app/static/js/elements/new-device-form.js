@@ -8,7 +8,8 @@ class NewDeviceForm {
     this.initialised = false;
     this.macs = null;
 
-    this.modalInput = getElement("#deviceModelInput");
+    this.modalInput = getElement("#modelInput");
+    this.ownerInput = getElement("#ownerInput");
     this.categorySelect = new Select(getElement("#categorySelect"));
     this.locationSelect = new Select(getElement("#locationSelect"));
     this.ownerSelect = new Select(getElement("#ownerSelect"));
@@ -45,9 +46,9 @@ class NewDeviceForm {
       label: "Add owner",
       icon: "/static/icons/add.svg",
       run: () => {
-        this.clean();
-        // TODO: Implement redirect to add owner page
-      }
+        this.ownerSelect.setState(SelectState.HIDDEN);
+        this.ownerInput.style.display = "";
+      },
     };
 
     const options = await fetch(ENDPOINT.OPTIONS).then(res => res.json());
@@ -83,11 +84,16 @@ class NewDeviceForm {
   /* Action methods --------------------------------------------------------- */
 
   async saveDevice() {
+    let owner = null;
+    if (this.ownerSelect.getState() === SelectState.HIDDEN) {
+      owner = await this.saveOwner();
+    }
+
     const deviceData = {
       model: this.modalInput.value,
       category_id: this.categorySelect.getValue(),
       location_id: this.locationSelect.getValue(),
-      owner_id: this.ownerSelect.getValue(),
+      owner_id: owner ? owner.id : this.ownerSelect.getState(),
       mac_ids: this.macs.map(mac => mac.id),
     };
 
@@ -120,6 +126,29 @@ class NewDeviceForm {
       console.error("Error saving device:", error);
     }
     return false;
+  }
+
+  async saveOwner() {
+    const ownerName = this.ownerInput.value.trim();
+    if (!ownerName) {
+      this.ownerInput.classList.add("error");
+      return null;
+    }
+    try {
+      const response = await fetch(ENDPOINT.ADD_OWNER, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: ownerName }),
+      });
+      const owner = await response.json();
+      return owner;
+    } catch (error) {
+      console.error("Error saving owner:", error);
+      this.ownerInput.classList.add("error");
+      return null;
+    }
   }
 
   show() {

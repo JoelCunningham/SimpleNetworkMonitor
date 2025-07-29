@@ -1,11 +1,11 @@
-{% macro textbox(id, placeholder, required) %}
+{% macro textbox(id, placeholder, hide) %}
 
 <input
   type="text"
   id="{{ id }}"
   class="input textbox"
   placeholder="{{ placeholder }}"
-  {% if required %}required{% endif %}
+  {% if hide %} style="display: none" {% endif %}
 />
 
 <style>

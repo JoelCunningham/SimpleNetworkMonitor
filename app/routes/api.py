@@ -112,3 +112,20 @@ def get_device_options():
         return jsonify(options)
     except Exception as e:
         return jsonify({'error': f'Failed to get device options: {str(e)}'}), 500
+
+@api_bp.route('/owners/save', methods=['POST'])
+def save_owner():
+    """Save a new owner."""
+    try:
+        data = json.loads(request.data)
+        name = data.get('name')
+        
+        controller = container.device_controller()
+        owner = controller.add_owner(name)
+
+        owner_raw = json.loads(json.dumps(owner, cls=ModelEncoder))
+        
+        return jsonify(owner_raw), 201
+    except Exception as e:
+        print(f"Error saving owner: {str(e)}")
+        return jsonify({'error': f'Failed to save owner: {str(e)}'}), 500

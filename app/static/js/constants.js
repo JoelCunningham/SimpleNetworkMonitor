@@ -50,7 +50,9 @@ export const ENDPOINT = {
   ADD_DEVICE: "/api/devices/save",
   GET_DEVICE: (mac_address) => `/api/devices/${mac_address}`,
   OPTIONS: "/api/devices/options",
-  
+
+  ADD_OWNER: "/api/owners/save",
+
   SCAN_STATUS: "/api/scan/status",
   DEVICE_ICONS: "/api/icons/devices",
 };

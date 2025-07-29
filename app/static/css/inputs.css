@@ -21,6 +21,10 @@
   color: var(--colour-primary);
 }
 
+.input.secondary.placeholder {
+  color: var(--colour-placeholder);
+}
+
 .input.disabled {
   background: var(--colour-page-background);
   color: var(--colour-light-grey);

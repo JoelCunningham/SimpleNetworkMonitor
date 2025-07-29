@@ -23,3 +23,6 @@ class DeviceController:
 
     def get_device_owners(self) -> list[Owner]:
         return self.device_service.get_device_owners()
+    
+    def add_owner(self, name: str) -> Owner:
+        return self.device_service.add_owner(name)
