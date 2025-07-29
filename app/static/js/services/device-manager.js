@@ -1,4 +1,4 @@
-import { getElement } from "./common.js";
+import { getElement } from "../common.js";
 import {
   DEFAULT_GRID_SIZE,
   DEVICE_GRID_SIZES,
@@ -20,7 +20,7 @@ import {
   STATUS_NOW,
   STATUS_OFFLINE,
   STATUS_ONLINE,
-} from "./constants.js";
+} from "../constants.js";
 
 class DeviceManager {
   constructor() {

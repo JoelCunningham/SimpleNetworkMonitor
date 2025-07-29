@@ -3,7 +3,7 @@ import {
   ENDPOINT,
   NO_SCAN_TEXT,
   SCANNING_TEXT,
-} from "./constants.js";
+} from "../constants.js";
 
 class ScanManager {
   constructor() {

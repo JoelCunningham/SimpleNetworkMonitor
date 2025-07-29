@@ -11,8 +11,8 @@ import {
   getServiceName,
   getStatusText,
   setElementText,
-} from "./common.js";
-import { UNK_FIELD } from "./constants.js";
+} from "../common.js";
+import { UNK_FIELD } from "../constants.js";
 
 class DeviceModal {
   constructor() {

@@ -1,6 +1,6 @@
 import Select, { SelectState } from "../elements/select.js";
-import { getElement } from "../services/common.js";
-import { ENDPOINT } from "../services/constants.js";
+import { getElement } from "../common.js";
+import { ENDPOINT } from "../constants.js";
 
 class NewDeviceForm {
   constructor(element) {

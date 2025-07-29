@@ -1,4 +1,4 @@
-import { HTTP_LINK_TITLE } from "../services/constants.js";
+import { HTTP_LINK_TITLE } from "../constants.js";
 
 class PortalButton {
   constructor(element) {

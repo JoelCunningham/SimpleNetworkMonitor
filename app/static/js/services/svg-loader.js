@@ -1,4 +1,4 @@
-import { DIRECTORY_DEVICES, ENDPOINT, ICON_EXT } from "./constants.js";
+import { DIRECTORY_DEVICES, ENDPOINT, ICON_EXT } from "../constants.js";
 
 class SvgLoader {
   constructor() {

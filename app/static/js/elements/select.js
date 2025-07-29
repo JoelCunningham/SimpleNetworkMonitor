@@ -1,4 +1,4 @@
-import { getElement } from "../services/common.js";
+import { getElement } from "../common.js";
 
 class Select {
   constructor(element) {
