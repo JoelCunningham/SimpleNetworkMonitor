@@ -21,7 +21,7 @@
 
       <form class="device-form" id="deviceForm" style="display: none">
         <section class="detail-section" id="formSection">
-          <div class="detail-grid"/>
+          <div class="detail-grid">
             <div class="detail-item">
               <span class="detail-label">Category</span>
               {{ select('categorySelect', 'Select a category', 'left') }}
@@ -49,19 +49,23 @@
 
       <article class="device-details">
         <section class="detail-section" id="generalSection">
-          <header>
-            <button
-              class="collapse-toggle"
-              onclick="toggleSectionCollapse('General')"
-            >
-              <h2>General Information</h2>
+          <header class="section-header">
+            <h2>
+              General Information
               <img
                 id="arrow-General"
-                src="/static/icons/collapse.svg"
-                alt="Toggle section"
-                class="collapse-icon"
-              />
-            </button>
+                src="/static/icons/edit.svg"
+                alt="Edit device details"
+                class="edit-icon"
+                />
+            </h2>
+            <img
+              id="arrow-General"
+              src="/static/icons/collapse.svg"
+              alt="Toggle section"
+              class="collapse-icon"
+              onclick="toggleSectionCollapse('General')"
+            />
           </header>
           <div class="detail-grid collapsible" id="General">
             <div class="gap"></div>
@@ -93,19 +97,15 @@
         </section>
 
         <section class="detail-section" id="networkSection">
-          <header>
-            <button
-              class="collapse-toggle"
+          <header class="section-header">
+            <h2>Network Information</h2>
+            <img
+              id="arrow-Network"
+              src="/static/icons/collapse.svg"
+              alt="Toggle section"
+              class="collapse-icon closed"
               onclick="toggleSectionCollapse('Network')"
-            >
-              <h2>Network Information</h2>
-              <img
-                id="arrow-Network"
-                src="/static/icons/collapse.svg"
-                alt="Toggle section"
-                class="collapse-icon closed"
-              />
-            </button>
+            />
           </header>
           <div class="detail-grid collapsible closed" id="Network">
             <div class="gap"></div>
@@ -145,7 +145,7 @@
         </section>
 
         <section class="detail-section" id="portsSection">
-          <header>
+          <header class="section-header">
             <h2>Open Ports</h2>
           </header>
           <div class="tags-container" id="modalPorts">
@@ -159,7 +159,7 @@
         </section>
 
         <section class="detail-section" id="servicesSection">
-          <header>
+          <header class="section-header">
             <h2>Discovered Services</h2>
           </header>
           <div class="tags-container" id="modalServices">
@@ -272,6 +272,11 @@
     font-weight: 600;
   }
 
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .detail-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -337,20 +342,13 @@
     padding: 0.5rem 0;
   }
 
-  .collapse-toggle {
-    border: none;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-
   .collapse-icon {
     width: 20px;
     height: 20px;
     transform: rotate(180deg);
     transition: transform var(--duration-fast) cubic-bezier(0.4, 0.2, 0.2, 1);
     display: inline-block;
+    cursor: pointer;
   }
   .collapse-icon.closed {
     transform: rotate(0deg);
@@ -363,6 +361,19 @@
   }
   .collapsible.closed {
     max-height: 0px;
+  }
+
+  .edit-icon {
+    width: 22px;
+    height: 22px;
+    margin-left: 0.3rem;
+    vertical-align: middle;
+    cursor: pointer;
+    translate: 0 -3px;
+    transition: transform var(--duration-fast) ease;
+  }
+  .edit-icon:hover {
+    transform: scale(1.15);
   }
 
   .actions-bar {
