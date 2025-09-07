@@ -1,0 +1,187 @@
+<app-notification
+  [message]="notificationMessage"
+  [type]="notificationType"
+  [css]="'margin-bottom: 2rem;'"
+  (onClose)="clearErrors()"
+/>
+@if (isViewMode()) {
+<div class="device-form device-view">
+  <div class="form-row">
+    <div class="form-group">
+      <label>Device Name</label>
+      <span>{{ deviceName }}</span>
+    </div>
+
+    <div class="form-group">
+      <label>Device Model</label>
+      <span>{{ device?.model || "N/A" }}</span>
+    </div>
+  </div>
+
+  <div class="form-group macs-group">
+    <label>Macs</label>
+    <ul class="mac-list">
+      @for (mac of device?.macs; track mac.id) {
+      <app-basic-card
+        [data]="{ value: mac.id, label: mac.address }"
+        [selected]="mac.id === currentMac?.id"
+        (onClick)="selectMac(mac)"
+        padding="0.75rem"
+      ></app-basic-card>
+      }
+    </ul>
+  </div>
+
+  <app-form-section title="Network Information" [collapsible]="true">
+    <div class="form-row">
+      <div class="form-group">
+        <label>IP Address</label>
+        <span>{{ currentMac?.last_ip }}</span>
+      </div>
+      <div class="form-group">
+        <label>Hostname</label>
+        <span>{{ currentMac?.hostname || "Unknown" }}</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Vendor</label>
+        <span>{{ currentMac?.vendor || "Unknown" }}</span>
+      </div>
+      <div class="form-group">
+        <label>OS Group</label>
+        <span>{{ currentMac?.os_guess }}</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Last Seen</label>
+        <span>{{ currentMac?.last_seen?.toLocaleString() }}</span>
+      </div>
+      <div class="form-group">
+        <label>TTL / ARP / Ping Time</label>
+        <span
+          >{{ currentMac?.ttl }} / {{ currentMac?.arp_time_ms }} /
+          {{ currentMac?.ping_time_ms }}</span
+        >
+      </div>
+    </div>
+  </app-form-section>
+
+  <app-form-section title="Ports">
+    <div class="tags">
+      @for (port of currentMac?.ports; track port.id) {
+      <div class="tag port-tag">
+        {{ getPortText(port) }}
+      </div>
+      } @if (currentMac?.ports?.length === 0) {
+      <app-notification
+        [message]="'No ports detected'"
+        [type]="infoNotificationType"
+        [closeable]="false"
+      />
+      }
+    </div>
+  </app-form-section>
+
+  <app-form-section title="Services">
+    <div class="tags">
+      @for (discovery of currentMac?.discoveries; track discovery.id) {
+      <div class="tag discovery-tag">
+        {{ getDiscoveryText(discovery) }}
+      </div>
+      } @if (currentMac?.discoveries?.length === 0) {
+      <app-notification
+        [message]="'No services detected'"
+        [type]="infoNotificationType"
+        [closeable]="false"
+      />
+      }
+    </div>
+  </app-form-section>
+
+  <div class="form-actions">
+    <div class="form-buttons">
+      <button
+        class="input secondary interactive"
+        (click)="setMode(editMode)"
+        [disabled]="!device"
+      >
+        Edit
+      </button>
+      <button class="input primary interactive" (click)="deleteDevice()">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+} @else {
+<form (ngSubmit)="submitForm()" class="device-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="deviceModel">Device Model</label>
+      <input
+        type="text"
+        id="deviceModel"
+        name="deviceModel"
+        placeholder="Enter the model of the device"
+        class="input secondary interactive"
+        required
+        [class.error]="modelError"
+        (input)="clearErrors()"
+        [(ngModel)]="newModel"
+      />
+    </div>
+    <div class="form-group">
+      <label for="deviceCategory">Category</label>
+      <app-select
+        id="deviceCategory"
+        name="deviceCategory"
+        [options]="categoryOptions"
+        [(ngModel)]="selectedCategory"
+        (ngModelChange)="clearErrors()"
+        [class.error]="categoryError"
+      ></app-select>
+    </div>
+  </div>
+  @if (newMacs.length > 0) {
+  <div class="form-group">
+    <label>Macs</label>
+    <ul>
+      @for (mac of newMacs; track mac.id) {
+      <app-basic-card
+        [data]="{ value: mac.id, label: mac.address }"
+        [showRemove]="true"
+        (onClick)="removeMac(mac)"
+        padding="0.75rem"
+      ></app-basic-card>
+      }
+    </ul>
+  </div>
+  }
+
+  <div class="form-actions">
+    <div class="form-buttons">
+      @if (isEditMode()) {
+      <button
+        type="button"
+        class="input secondary interactive"
+        (click)="cancelEdit()"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="input primary interactive">Save</button>
+      } @else {
+      <button
+        type="reset"
+        class="input secondary interactive"
+        (click)="closeForm()"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="input primary interactive">Add owner</button>
+      }
+    </div>
+  </div>
+</form>
+}

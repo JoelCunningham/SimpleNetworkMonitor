@@ -1,0 +1,13 @@
+<section class="panel scan-status-panel">
+  <span class="status-info">
+    Last scan: <time id="lastScanTime" datetime="never">Never</time>
+  </span>
+  <button
+    class="view-button input primary interactive"
+    [class.inactive]="!isLiveView"
+    (click)="toggleViewMode()"
+  >
+    <app-icon name="refresh" size="20"></app-icon>
+    Live View
+  </button>
+</section>

@@ -22,3 +22,5 @@ class Service(BaseModel):
     
     # Relationships
     discovery = database.relationship('Discovery', back_populates='services')
+
+#TODO Remove this

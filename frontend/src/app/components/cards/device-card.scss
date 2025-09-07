@@ -1,0 +1,100 @@
+.device-card {
+  background: var(--colour-page-background);
+  position: relative;
+  border-radius: var(--radius-panel);
+  padding: 1.5rem;
+  transition: all var(--duration-fast) ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  &.status-display {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      width: 8px;
+      height: 8px;
+      color: white;
+      border-radius: var(--radius-circle);
+      transition: all var(--duration-fast) ease;
+      font-size: 0;
+      line-height: 1;
+    }
+
+    &:hover::before {
+      content: attr(last-seen);
+      width: auto;
+      height: auto;
+      border-radius: var(--radius-status);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      font-weight: 500;
+      min-width: 8px;
+      min-height: 8px;
+    }
+
+    &.online::before {
+      background-color: var(--colour-success);
+    }
+    &.away::before {
+      background-color: var(--colour-warning);
+    }
+    &.offline::before {
+      background-color: var(--colour-error);
+    }
+  }
+
+  .link-button {
+    position: absolute;
+    display: flex;
+    top: 8px;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    background-color: var(--colour-primary);
+    border-radius: var(--radius-circle);
+    color: var(--colour-white);
+
+    app-icon {
+      padding: 5px 2px 0 0;
+    }
+  }
+
+  .remove-button {
+    color: var(--colour-primary);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    border: none;
+  }
+
+  .device-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    span {
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    app-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+  }
+}

@@ -1,0 +1,177 @@
+:root {
+  --colour-primary: #667eea;
+  --colour-secondary: #764ba2;
+
+  --colour-success: #28a745;
+  --colour-success-background: #d4edda;
+  --colour-warning: #ffc107;
+  --colour-warning-background: #fff3cd;
+  --colour-error: #dc3545;
+  --colour-error-background: #ffced3;
+  --colour-info: #17a2b8;
+  --colour-info-background: #d1ecf1;
+
+  --colour-white: #f8f9fa;
+  --colour-placeholder: #757575;
+  --colour-light-grey: #6c757d;
+  --colour-dark-grey: #495057;
+  --colour-black: #1d1d1f;
+
+  --colour-page-background: #f2f0f0;
+  --colour-section-background: #f8f9fa;
+  --colour-dropdown-background: #e3e3e3;
+
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--colour-primary) 0%,
+    var(--colour-secondary) 100%
+  );
+  --gradient-grey: linear-gradient(
+    135deg,
+    var(--colour-light-grey) 0%,
+    var(--colour-dark-grey) 100%
+  );
+
+  --radius-input: 14px;
+  --radius-panel: 12px;
+  --radius-circle: 50%;
+  --radius-status: 4px;
+  --radius-tag: 20px;
+
+  --duration-very-fast: 0.05s;
+  --duration-fast: 0.15s;
+  --duration-medium: 0.3s;
+
+  /* Colours used for SVG files */
+  --svg_dark_purple: #645d89;
+  --svg_light_purple: #968fbb;
+  --svg_white: #f3f3ff;
+  --svg_screen: #8ce6ff;
+  --svg_red: #ef59a2;
+  --svg_green: #8ceb82;
+  --svg_yellow: #ffdc7a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background-color: var(--colour-page-background);
+  color: var(--colour-dark-grey);
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+.panel {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--colour-section-background);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.interactive {
+  cursor: pointer;
+  transition: transform var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  &[type="text"] {
+    cursor: text;
+  }
+
+  &.inactive:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  &.no-shadow:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.primary {
+  background: var(--gradient-primary);
+  color: var(--colour-white);
+}
+
+.secondary {
+  background: var(--colour-white);
+  color: var(--colour-primary);
+  border-style: solid;
+  border-color: var(--colour-primary);
+
+  &.input {
+    border: 2px solid var(--colour-primary);
+  }
+
+  &[type="text"] {
+    color: var(--colour-black);
+  }
+}
+
+.warning {
+  background: var(--colour-white);
+  color: var(--colour-error);
+  border-style: solid;
+  border-color: var(--colour-error);
+
+  &.input {
+    border: 2px solid var(--colour-error);
+  }
+}
+
+.inactive {
+  background: var(--gradient-grey);
+}
+
+.input {
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-input);
+  font-size: 1rem;
+  font-weight: 500;
+
+  &:focus {
+    outline: none;
+  }
+
+  &[type="text"] {
+    padding: 0.8rem 1rem;
+  }
+
+  &.error {
+    border: 2px solid var(--colour-error);
+  }
+}
+
+.icon-button {
+  display: flex;
+  border: none;
+  background: none;
+  border-radius: var(--radius-circle);
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+    box-shadow: none;
+  }
+}

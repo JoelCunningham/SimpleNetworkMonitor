@@ -8,6 +8,7 @@ import threading
 import time
 
 from flask import Flask
+from flask_cors import CORS
 
 from app.container import Container
 from app.database import Database
@@ -44,6 +45,9 @@ def create_app():
     from app.routes.api import api_bp
     app.register_blueprint(web_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
+    
+    # Enable CORS for frontend development
+    CORS(app, origins=["http://localhost:4200"]) 
     
     return app
 

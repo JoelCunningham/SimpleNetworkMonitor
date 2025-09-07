@@ -1,0 +1,16 @@
+<section
+  class="form-section"
+  [class.collapsible]="collapsible"
+  [class.collapsed]="collapsed"
+  (click)="toggle()"
+>
+  <header>
+    <h2>{{ title }}</h2>
+    @if (collapsible) {
+    <app-icon name="collapse" size="20"></app-icon>
+    }
+  </header>
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+</section>

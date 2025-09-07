@@ -1,0 +1,52 @@
+.notification {
+  padding: 1rem;
+  position: relative;
+  border-radius: var(--radius-input);
+  border: 2px solid;
+
+  &.error {
+    border-color: var(--colour-error-background);
+    background-color: var(--colour-error-background);
+    p,
+    app-icon {
+      color: var(--colour-error);
+    }
+  }
+  &.success {
+    border-color: var(--colour-success-background);
+    background-color: var(--colour-success-background);
+    p,
+    app-icon {
+      color: var(--colour-success);
+    }
+  }
+  &.warning {
+    border-color: var(--colour-warning-background);
+    background-color: var(--colour-warning-background);
+    p,
+    app-icon {
+      color: var(--colour-warning);
+    }
+  }
+  &.info {
+    border-color: var(--colour-info-background);
+    background-color: var(--colour-info-background);
+    p,
+    app-icon {
+      color: var(--colour-info);
+    }
+  }
+
+  .close-button {
+    position: absolute;
+    align-self: anchor-center;
+    right: 1rem;
+    width: 25px;
+    height: 25px;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

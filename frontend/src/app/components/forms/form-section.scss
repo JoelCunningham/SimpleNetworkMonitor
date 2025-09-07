@@ -1,0 +1,43 @@
+.form-section {
+  border-radius: var(--radius-panel);
+  background: var(--colour-page-background);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  max-height: 25rem;
+  overflow: hidden;
+  transition: max-height var(--duration-fast) ease-in-out;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      color: var(--colour-dark-grey);
+    }
+
+    app-icon {
+      margin-top: -15px;
+      rotate: 180deg;
+      transition: rotate var(--duration-fast) ease;
+    }
+  }
+
+  &.collapsible {
+    header {
+      cursor: pointer;
+    }
+  }
+
+  &.collapsed {
+    max-height: 4.5rem;
+
+    header {
+      app-icon {
+        rotate: 0deg;
+      }
+    }
+  }
+}

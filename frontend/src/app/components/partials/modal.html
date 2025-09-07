@@ -1,0 +1,22 @@
+<dialog
+  class="modal"
+  [class.show]="isOpen"
+  [class.hide]="!isOpen"
+  (click)="onBackgroundClick($event)"
+>
+  <div class="modal-content">
+    <header class="modal-header">
+      <h1>{{ title }}</h1>
+      <button
+        class="modal-close icon-button interactive"
+        (click)="closeModal()"
+      >
+        <app-icon name="close" size="24"></app-icon>
+      </button>
+    </header>
+    <main class="modal-body">
+      <ng-content></ng-content>
+    </main>
+    <footer class="modal-footer"></footer>
+  </div>
+</dialog>

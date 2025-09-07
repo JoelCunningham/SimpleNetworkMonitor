@@ -24,5 +24,11 @@ class DeviceController:
     def get_device_owners(self) -> list[Owner]:
         return self.device_service.get_device_owners()
     
-    def add_owner(self, name: str) -> Owner:
-        return self.device_service.add_owner(name)
+    def add_owner(self, name: str, device_ids: list[int]) -> Owner:
+        return self.device_service.add_owner(name, device_ids)
+
+    def update_owner(self, id: int, name: str, device_ids: list[int]) -> Owner:
+        return self.device_service.update_owner(id, name, device_ids)
+    
+    def delete_owner(self, owner_id: int) -> None:
+        return self.device_service.delete_owner(owner_id)

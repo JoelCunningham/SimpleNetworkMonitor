@@ -1,0 +1,27 @@
+<div
+  class="input placeholder select {{ css }}"
+  [class.closed]="!isOpen"
+  [class.inactive]="isDisabled()"
+  [class.interactive]="!isDisabled()"
+  (click)="toggleDropdown()"
+>
+  <div class="select-body">
+    <span>
+      {{ selectText }}
+    </span>
+    <app-icon name="collapse" size="20"></app-icon>
+  </div>
+  <div class="select-dropdown" [style.max-height]="getDropdownHeight()">
+    <ul class="select-options">
+      @for (option of selectOptions; track option.value) {
+      <li
+        class="select-option"
+        [class.action]="option.value == 0"
+        (click)="option.event(); $event.stopPropagation()"
+      >
+        {{ option.label }}
+      </li>
+      }
+    </ul>
+  </div>
+</div>

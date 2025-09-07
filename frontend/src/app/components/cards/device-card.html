@@ -1,0 +1,33 @@
+<div
+  class="device-card interactive no-shadow"
+  [class.status-display]="showStatus"
+  [class.online]="statusClass === 'online'"
+  [class.away]="statusClass === 'away'"
+  [class.offline]="statusClass === 'offline'"
+  [attr.last-seen]="statusText"
+  (click)="handleClick()"
+>
+  <div class="device-info">
+    <app-icon [name]="deviceIcon()" type="device" size="60"></app-icon>
+    <span>{{ deviceName() }}</span>
+  </div>
+  @if (showRemove) {
+  <button
+    type="button"
+    title="Remove device"
+    class="remove-button icon-button interactive"
+    (click)="cardRemoved.emit(device)"
+  >
+    <app-icon name="close" size="24"></app-icon>
+  </button>
+  } @if (showLink && portalUrl) {
+  <button
+    type="button"
+    title="Open in new tab"
+    class="link-button icon-button interactive"
+    (click)="openInNewTab()"
+  >
+    <app-icon name="external-link" size="18"></app-icon>
+  </button>
+  }
+</div>

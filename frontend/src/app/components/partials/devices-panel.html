@@ -1,0 +1,67 @@
+<section class="panel devices-panel">
+  <header>
+    <h1>Devices</h1>
+    <div class="filters">
+      @if (selectedCategory || selectedLocation || selectedOwner) {
+      <button class="clear-filters interactive" (click)="clearFilters()">
+        Clear all
+      </button>
+      }
+      <app-select
+        [css]="'secondary right'"
+        [options]="ownerOptions"
+        [placeholder]="'Owner'"
+        [isClearable]="true"
+        [isPersistent]="true"
+        (optionSelected)="selectOwner($event)"
+      />
+      <app-select
+        [css]="'secondary right'"
+        [options]="locationOptions"
+        [placeholder]="'Location'"
+        [isClearable]="true"
+        [isPersistent]="true"
+        (optionSelected)="selectLocation($event)"
+      />
+      <app-select
+        [css]="'secondary right'"
+        [options]="categoryOptions"
+        [placeholder]="'Category'"
+        [isClearable]="true"
+        [isPersistent]="true"
+        (optionSelected)="selectCategory($event)"
+      />
+    </div>
+  </header>
+  <app-notification
+    [message]="notificationMessage"
+    [type]="notificationType"
+    [closeable]="false"
+  />
+  <div class="devices-grid">
+    @for (device of deviceList; track device.primary_mac.address) {
+    <app-device-card
+      [device]="device"
+      [showStatus]="true"
+      [showLink]="true"
+      [showRemove]="false"
+      (onClick)="device.primary_mac ? openViewModal(device) : openAddModal()"
+    />
+    }
+  </div>
+</section>
+
+<app-modal
+  [title]="getModalTitle()"
+  [isOpen]="showDeviceModal"
+  (onClose)="closeModal()"
+>
+  <app-device-form
+    [device]="currentDevice"
+    [mode]="deviceFormMode"
+    (onClose)="closeModal()"
+    (onSubmit)="handleDeviceUpdate($event)"
+    (onDelete)="handleDeviceDelete($event)"
+    (modeChange)="deviceFormMode = $event"
+  />
+</app-modal>

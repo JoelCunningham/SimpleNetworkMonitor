@@ -1,0 +1,32 @@
+<section class="panel owners-panel">
+  <h1>Owners</h1>
+  <div class="owners-grid">
+    @for (owner of owners; track owner.id) {
+    <app-basic-card
+      badgeText="{{ owner.devices.length }}"
+      [data]="{ value: owner.id, label: owner.name }"
+      (onClick)="openViewModal(owner)"
+    />
+    }
+    <app-basic-card
+      [addText]="'owner'"
+      [fullWidth]="hasOwners()"
+      (onClick)="openAddModal()"
+    />
+  </div>
+</section>
+
+<app-modal
+  [title]="getModalTitle()"
+  [isOpen]="showOwnerModal"
+  (onClose)="closeModal()"
+>
+  <app-owner-form
+    [owner]="currentOwner"
+    [mode]="ownerFormMode"
+    (onClose)="closeModal()"
+    (onSubmit)="handleOwnerUpdate($event)"
+    (onDelete)="handleOwnerDelete($event)"
+    (modeChange)="ownerFormMode = $event"
+  />
+</app-modal>

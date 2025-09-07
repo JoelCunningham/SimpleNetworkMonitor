@@ -1,0 +1,15 @@
+@if (visible) {
+<div class="notification {{ type }}" [style]="css">
+  <p>{{ message }}</p>
+  @if (closeable) {
+  <button
+    type="button"
+    title="Close notification"
+    class="close-button icon-button interactive"
+    (click)="closeNotification()"
+  >
+    <app-icon name="close" size="24"></app-icon>
+  </button>
+  }
+</div>
+}

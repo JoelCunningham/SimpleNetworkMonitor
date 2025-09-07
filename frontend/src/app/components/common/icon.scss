@@ -1,0 +1,25 @@
+.icon {
+  display: inline-flex;
+}
+
+.icon.svg-dark-purple {
+  color: var(--svg_dark_purple);
+}
+.icon.svg-light-purple {
+  color: var(--svg_light_purple);
+}
+.icon.svg-white {
+  color: var(--svg_white);
+}
+.icon.svg-screen {
+  color: var(--svg_screen);
+}
+.icon.svg-red {
+  color: var(--svg_red);
+}
+.icon.svg-green {
+  color: var(--svg_green);
+}
+.icon.svg-yellow {
+  color: var(--svg_yellow);
+}

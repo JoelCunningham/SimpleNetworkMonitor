@@ -1,0 +1,5 @@
+{
+    "explorer.fileNesting.patterns": {
+        "*.ts": "${capture}.js, ${capture}.html, ${capture}.scss, ${capture}.spec.ts, ${capture}.config.ts, ${capture}.routes.ts"
+    }
+}

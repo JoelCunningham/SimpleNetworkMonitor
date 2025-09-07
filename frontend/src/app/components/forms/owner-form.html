@@ -1,0 +1,115 @@
+<app-notification
+  [message]="notificationMessage"
+  [type]="notificationType"
+  [css]="'margin-bottom: 2rem;'"
+  (onClose)="clearErrors()"
+/>
+@if (isViewMode()) {
+<div class="owner-form owner-view">
+  <div class="form-group">
+    <label>Owner Name</label>
+    <span>{{ owner?.name }}</span>
+  </div>
+
+  <div class="form-group">
+    <label>Devices</label>
+    @if (owner?.devices && owner?.devices?.length !== 0) {
+    <ul>
+      @for (device of owner?.devices; track device.id) {
+      <li>
+        <app-device-card
+          [device]="device"
+          [owner]="owner"
+          [showRemove]="false"
+        />
+      </li>
+      }
+    </ul>
+    } @else {
+    <span>No devices assigned</span>
+    }
+  </div>
+
+  <div class="form-actions">
+    <div class="form-buttons">
+      <button
+        class="input secondary interactive"
+        (click)="setMode(editMode)"
+        [disabled]="!owner"
+      >
+        Edit
+      </button>
+      <button class="input primary interactive" (click)="deleteOwner()">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+} @else {
+<form (ngSubmit)="submitForm()" class="owner-form">
+  <div class="form-group">
+    <label for="ownerName">Owner Name</label>
+    <input
+      type="text"
+      id="ownerName"
+      name="ownerName"
+      placeholder="Enter the name of the owner"
+      class="input secondary interactive"
+      required
+      [class.error]="nameError"
+      (input)="clearErrors()"
+      [(ngModel)]="newName"
+    />
+  </div>
+
+  @if (newDevices.length > 0) {
+  <div class="form-group">
+    <label>Devices</label>
+    <ul>
+      @for (device of newDevices; track device.id) {
+      <li>
+        <app-device-card
+          [device]="device"
+          [owner]="owner"
+          [showRemove]="true"
+          (cardRemoved)="removeDevice($event); clearErrors()"
+        />
+      </li>
+      }
+    </ul>
+  </div>
+  }
+
+  <div class="form-actions">
+    <app-select
+      [css]="'primary left'"
+      [options]="deviceOptions"
+      [placeholder]="'Assign a device'"
+      [isClearable]="false"
+      [isPersistent]="false"
+      (optionSelected)="addDevice($event); clearErrors()"
+    />
+    <div class="form-buttons">
+      @if (isEditMode()) {
+      <button
+        type="button"
+        class="input secondary interactive"
+        (click)="cancelEdit()"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="input primary interactive">Save</button>
+      } @else {
+      <button
+        type="reset"
+        class="input secondary interactive"
+        (click)="closeForm()"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="input primary interactive">Add owner</button>
+      }
+    </div>
+  </div>
+</form>
+}
