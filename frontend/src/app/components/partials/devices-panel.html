@@ -51,6 +51,7 @@
   </div>
 </section>
 
+@if(currentDevice && deviceFormMode) {
 <app-modal
   [title]="getModalTitle()"
   [isOpen]="showDeviceModal"
@@ -65,3 +66,4 @@
     (modeChange)="deviceFormMode = $event"
   />
 </app-modal>
+}

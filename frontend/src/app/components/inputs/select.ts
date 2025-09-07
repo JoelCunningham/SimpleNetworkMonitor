@@ -21,6 +21,7 @@ export class Select implements OnChanges {
   @Input() css?: string;
   @Input() options: Option[] = [];
   @Input() placeholder?: string;
+  @Input() initialOption?: Option;
   @Input() isClearable: boolean = false;
   @Input() isPersistent: boolean = false;
 
@@ -46,8 +47,12 @@ export class Select implements OnChanges {
       });
     }
 
-    if (this.placeholder) {
+    if (this.initialOption) {
+      this.selectText = this.initialOption.label;
+    } else if (this.placeholder) {
       this.selectText = this.placeholder;
+    } else {
+      this.selectText = 'Select...';
     }
   }
 

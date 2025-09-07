@@ -2,13 +2,10 @@ import { BasicCard } from '#components/cards/basic-card';
 import { Notification } from '#components/common/notification';
 import { FormSection } from '#components/forms/form-section';
 import { Select } from '#components/inputs/select';
-import { Category } from '#interfaces/category';
-import { Device } from '#interfaces/device';
+import { Device, DeviceRequest } from '#interfaces/device';
 import { Discovery } from '#interfaces/discovery';
-import { Location } from '#interfaces/location';
 import { Mac } from '#interfaces/mac';
 import { Option, Value } from '#interfaces/option';
-import { Owner } from '#interfaces/owner';
 import { Port } from '#interfaces/port';
 import { CategoryService } from '#services/category_service';
 import { DeviceService } from '#services/device-service';
@@ -37,8 +34,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './device-form.scss',
 })
 export class DeviceForm implements OnInit, OnChanges {
-  @Input() device: Device | null = null;
-  @Input() mode: FormMode | null = null;
+  @Input() device!: Device;
+  @Input() mode!: FormMode;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<Device>();
   @Output() onDelete = new EventEmitter<Device>();
@@ -47,20 +44,18 @@ export class DeviceForm implements OnInit, OnChanges {
   protected macs: Mac[] = [];
   protected macOptions: Option[] = [];
 
+  protected categoryOptions: Option[] = [];
+  protected selectedCategory!: Option;
+
+  protected locationOptions: Option[] = [];
+  protected selectedLocation!: Option;
+
+  protected ownerOptions: Option[] = [];
+  protected selectedOwner!: Option;
+
+  protected newName: string | null = null;
   protected newModel: string = '';
   protected newMacs: Mac[] = [];
-
-  private categories: Category[] = [];
-  protected categoryOptions: Option[] = [];
-  protected selectedCategory: Category | null = null;
-
-  private locations: Location[] = [];
-  protected locationOptions: Option[] = [];
-  protected selectedLocation: Location | null = null;
-
-  private owners: Owner[] = [];
-  protected ownerOptions: Option[] = [];
-  protected selectedOwner: Owner | null = null;
 
   protected genericError: boolean = false;
   protected modelError: boolean = false;
@@ -74,7 +69,6 @@ export class DeviceForm implements OnInit, OnChanges {
   protected infoNotificationType: NotificationType = NotificationType.INFO;
 
   protected editMode: FormMode = FormMode.Edit;
-  protected deviceName: string = 'Unknown Device';
   protected deviceStatus: DeviceStatus | null = null;
 
   protected currentMac: Mac | null = null;
@@ -89,8 +83,14 @@ export class DeviceForm implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
+    if (!this.device) {
+      throw new Error('DeviceForm: device is required');
+    }
+    if (!this.mode) {
+      throw new Error('DeviceForm: mode is required');
+    }
+
     this.categoryService.currentCategories().subscribe((categories) => {
-      this.categories = categories;
       this.categoryOptions = categories.map((category) => ({
         label: category.name,
         value: category.id,
@@ -98,7 +98,6 @@ export class DeviceForm implements OnInit, OnChanges {
     });
 
     this.locationService.currentLocations().subscribe((locations) => {
-      this.locations = locations;
       this.locationOptions = locations.map((location) => ({
         label: location.name,
         value: location.id,
@@ -106,7 +105,6 @@ export class DeviceForm implements OnInit, OnChanges {
     });
 
     this.ownerService.currentOwners().subscribe((owners) => {
-      this.owners = owners;
       this.ownerOptions = owners.map((owner) => ({
         label: owner.name,
         value: owner.id,
@@ -129,7 +127,6 @@ export class DeviceForm implements OnInit, OnChanges {
       this.clearErrors();
     }
     if (this.device) {
-      this.deviceName = this.utilitiesService.getDeviceName(this.device);
       this.deviceStatus = this.utilitiesService.getDeviceStatus(this.device);
       this.currentMac = this.device.primary_mac;
     }
@@ -155,13 +152,42 @@ export class DeviceForm implements OnInit, OnChanges {
   initMode() {
     if (this.device && (this.isEditMode() || this.isViewMode())) {
       this.newModel = this.device.model || '';
-      this.selectedCategory = this.device.category || null;
-      this.selectedLocation = this.device.location || null;
-      this.selectedOwner = this.device.owner || null;
       this.newMacs = this.device.macs || [];
+
+      this.selectedCategory = this.getSelectedOption(
+        this.device.category?.id,
+        this.categoryOptions,
+        'category'
+      );
+      this.selectedLocation = this.getSelectedOption(
+        this.device.location?.id,
+        this.locationOptions,
+        'location'
+      );
+      this.selectedOwner = this.getSelectedOption(
+        this.device.owner?.id,
+        this.ownerOptions,
+        'owner'
+      );
+
+      if (
+        !this.selectedCategory ||
+        !this.selectedLocation ||
+        !this.selectedOwner
+      ) {
+        throw new Error('DeviceForm: Invalid category, location, or owner');
+      }
     }
     if (this.isAddMode()) {
     }
+  }
+
+  getSelectedOption(id: number | undefined, options: Option[], name: string) {
+    const option = options.find((option) => option.value === id) || null;
+    if (!option) {
+      throw new Error(`DeviceForm: Invalid ${name}`);
+    }
+    return option;
   }
 
   cancelEdit() {
@@ -208,6 +234,27 @@ export class DeviceForm implements OnInit, OnChanges {
     this.newMacs = this.newMacs.filter((m) => m.id !== mac.id);
   }
 
+  setCategory(categoryId: Value) {
+    this.selectedCategory = this.categoryOptions.find(
+      (category) => category.value === categoryId
+    )!;
+    this.clearErrors();
+  }
+
+  setLocation(locationId: Value) {
+    this.selectedLocation = this.locationOptions.find(
+      (location) => location.value === locationId
+    )!;
+    this.clearErrors();
+  }
+
+  setOwner(ownerId: Value) {
+    this.selectedOwner = this.ownerOptions.find(
+      (owner) => owner.value === ownerId
+    )!;
+    this.clearErrors();
+  }
+
   getPortText(port: Port) {
     const portNumber = port.port || 'Unknown';
     const service = port.service ? ` (${port.service})` : '';
@@ -233,25 +280,27 @@ export class DeviceForm implements OnInit, OnChanges {
 
   validateForm() {
     this.clearErrors();
+
+    if (!this.selectedCategory) {
+      this.categoryError = true;
+      this.setNotification('Category is required.');
+      return false;
+    }
+
     return true;
   }
 
   submitForm() {
     if (!this.validateForm()) return;
 
-    const device: Device = {
-      id: this.device && this.isEditMode() ? this.device.id : 0,
-      model: this.device?.model || null,
-      owner: this.device?.owner || null,
-      category: this.device?.category || null,
-      location: this.device?.location || null,
-      primary_mac: this.device?.primary_mac || {
-        id: 0,
-        address: '',
-        last_ip: '',
-        last_seen: '',
-      },
-      macs: this.device?.macs || [],
+    const request: DeviceRequest = {
+      id: this.isEditMode() ? this.device.id : 0,
+      name: this.newName,
+      model: this.newModel,
+      owner_id: this.selectedOwner.value,
+      category_id: this.selectedCategory.value,
+      location_id: this.selectedLocation.value,
+      mac_ids: this.newMacs.map((mac) => mac.id),
     };
 
     const handleError = () => {
@@ -261,7 +310,7 @@ export class DeviceForm implements OnInit, OnChanges {
     };
 
     if (this.isEditMode() && this.device) {
-      this.deviceService.updateDevice(device).subscribe({
+      this.deviceService.updateDevice(request).subscribe({
         next: (updatedDevice: Device) => {
           this.device = updatedDevice;
           this.setMode(FormMode.View);
@@ -269,16 +318,17 @@ export class DeviceForm implements OnInit, OnChanges {
           this.onSubmit.emit(updatedDevice);
           this.cdr.detectChanges();
         },
-        error: () => {
+        error: (e) => {
           this.genericError = true;
           this.setNotification(
             'An unexpected error occurred. Please try again.'
           );
+          console.error(e);
           this.cdr.detectChanges();
         },
       });
     } else {
-      this.deviceService.createDevice(device).subscribe({
+      this.deviceService.createDevice(request).subscribe({
         next: (newDevice: Device) => {
           this.onSubmit.emit(newDevice);
           this.closeForm();

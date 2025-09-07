@@ -1,4 +1,4 @@
-import { Device } from '#interfaces/device';
+import { Device, DeviceRequest } from '#interfaces/device';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
@@ -35,11 +35,11 @@ export class DeviceService {
     return this.devices;
   }
 
-  createDevice(device: Device): Observable<Device> {
+  createDevice(device: DeviceRequest): Observable<Device> {
     return this.http.post<Device>(this.apiUrl, device);
   }
 
-  updateDevice(device: Device): Observable<Device> {
+  updateDevice(device: DeviceRequest): Observable<Device> {
     return this.http.put<Device>(`${this.apiUrl}/${device.id}`, device);
   }
 

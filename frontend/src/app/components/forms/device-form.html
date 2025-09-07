@@ -9,19 +9,19 @@
   <div class="form-row">
     <div class="form-group">
       <label>Device Name</label>
-      <span>{{ deviceName }}</span>
+      <span>{{ device.default_name }}</span>
     </div>
 
     <div class="form-group">
       <label>Device Model</label>
-      <span>{{ device?.model || "N/A" }}</span>
+      <span>{{ device.model || "N/A" }}</span>
     </div>
   </div>
 
   <div class="form-group macs-group">
     <label>Macs</label>
     <ul class="mac-list">
-      @for (mac of device?.macs; track mac.id) {
+      @for (mac of device.macs; track mac.id) {
       <app-basic-card
         [data]="{ value: mac.id, label: mac.address }"
         [selected]="mac.id === currentMac?.id"
@@ -138,9 +138,34 @@
         id="deviceCategory"
         name="deviceCategory"
         [options]="categoryOptions"
-        [(ngModel)]="selectedCategory"
-        (ngModelChange)="clearErrors()"
+        [initialOption]="selectedCategory"
         [class.error]="categoryError"
+        [css]="'secondary right'"
+        (optionSelected)="setCategory($event); clearErrors()"
+      ></app-select>
+    </div>
+    <div class="form-group">
+      <label for="deviceLocation">Location</label>
+      <app-select
+        id="deviceLocation"
+        name="deviceLocation"
+        [options]="locationOptions"
+        [initialOption]="selectedLocation"
+        [class.error]="locationError"
+        [css]="'secondary right'"
+        (optionSelected)="setLocation($event); clearErrors()"
+      ></app-select>
+    </div>
+    <div class="form-group">
+      <label for="deviceOwner">Owner</label>
+      <app-select
+        id="deviceOwner"
+        name="deviceOwner"
+        [options]="ownerOptions"
+        [initialOption]="selectedOwner"
+        [class.error]="ownerError"
+        [css]="'secondary right'"
+        (optionSelected)="setOwner($event); clearErrors()"
       ></app-select>
     </div>
   </div>
