@@ -2,7 +2,9 @@ import { Icon } from '#components/common/icon';
 import { Option, Value } from '#interfaces/option';
 import {
   Component,
+  ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   Output,
@@ -27,6 +29,8 @@ export class Select implements OnChanges {
   protected isOpen = false;
   protected selectText: string = 'Select...';
   protected selectOptions: Option[] = [];
+
+  constructor(private ref: ElementRef) {}
 
   ngOnChanges() {
     this.selectOptions = this.options.map((option) => ({
@@ -74,5 +78,18 @@ export class Select implements OnChanges {
 
   isDisabled(): boolean {
     return this.selectOptions.length === 0;
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscape(event: Event) {
+    if (this.isOpen) {
+      this.isOpen = false;
+    }
+  }
+  @HostListener('document:click', ['$event'])
+  onBackgroundClick(event: MouseEvent) {
+    if (this.isOpen && !this.ref.nativeElement.contains(event.target)) {
+      this.isOpen = false;
+    }
   }
 }

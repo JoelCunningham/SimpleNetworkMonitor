@@ -1,9 +1,4 @@
-<dialog
-  class="modal"
-  [class.show]="isOpen"
-  [class.hide]="!isOpen"
-  (click)="onBackgroundClick($event)"
->
+<dialog class="modal" [class.show]="isOpen" [class.hide]="!isOpen">
   <div class="modal-content">
     <header class="modal-header">
       <h1>{{ title }}</h1>

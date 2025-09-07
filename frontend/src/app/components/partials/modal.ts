@@ -19,7 +19,7 @@ export class Modal {
   @Input() isOpen: boolean = false;
   @Output() onClose = new EventEmitter<void>();
 
-  constructor(private el: ElementRef) {}
+  constructor(private ref: ElementRef) {}
 
   closeModal() {
     this.onClose.emit();
@@ -31,11 +31,11 @@ export class Modal {
       this.closeModal();
     }
   }
-
+  @HostListener('document:click', ['$event'])
   onBackgroundClick(event: MouseEvent) {
     if (
       this.isOpen &&
-      event.target === this.el.nativeElement.querySelector('.modal')
+      event.target === this.ref.nativeElement.querySelector('.modal')
     ) {
       this.closeModal();
     }
