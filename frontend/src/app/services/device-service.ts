@@ -6,22 +6,28 @@ import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
   private apiUrl = 'http://localhost:5000/api/devices';
+  private doRefresh = true;
+
   private devicesSubject = new BehaviorSubject<Device[]>([]);
+  private lastRefreshSubject = new BehaviorSubject<Date | null>(null);
 
   public devices = this.devicesSubject.asObservable();
+  public lastRefresh = this.lastRefreshSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.loadDevices();
 
     interval(60000).subscribe(() => {
-      this.loadDevices();
-      console.log('Devices updated');
+      if (this.doRefresh) {
+        this.loadDevices();
+      }
     });
   }
 
   private loadDevices(): void {
     this.http.get<Device[]>(this.apiUrl).subscribe((devices) => {
       this.devicesSubject.next(devices);
+      this.lastRefreshSubject.next(new Date());
     });
   }
 
@@ -41,7 +47,10 @@ export class DeviceService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  refreshDevices(): void {
-    this.loadDevices();
+  setAutoRefresh(enabled: boolean): void {
+    this.doRefresh = enabled;
+    if (enabled) {
+      this.loadDevices();
+    }
   }
 }
