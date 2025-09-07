@@ -9,7 +9,7 @@
 >
   <div class="device-info">
     <app-icon [name]="deviceIcon()" type="device" size="60"></app-icon>
-    <span>{{ deviceName() }}</span>
+    <span>{{ device?.default_name }}</span>
   </div>
   @if (showRemove) {
   <button

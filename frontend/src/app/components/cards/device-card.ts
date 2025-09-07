@@ -60,12 +60,6 @@ export class DeviceCard implements OnInit, OnDestroy {
     this.statusSubscription?.unsubscribe();
   }
 
-  deviceName(): string {
-    return this.device
-      ? this.utilitiesService.getDeviceName(this.device, this.owner)
-      : 'Unknown Device';
-  }
-
   deviceIcon(): string {
     return this.device?.category?.name.toLowerCase() || 'unknown';
   }

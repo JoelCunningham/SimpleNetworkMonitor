@@ -1,25 +1,11 @@
 import { Device } from '#interfaces/device';
 import { HttpPort } from '#interfaces/httpPort';
-import { Owner } from '#interfaces/owner';
 import { DeviceStatus } from '#types/device-status';
 import { LastSeenStatus } from '#types/last-seen-status';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class UtilitiesService {
-  getDeviceName(device: Device, owner?: Owner | null): string {
-    let ownerName: string | undefined;
-    if (owner == undefined) ownerName = device.owner?.name;
-    if (owner == null) ownerName = '';
-    if (owner) ownerName = owner.name;
-
-    let name = '';
-    name += ownerName ? ownerName + "'s " : '';
-    name += device.location ? device.location.name + ' ' : '';
-    name += device.category ? device.category.name : '';
-    return name.trim() || 'Unknown Device';
-  }
-
   getLastSeenStatus(device: Device): string {
     const minsSinceLastSeen = this.getMinsSinceLastSeen(device);
 

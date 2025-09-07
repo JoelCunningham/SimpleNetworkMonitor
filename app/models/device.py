@@ -14,6 +14,7 @@ class Device(BaseModel):
     """Device model representing a network device."""
     __tablename__ = 'device'
     
+    name = database.Column(database.String(200), nullable=True, unique=True)
     model = database.Column(database.String(200), nullable=True)
     
     # Foreign keys
@@ -28,8 +29,11 @@ class Device(BaseModel):
     macs = database.relationship('Mac', back_populates='device', lazy='dynamic', cascade='all, delete-orphan')
     
     @property
-    def name(self) -> str:
-        """Return the display name for the device."""
+    def default_name(self) -> str:
+        """Return the default name for the device."""
+        if self.name:
+            return self.name
+        
         device_name = ""
         
         device_name += self.owner.name + "'s " if self.owner else ""
@@ -37,7 +41,7 @@ class Device(BaseModel):
         device_name += self.category.name if self.category else ""
     
         return device_name.strip() or UNKNOWN_DEVICE_NAME
-    
+
     @property
     def primary_mac(self) -> Mac | None:
         """Get the primary MAC address (most recently seen)."""

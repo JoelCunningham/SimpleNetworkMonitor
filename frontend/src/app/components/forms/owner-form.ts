@@ -66,7 +66,7 @@ export class OwnerForm implements OnInit, OnChanges {
         .filter((device) => device.id)
         .map((device) => ({
           value: device.id,
-          label: this.utilitiesService.getDeviceName(device),
+          label: device.default_name,
         }));
       this.cdr.detectChanges();
     });
@@ -124,7 +124,7 @@ export class OwnerForm implements OnInit, OnChanges {
         ...this.deviceOptions,
         {
           value: device.id,
-          label: this.utilitiesService.getDeviceName(device, null),
+          label: device.default_name,
         },
       ];
       this.newDevices = this.newDevices.filter((d) => d !== device);
