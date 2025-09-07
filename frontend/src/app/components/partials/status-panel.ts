@@ -1,7 +1,7 @@
 import { Icon } from '#components/common/icon';
 import { DeviceService } from '#services/device-service';
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
   selector: 'app-status-panel',
@@ -13,9 +13,15 @@ export class StatusPanel {
   protected isLiveView = true;
   protected lastScan: Date | null = null;
 
-  constructor(private deviceService: DeviceService) {
+  constructor(
+    private deviceService: DeviceService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.deviceService.lastRefresh.subscribe((date) => {
-      this.lastScan = date;
+      setTimeout(() => {
+        this.lastScan = date;
+        this.cdr.detectChanges();
+      });
     });
   }
 
