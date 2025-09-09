@@ -3,6 +3,7 @@ from app.models.device import Device
 from app.models.mac import Mac
 from app.services.mac_service import MacService
 from app.services.scanning_service import ScanningService
+from common.objects.device_input import DeviceInput
 
 
 class DeviceService:
@@ -13,14 +14,13 @@ class DeviceService:
         self.scanning_service = scanning_service
 
     def get_current_devices(self,) -> list[Device]:
-        """Get all devices from database."""
-        
-        devices = database.session.query(Device).all()
+        """Get all devices from database."""    
+        devices = database.select_all(Device).all()
         scanned_devices = self.scanning_service.get_latest_results()
             
         for device_data in scanned_devices:
             if device_data.mac_address:
-                has_device = any(device_data.mac_address == mac.address for device in devices for mac in device.macs.all())
+                has_device = any(device_data.mac_address == mac.address for device in devices for mac in device.macs)
                 if not has_device:
                     mac_data = self.mac_service.get_mac_by_address(device_data.mac_address)                
                     if mac_data: 
@@ -31,53 +31,39 @@ class DeviceService:
         
         return devices
 
-    def add_device(self, name: str, model:str, category_id: int, location_id: int, owner_id: int, mac_ids: list[int]) -> Device:
+    def add_device(self, device: DeviceInput) -> Device:
         """Save a device to the database."""
-        new_device = Device()
-        
-        new_device.name = name
-        new_device.model = model
-        new_device.category_id = category_id
-        new_device.location_id = location_id
-        new_device.owner_id = owner_id
-        
-        existing_macs = database.session.query(Mac).filter(Mac.id.in_(mac_ids)).all()
-        new_device.macs.extend(existing_macs)
-        
-        database.session.add(new_device)
-        database.session.commit()
-        
+        new_device = Device(
+            name=device.name,
+            model=device.model,
+            category_id=device.category_id,
+            location_id=device.location_id,
+            owner_id=device.owner_id,
+            macs=database.select_all(Mac).where_in(Mac.id, device.mac_ids).all()
+        )
+
+        database.save(new_device);
+
         return new_device
-    
-    def update_device(self, id: int, name: str, model:str, category_id: int, location_id: int, owner_id: int, mac_ids: list[int]) -> Device:
-        """Update an existing device."""
-        existing_device = database.session.get(Device, id)
-        
+
+    def update_device(self, id: int, device: DeviceInput) -> Device:
+        """Update an existing device."""   
+        existing_device = database.select_by_id(Device, id).first()
         if not existing_device:
             raise ValueError("Device not found")
-        
-        if not mac_ids:
+        if not device.mac_ids:
             raise ValueError("At least one MAC address is required")
+
+        existing_device = Device(
+            id=id,
+            name=device.name,
+            model=device.model,
+            category_id=device.category_id,
+            location_id=device.location_id,
+            owner_id=device.owner_id,
+            macs=database.select_all(Mac).where_in(Mac.id, device.mac_ids).all()
+        )
         
-        existing_device.name = name
-        existing_device.model = model
-        existing_device.category_id = category_id
-        existing_device.location_id = location_id
-        existing_device.owner_id = owner_id
-        
-        existing_device.macs.all().clear()
-        for mac_id in mac_ids:
-            mac = database.session.get(Mac, mac_id)
-            if mac:
-                existing_device.macs.append(mac)
-            else:
-                raise ValueError(f"MAC with ID {mac_id} not found")
-        
-        database.session.commit()
+        database.save(existing_device)
         
         return existing_device
-
-    def get_device(self, mac_address: str) -> Device | None:
-        """Get a device by its MAC address."""
-        return database.session.query(Device).join(Mac).filter(Mac.address == mac_address).first()
-    

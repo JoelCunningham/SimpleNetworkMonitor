@@ -1,8 +1,6 @@
 import threading
 from datetime import datetime, timedelta
 
-from flask import Flask
-
 from app import config
 from app.objects.address_data import AddressData
 from app.objects.scan_options import ScanOptions
@@ -13,9 +11,8 @@ SCAN_CHECK_INTERVAL = 60
 class ScanningService:
     """Scan services that manages scanning operations."""
 
-    def __init__(self, scan_service: ScanService, app: Flask) -> None:
+    def __init__(self, scan_service: ScanService) -> None:
         self.scan_service = scan_service
-        self.app = app
         
         self.scanning_thread: threading.Thread | None = None
         self.stop_event = threading.Event()
@@ -35,13 +32,8 @@ class ScanningService:
     def start_continuous_scan(self):
         """Start the background scanning service."""
         self.stop_event.clear()
-        self.scanning_thread = threading.Thread(target=self._scan_loop_with_context, daemon=True)
+        self.scanning_thread = threading.Thread(target=self._scan_loop, daemon=True)
         self.scanning_thread.start()
-        
-    def _scan_loop_with_context(self):
-        """Wrapper that ensures the scan loop runs with Flask app context."""
-        with self.app.app_context():
-            self._scan_loop()
         
     def _scan_loop(self):
         """Main scanning loop that runs in background thread."""        

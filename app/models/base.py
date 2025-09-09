@@ -1,37 +1,15 @@
+
 """
-Base model class with common functionality.
+Base model class with common functionality (SQLModel version).
 """
 from datetime import datetime, timezone
 
-from app import database
+from sqlmodel import Field, SQLModel
 
 
-class BaseModel(database.Model):
-    """Base model class that provides common fields and methods."""
-    __abstract__ = True
-    
-    id = database.Column(database.Integer, primary_key=True)
-    deleted = database.Column(database.Boolean, default=False, nullable=False)
-    created_at = database.Column(database.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
-    updated_at = database.Column(database.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
-    
-    def save(self):
-        """Save the model to the database."""
-        database.session.add(self)
-        database.session.commit()
-        return self
-    
-    def delete(self):
-        """Soft delete the model."""
-        self.deleted = True
-        database.session.commit()
-    
-    def hard_delete(self):
-        """Hard delete the model from the database."""
-        database.session.delete(self)
-        database.session.commit()
-    
-    @classmethod
-    def get_active(cls):
-        """Get all non-deleted records."""
-        return cls.query.filter_by(deleted=False)
+class BaseModel(SQLModel):
+    id: int = Field(default=None, primary_key=True, index=True)
+    deleted: bool = Field(default=False, nullable=False)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
+    #TODO make updated_at update on every update automatically

@@ -3,31 +3,33 @@ Device model.
 
 Represents network devices discovered during scans.
 """
-from app import database
+
+from typing import TYPE_CHECKING, Optional
+
+from sqlmodel import Field, Relationship
+
 from app.models.base import BaseModel
-from app.models.mac import Mac
 
-UNKNOWN_DEVICE_NAME = "Unknown Device"
+if TYPE_CHECKING:
+    from app.models.category import Category
+    from app.models.location import Location
+    from app.models.mac import Mac
+    from app.models.owner import Owner
 
+class Device(BaseModel, table=True):
+    """Device model representing a network device.""" 
+    name: str | None = Field(default=None, unique=True, max_length=200)
+    model: str | None = Field(default=None, max_length=200)
 
-class Device(BaseModel):
-    """Device model representing a network device."""
-    __tablename__ = 'device'
-    
-    name = database.Column(database.String(200), nullable=True, unique=True)
-    model = database.Column(database.String(200), nullable=True)
-    
-    # Foreign keys
-    category_id = database.Column(database.Integer, database.ForeignKey('category.id'), nullable=True)
-    location_id = database.Column(database.Integer, database.ForeignKey('location.id'), nullable=True)
-    owner_id = database.Column(database.Integer, database.ForeignKey('owner.id'), nullable=True)
-    
-    # Relationships
-    category = database.relationship('Category', back_populates='devices')
-    location = database.relationship('Location', back_populates='devices')
-    owner = database.relationship('Owner', back_populates='devices')
-    macs = database.relationship('Mac', back_populates='device', lazy='dynamic', cascade='all, delete-orphan')
-    
+    category_id: int | None = Field(default=None, foreign_key="category.id")
+    location_id: int | None = Field(default=None, foreign_key="location.id")
+    owner_id: int | None = Field(default=None, foreign_key="owner.id")
+
+    category: Optional["Category"] = Relationship(back_populates="devices")
+    location: Optional["Location"] = Relationship(back_populates="devices")
+    owner: Optional["Owner"] = Relationship(back_populates="devices")
+    macs: list["Mac"] = Relationship(back_populates="device")
+
     @property
     def default_name(self) -> str:
         """Return the default name for the device."""
@@ -40,11 +42,11 @@ class Device(BaseModel):
         device_name += self.location.name + " " if self.location else ""
         device_name += self.category.name if self.category else ""
     
-        return device_name.strip() or UNKNOWN_DEVICE_NAME
+        return device_name.strip() or "Unknown Device"
 
     @property
-    def primary_mac(self) -> Mac | None:
+    def primary_mac(self) -> Optional["Mac"]:
         """Get the primary MAC address (most recently seen)."""
         if not self.macs:
             return None
-        return max(self.macs.all(), key=lambda mac: mac.last_seen or 0)
+        return max(self.macs, key=lambda mac: mac.last_seen or 0)

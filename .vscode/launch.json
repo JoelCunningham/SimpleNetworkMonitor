@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug FastAPI (Uvicorn Factory)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "app:create_app",
+                "--factory",
+                "--reload"
+            ],
+            "jinja": true,
+            "justMyCode": true,
+            "env": {},
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

@@ -30,6 +30,12 @@ Save virtual environment dependencies:
 pip freeze > requirements.txt
 ```
 
+Run:
+
+```bash
+uvicorn app:create_app --factory --reload
+```
+
 ## Style Guide
 
 | Type           | Case             |

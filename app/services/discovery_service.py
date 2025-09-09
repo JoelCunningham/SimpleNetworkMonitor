@@ -4,7 +4,6 @@ import struct
 from app import config, database
 from app.models.discovery import Discovery
 from app.models.mac import Mac
-from app.models.service import Service
 from app.objects.discovery_info import DiscoveryInfo
 
 MDNS_ADDITIONAL_COUNT = 0
@@ -72,36 +71,21 @@ class DiscoveryService():
             raise Exception("AddressData does not contain discovery information.")
 
         # Remove existing discovery data for this MAC
-        existing_discoveries = database.session.query(Discovery).filter(Discovery.mac_id == mac.id).all()
+        existing_discoveries = database.select_all(Discovery).where(Discovery.mac_id == mac.id).all()
         for discovery in existing_discoveries:
-            services = database.session.query(Service).filter(Service.discovery_id == discovery.id).all()
-            for service in services:
-                database.session.delete(service)
-            database.session.delete(discovery)
+            database.delete(discovery)
         
         # Add new discovery data
         for discovery_info in discoveries:
-            discovery = Discovery()
-            discovery.mac_id = mac.id
-            discovery.protocol = discovery_info.protocol
-            discovery.device_name = discovery_info.device_name
-            discovery.device_type = discovery_info.device_type
-            discovery.manufacturer = discovery_info.manufacturer
-            discovery.model = discovery_info.model
-            database.session.add(discovery)
-            database.session.flush()
-            
-            # Add services if any
-            if discovery_info.services:
-                for service_name in discovery_info.services:
-                    service = Service()
-                    service.discovery_id = discovery.id
-                    service.name = service_name
-                    service.version = None
-                    service.port = None
-                    database.session.add(service)
-                    
-        database.session.commit()
+            discovery = Discovery(
+                mac_id=mac.id,
+                protocol=discovery_info.protocol,
+                device_name=discovery_info.device_name,
+                device_type=discovery_info.device_type,
+                manufacturer=discovery_info.manufacturer,
+                model=discovery_info.model
+            )
+            database.save(discovery)
 
     def discover_mdns(self, ip_address: str) -> DiscoveryInfo | None:
         """Discover device information using mDNS."""      

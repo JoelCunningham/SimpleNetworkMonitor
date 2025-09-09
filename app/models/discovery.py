@@ -3,23 +3,22 @@ Discovery model.
 
 Represents discovery information from network protocols.
 """
-from app import database
+
+from typing import TYPE_CHECKING, Optional
+
+from sqlmodel import Field, Relationship
+
 from app.models.base import BaseModel
 
+if TYPE_CHECKING:
+    from app.models.mac import Mac
+class Discovery(BaseModel, table=True):
+    """Discovery information model."""    
+    protocol: str = Field(default="unknown", nullable=False, max_length=50)
+    device_name: str | None = Field(default=None, max_length=255)
+    device_type: str | None = Field(default=None, max_length=100)
+    manufacturer: str | None = Field(default=None, max_length=255)
+    model: str | None = Field(default=None, max_length=255)
 
-class Discovery(BaseModel):
-    """Discovery information model."""
-    __tablename__ = 'discovery'
-    
-    protocol = database.Column(database.String(50), default='unknown', nullable=False)
-    device_name = database.Column(database.String(255), nullable=True)
-    device_type = database.Column(database.String(100), nullable=True)
-    manufacturer = database.Column(database.String(255), nullable=True)
-    model = database.Column(database.String(255), nullable=True)
-    
-    # Foreign key
-    mac_id = database.Column(database.Integer, database.ForeignKey('mac.id'), nullable=False)
-    
-    # Relationships
-    mac = database.relationship('Mac', back_populates='discoveries')
-    services = database.relationship('Service', back_populates='discovery', lazy='dynamic', cascade='all, delete-orphan')
+    mac_id: int = Field(foreign_key="mac.id")
+    mac: Optional["Mac"] = Relationship(back_populates="discoveries")

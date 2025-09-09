@@ -1,70 +1,73 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from typing import Any, Generic, Type, TypeVar
 
-class Database(SQLAlchemy):
+from sqlalchemy import Engine
+from sqlalchemy.orm import joinedload
+from sqlmodel import Session, SQLModel, create_engine, select
 
-    def init(self, app: Flask):
-        """Create all database tables and seed initial data if needed."""
-        from app import models  #type: ignore[import]
-        
-        self.init_app(app)
-        self.create_all()
-        self.seed_initial_data()
-       
-    def seed_initial_data(self):
-        """Seed the database with initial data."""
-        self._seed_categories()
-        self._seed_locations()
+from app.models.base import BaseModel
 
-    def _seed_categories(self):
-        """Seed the database with default categories."""
-        from app.models.category import Category
-        if self.session.query(Category).count() > 0:
-            return
-        
-        categories = [
-            'Router',
-            'Printer', 
-            'NVR',
-            'Laptop',
-            'Smart Speaker',
-            'Smart TV',
-            'Smart Phone',
-            'Tablet',
-            'Desktop',
-            'Smart Radio',
-            'AP',
-            'NAS'
-        ]
-        
-        for category_name in categories:
-            category = Category()
-            category.name = category_name
-            self.session.add(category)
-        self.session.commit()
+T = TypeVar("T", bound=BaseModel)
+U = TypeVar("U", bound=Any)
 
-    def _seed_locations(self):
-        """Seed the database with default locations."""
-        from app.models.location import Location
-        if self.session.query(Location).count() > 0:
-            return
-       
-        locations = [
-            'Bedroom',
-            'Kitchen',
-            'Living',
-            'Rumpus',
-            'Hallway',
-            'Work',
-            'Study',
-            'Dining',
-            'Garage',
-            'Lounge',
-            'Bathroom',
-        ]
+class Query(Generic[T]):
+    def __init__(self, engine: Engine, model: Type[T]):
+        self.engine = engine
+        self.statement = select(model).options(joinedload("*"))
+
+    def where(self, condition: Any) -> "Query[T]":
+        self.statement = self.statement.where(condition)
+        return self
+    
+    def where_in(self, column: U, values: list[U]) -> "Query[T]":
+        self.statement = self.statement.where(column.in_(values))
+        return self
+    
+    def order_by(self, *criteria: Any) -> "Query[T]":
+        self.statement = self.statement.order_by(*criteria)
+        return self
+
+    def all(self) -> list[T]:
+        with Session(self.engine) as session:
+            return list(session.exec(self.statement).unique())
         
-        for location_name in locations:
-            location = Location()
-            location.name = location_name
-            self.session.add(location)
-        self.session.commit()
+    def first(self) -> T | None:
+        with Session(self.engine) as session:
+            return session.exec(self.statement).unique().first()
+        
+class Database:
+    url: str
+    engine: Engine
+
+    def __init__(self, db_url: str):
+        self.url = db_url
+        self.engine = create_engine(self.url, connect_args={"check_same_thread": False})
+
+        import app.models.category  # type: ignore[unused-import]
+        import app.models.device  # type: ignore[unused-import]
+        import app.models.discovery  # type: ignore[unused-import]
+        import app.models.location  # type: ignore[unused-import]
+        import app.models.mac  # type: ignore[unused-import]
+        import app.models.owner  # type: ignore[unused-import]
+        import app.models.port  # type: ignore[unused-import]
+
+        SQLModel.metadata.create_all(self.engine)
+    
+    def select_all(self, model: Type[T]) -> Query[T]:
+        """Return a query object for all rows of the given model."""
+        return Query(self.engine, model)
+    
+    def select_by_id(self, model: Type[T], id: int) -> Query[T]:
+        """Return a Query pre-filtered by primary key."""
+        return self.select_all(model).where(model.id == id)
+
+    def save(self, instance: BaseModel) -> None:
+        """Add an instance to the database."""
+        with Session(self.engine) as session:
+            session.add(instance)
+            session.commit()
+    
+    def delete(self, instance: BaseModel) -> None:
+        """Delete an instance from the database."""
+        with Session(self.engine) as session:
+            session.delete(instance)
+            session.commit()

@@ -3,15 +3,17 @@ Owner model.
 
 Represents device owners for organization.
 """
-from app import database
+
+from typing import TYPE_CHECKING
+
+from sqlmodel import Field, Relationship
+
 from app.models.base import BaseModel
 
+if TYPE_CHECKING:
+    from app.models.device import Device
 
-class Owner(BaseModel):
+class Owner(BaseModel, table=True):
     """Device owner model."""
-    __tablename__ = 'owner'
-    
-    name = database.Column(database.String(100), nullable=False, unique=True)
-    
-    # Relationships
-    devices = database.relationship('Device', back_populates='owner')
+    name: str = Field(nullable=False, unique=True, max_length=100)
+    devices: list["Device"] = Relationship(back_populates="owner")

@@ -7,6 +7,6 @@ class LocationService:
 
     def get_locations(self) -> list[Location]:
         """Get all device locations."""
-        return database.session.query(Location).all()
+        return database.select_all(Location).all()
     
     

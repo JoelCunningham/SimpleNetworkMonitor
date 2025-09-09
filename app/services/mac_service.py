@@ -26,8 +26,8 @@ class MacService:
         if address_data.mac_address is None:
             raise Exception("AddressData does not contain a MAC address.")
     
-        mac: Mac | None = database.session.query(Mac).filter(Mac.address == address_data.mac_address).first()
-
+        mac = self.get_mac_by_address(address_data.mac_address)
+        
         if mac:
             mac.ping_time_ms = address_data.ping_time_ms
             mac.arp_time_ms = address_data.arp_time_ms
@@ -45,26 +45,26 @@ class MacService:
                 mac.os_guess = address_data.os_guess
                 mac.ttl = address_data.ttl
         else:
-            mac = Mac()
-            mac.address = address_data.mac_address
-            mac.ping_time_ms = address_data.ping_time_ms
-            mac.arp_time_ms = address_data.arp_time_ms
-            mac.last_ip = address_data.ip_address
-            mac.hostname = address_data.hostname
-            mac.vendor = address_data.mac_vendor
-            mac.os_guess = address_data.os_guess
-            mac.ttl = address_data.ttl
-            mac.last_seen = datetime.now(timezone.utc)
-            database.session.add(mac)
+            mac = Mac(
+                address=address_data.mac_address,
+                ping_time_ms=address_data.ping_time_ms,
+                arp_time_ms=address_data.arp_time_ms,
+                last_ip=address_data.ip_address,
+                hostname=address_data.hostname,
+                vendor=address_data.mac_vendor,
+                os_guess=address_data.os_guess,
+                ttl=address_data.ttl,
+                last_seen=datetime.now(timezone.utc)
+            )
 
-        database.session.commit()
-        database.session.refresh(mac)
+            database.save(mac)
+
         return mac
     
     def get_mac_by_address(self, mac_address: str) -> Mac | None:
         """Get MAC address by address string."""
-        return database.session.query(Mac).filter(Mac.address == mac_address).first()
-    
+        return database.select_all(Mac).where(Mac.address == mac_address).first()
+
     def resolve_mac_address(self, ip_address: str) -> tuple[str, int] | None:
         """Resolve MAC address for IP."""   
         arp: Packet = ARP(pdst=ip_address)  # type: ignore

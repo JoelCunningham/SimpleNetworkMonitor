@@ -3,26 +3,17 @@ Service factory for creating properly configured service instances.
 
 Handles the complex dependency injection for services with many dependencies.
 """
-from flask import Flask
-
-
 class Container:
     """Factory class for creating properly configured service instances."""
-    app = None
-    
     _scan_controller = None
     _device_controller = None
-    
+
     _scan_service = None
     _mac_service = None
     _device_service = None
     _owner_service = None
     _category_service = None
     _location_service = None
-
-    def init(self, app: Flask):
-        """Initialize the container with the Flask app."""
-        self.app = app
     
     def mac_service(self):
         """Get or create a shared MacService instance."""
@@ -91,13 +82,9 @@ class Container:
     def scanning_service(self):
         """Get or create a BackgroundScannerService instance."""
         from app.services.scanning_service import ScanningService
-        
-        if self.app is None:
-            raise RuntimeError("Container must be initialized with an app instance")
-        
+                
         if self._scan_controller is None:
             self._scan_controller = ScanningService(
-                scan_service=self.scan_service(),
-                app=self.app
+                scan_service=self.scan_service()
             )
         return self._scan_controller

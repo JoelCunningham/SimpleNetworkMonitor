@@ -43,10 +43,10 @@ class PortService:
             raise Exception("AddressData does not contain open ports.")
 
         # Remove existing port data for this MAC
-        existing_ports = database.session.query(Port).filter(Port.mac_id == mac.id).all()
+        existing_ports = database.select_all(Port).where(Port.mac_id == mac.id).all()
         for port in existing_ports:
-            database.session.delete(port)
-        
+            database.delete(port)
+
         for port_info in ports:
             service_name = port_info.service
             banner = port_info.banner
@@ -59,15 +59,15 @@ class PortService:
                     if service_info.version:
                         service_name += f" {service_info.version}"
             
-            port = Port()
-            port.mac_id = mac.id
-            port.port = port_info.port
-            port.protocol = port_info.protocol
-            port.service = service_name
-            port.banner = banner
-            database.session.add(port)
-        
-        database.session.commit()
+            port = Port(
+                mac_id=mac.id,
+                port=port_info.port,
+                protocol=port_info.protocol,
+                service=service_name,
+                banner=banner
+            )
+
+            database.save(port)
         
     def scan_ports(self, ip_address: str, ports: list[int]) -> list[PortInfo]:
         """Scan specified ports on the given IP address."""        
