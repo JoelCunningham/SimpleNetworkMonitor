@@ -6,7 +6,6 @@ import { Owner } from '#interfaces/owner';
 export interface Device {
   id: number;
   name: string | null;
-  default_name: string;
   model: string | null;
   category: Category;
   location: Location | null;

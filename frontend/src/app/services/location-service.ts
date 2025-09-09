@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
-  private apiUrl = 'http://localhost:5000/api/locations';
+  private apiUrl = 'http://localhost:8000/api/locations';
   private locationsSubject = new BehaviorSubject<Location[]>([]);
 
   public locations = this.locationsSubject.asObservable();

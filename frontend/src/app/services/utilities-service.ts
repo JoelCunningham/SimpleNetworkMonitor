@@ -6,6 +6,19 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class UtilitiesService {
+  getDisplayName(device: Device): string {
+    if (device.name) {
+      return device.name;
+    }
+
+    var device_name = '';
+    device_name += device.owner ? device.owner.name + "'s " : '';
+    device_name += device.location ? device.location.name + ' ' : '';
+    device_name += device.category ? device.category.name : '';
+
+    return device_name.trim() || 'Unknown Device';
+  }
+
   getLastSeenStatus(device: Device): string {
     const minsSinceLastSeen = this.getMinsSinceLastSeen(device);
 

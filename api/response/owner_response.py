@@ -1,31 +1,19 @@
 from pydantic import BaseModel
 
+from api.response.category_response import CategoryResponse
+from api.response.location_response import LocationResponse
+from api.response.mac_response import MacResponse
+
 class OwnerResponse(BaseModel):   
-    class Device(BaseModel):
-        class Category(BaseModel):
-            id: int
-            name: str
-
-        class Location(BaseModel):
-            id: int
-            name: str
-
-        class Owner(BaseModel):
-            id: int
-            name: str
-
-        class Mac(BaseModel):
-            id: int
-            address: str
-
+    class DeviceResponse(BaseModel):
         id: int
-        name: str
-        model: str
-        category: Category
-        location: Location
-        owner: Owner
-        macs: list[Mac]
+        name: str | None
+        model: str | None
+        category: CategoryResponse
+        location: LocationResponse | None
+        macs: list[MacResponse]
+        primary_mac: MacResponse
         
     id: int
     name: str
-    devices: list[Device] = []
+    devices: list[DeviceResponse]

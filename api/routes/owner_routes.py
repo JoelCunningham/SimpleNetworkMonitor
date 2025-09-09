@@ -8,12 +8,13 @@ from fastapi import APIRouter, HTTPException
 from api.request.owner_request import OwnerRequest
 from api.response.error_response import ErrorResponse
 from api.response.owner_response import OwnerResponse
-from app import container
+from app.container import Container
 from common.objects.owner_input import OwnerInput
 
 router = APIRouter()
+container = Container()
 
-@router.get("/", response_model=List[OwnerResponse], responses={500: {"model": ErrorResponse}})
+@router.get("", response_model=List[OwnerResponse], responses={500: {"model": ErrorResponse}})
 async def get_owners():
     """Get all device owners."""
     try:
@@ -21,7 +22,7 @@ async def get_owners():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get owners: {str(e)}")
 
-@router.post("/", response_model=OwnerResponse, status_code=201, responses={500: {"model": ErrorResponse}})
+@router.post("", response_model=OwnerResponse, status_code=201, responses={500: {"model": ErrorResponse}})
 async def save_owner(owner: OwnerRequest):
     """Save a new owner."""
     try:

@@ -5,7 +5,7 @@ import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
-  private apiUrl = 'http://localhost:5000/api/devices';
+  private apiUrl = 'http://localhost:8000/api/devices';
   private doRefresh = true;
 
   private devicesSubject = new BehaviorSubject<Device[]>([]);
@@ -33,6 +33,10 @@ export class DeviceService {
 
   currentDevices(): Observable<Device[]> {
     return this.devices;
+  }
+
+  getDevice(id: number): Observable<Device> {
+    return this.http.get<Device>(`${this.apiUrl}/${id}`);
   }
 
   createDevice(device: DeviceRequest): Observable<Device> {

@@ -6,6 +6,7 @@ import { Option, Value } from '#interfaces/option';
 import { Owner } from '#interfaces/owner';
 import { DeviceService } from '#services/device-service';
 import { OwnerService } from '#services/owner-service';
+import { UtilitiesService } from '#services/utilities-service';
 import { FormMode } from '#types/form-mode';
 import { NotificationType } from '#types/notification-type';
 import {
@@ -27,8 +28,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './owner-form.scss',
 })
 export class OwnerForm implements OnInit, OnChanges {
-  @Input() owner: Owner | null = null;
-  @Input() mode: FormMode | null = null;
+  @Input() owner!: Owner;
+  @Input() mode!: FormMode;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<Owner>();
   @Output() onDelete = new EventEmitter<Owner>();
@@ -53,10 +54,18 @@ export class OwnerForm implements OnInit, OnChanges {
   constructor(
     private cdr: ChangeDetectorRef,
     private ownerService: OwnerService,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private utilitiesService: UtilitiesService
   ) {}
 
   ngOnInit() {
+    if (!this.owner) {
+      throw new Error('OwnerForm: owner is required');
+    }
+    if (!this.mode) {
+      throw new Error('OwnerForm: mode is required');
+    }
+
     this.deviceService.currentDevices().subscribe((devices) => {
       this.devices = devices;
       this.deviceOptions = this.devices
@@ -64,7 +73,7 @@ export class OwnerForm implements OnInit, OnChanges {
         .filter((device) => device.id)
         .map((device) => ({
           value: device.id,
-          label: device.default_name,
+          label: this.utilitiesService.getDisplayName(device),
         }));
       this.cdr.detectChanges();
     });
@@ -98,7 +107,7 @@ export class OwnerForm implements OnInit, OnChanges {
   initMode() {
     if (this.owner && (this.isEditMode() || this.isViewMode())) {
       this.newName = this.owner.name;
-      this.newDevices = this.owner.devices ? [...this.owner.devices] : [];
+      this.newDevices = [...this.owner.devices];
     }
     if (this.isAddMode()) {
       this.newName = '';
@@ -122,7 +131,7 @@ export class OwnerForm implements OnInit, OnChanges {
         ...this.deviceOptions,
         {
           value: device.id,
-          label: device.default_name,
+          label: this.utilitiesService.getDisplayName(device),
         },
       ];
       this.newDevices = this.newDevices.filter((d) => d !== device);
@@ -130,8 +139,8 @@ export class OwnerForm implements OnInit, OnChanges {
   }
 
   cancelEdit() {
-    this.newName = this.owner?.name || '';
-    this.newDevices = [...(this.owner?.devices || [])];
+    this.newName = this.owner.name || '';
+    this.newDevices = [...this.owner.devices];
     this.setMode(FormMode.View);
   }
 

@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private apiUrl = 'http://localhost:5000/api/categories';
+  private apiUrl = 'http://localhost:8000/api/categories';
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
 
   public categories = this.categoriesSubject.asObservable();

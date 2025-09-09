@@ -16,6 +16,7 @@
   </div>
 </section>
 
+@if (currentOwner && ownerFormMode) {
 <app-modal
   [title]="getModalTitle()"
   [isOpen]="showOwnerModal"
@@ -30,3 +31,4 @@
     (modeChange)="ownerFormMode = $event"
   />
 </app-modal>
+}

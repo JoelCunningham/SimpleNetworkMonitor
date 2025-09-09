@@ -27,7 +27,7 @@ export class OwnersPanel implements OnInit {
   ngOnInit() {
     this.ownerService.currentOwners().subscribe((data) => {
       this.owners = data.sort((a, b) => {
-        const deviceDiff = (b.devices?.length || 0) - (a.devices?.length || 0);
+        const deviceDiff = (b.devices.length || 0) - (a.devices.length || 0);
         if (deviceDiff !== 0) return deviceDiff;
         return (a.name || '').localeCompare(b.name || '');
       });

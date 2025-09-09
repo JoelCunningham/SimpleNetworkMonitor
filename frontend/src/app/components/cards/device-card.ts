@@ -34,6 +34,7 @@ export class DeviceCard implements OnInit, OnDestroy {
 
   protected statusText: string = LastSeenStatus.NEVER;
   protected statusClass: string = DeviceStatus.OFFLINE;
+  protected displayName: string = 'Unknown Device';
   protected portalUrl: string | null = null;
 
   private statusSubscription?: Subscription;
@@ -52,6 +53,7 @@ export class DeviceCard implements OnInit, OnDestroy {
     });
 
     if (this.device) {
+      this.displayName = this.utilitiesService.getDisplayName(this.device);
       this.portalUrl = this.utilitiesService.getDeviceHttpUrl(this.device);
     }
   }

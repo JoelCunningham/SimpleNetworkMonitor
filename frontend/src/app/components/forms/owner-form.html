@@ -8,14 +8,14 @@
 <div class="owner-form owner-view">
   <div class="form-group">
     <label>Owner Name</label>
-    <span>{{ owner?.name }}</span>
+    <span>{{ owner.name }}</span>
   </div>
 
   <div class="form-group">
     <label>Devices</label>
-    @if (owner?.devices && owner?.devices?.length !== 0) {
+    @if (owner.devices.length !== 0) {
     <ul>
-      @for (device of owner?.devices; track device.id) {
+      @for (device of owner.devices; track device.id) {
       <li>
         <app-device-card
           [device]="device"

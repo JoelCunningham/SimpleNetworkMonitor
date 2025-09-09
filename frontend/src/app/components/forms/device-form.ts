@@ -70,6 +70,7 @@ export class DeviceForm implements OnInit, OnChanges {
 
   protected editMode: FormMode = FormMode.Edit;
   protected deviceStatus: DeviceStatus | null = null;
+  protected displayName: string = 'Unknown Device';
 
   protected currentMac: Mac | null = null;
 
@@ -118,6 +119,8 @@ export class DeviceForm implements OnInit, OnChanges {
         value: mac.id,
       }));
     });
+
+    this.displayName = this.utilitiesService.getDisplayName(this.device);
 
     this.initMode();
   }
@@ -228,7 +231,6 @@ export class DeviceForm implements OnInit, OnChanges {
       this.macError = true;
       this.setNotification('At least one MAC address is required.');
       this.cdr.detectChanges();
-      console.log(this.notificationType, this.notificationMessage);
       return;
     }
     this.newMacs = this.newMacs.filter((m) => m.id !== mac.id);

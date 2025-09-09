@@ -31,20 +31,6 @@ class Device(BaseModel, table=True):
     macs: list["Mac"] = Relationship(back_populates="device")
 
     @property
-    def default_name(self) -> str:
-        """Return the default name for the device."""
-        if self.name:
-            return self.name
-        
-        device_name = ""
-        
-        device_name += self.owner.name + "'s " if self.owner else ""
-        device_name += self.location.name + " " if self.location else ""
-        device_name += self.category.name if self.category else ""
-    
-        return device_name.strip() or "Unknown Device"
-
-    @property
     def primary_mac(self) -> Optional["Mac"]:
         """Get the primary MAC address (most recently seen)."""
         if not self.macs:
