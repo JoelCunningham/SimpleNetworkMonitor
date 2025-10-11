@@ -42,7 +42,7 @@ class DeviceService:
             macs=database.select_all(Mac).where_in(Mac.id, device.mac_ids).all()
         )
 
-        database.save(new_device);
+        database.create(new_device);
 
         return new_device
 
@@ -54,16 +54,17 @@ class DeviceService:
         if not device.mac_ids:
             raise ValueError("At least one MAC address is required")
 
-        existing_device = Device(
-            id=id,
-            name=device.name,
-            model=device.model,
-            category_id=device.category_id,
-            location_id=device.location_id,
-            owner_id=device.owner_id,
-            macs=database.select_all(Mac).where_in(Mac.id, device.mac_ids).all()
-        )
+        existing_device.name = device.name
+        existing_device.model = device.model
+        existing_device.category_id = device.category_id
+        existing_device.location_id = device.location_id
+        existing_device.owner_id = device.owner_id
+        existing_device.macs = database.select_all(Mac).where_in(Mac.id, device.mac_ids).all()
         
-        database.save(existing_device)
+        database.update(existing_device)
         
-        return existing_device
+        updated_device = database.select_by_id(Device, id).first()
+        if not updated_device:
+            raise ValueError("Device not found")
+        
+        return updated_device

@@ -18,7 +18,7 @@ class OwnerService:
             devices=database.select_all(Device).where_in(Device.id, owner.device_ids).all()
         )
     
-        database.save(new_owner)
+        database.create(new_owner)
         
         return new_owner
 
@@ -34,7 +34,7 @@ class OwnerService:
             devices=database.select_all(Device).where_in(Device.id, owner.device_ids).all()
         )
         
-        database.save(existing_owner)
+        database.create(existing_owner)
 
         return existing_owner
     

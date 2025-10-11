@@ -60,10 +60,16 @@ class Database:
         """Return a Query pre-filtered by primary key."""
         return self.select_all(model).where(model.id == id)
 
-    def save(self, instance: BaseModel) -> None:
+    def create(self, instance: BaseModel) -> None:
         """Add an instance to the database."""
         with Session(self.engine) as session:
             session.add(instance)
+            session.commit()
+    
+    def update(self, instance: BaseModel) -> None:
+        """Update an existing instance in the database."""
+        with Session(self.engine) as session:
+            session.merge(instance)
             session.commit()
     
     def delete(self, instance: BaseModel) -> None:

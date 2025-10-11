@@ -67,7 +67,7 @@ class PortService:
                 banner=banner
             )
 
-            database.save(port)
+            database.create(port)
         
     def scan_ports(self, ip_address: str, ports: list[int]) -> list[PortInfo]:
         """Scan specified ports on the given IP address."""        

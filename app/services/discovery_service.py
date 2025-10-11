@@ -85,7 +85,7 @@ class DiscoveryService():
                 manufacturer=discovery_info.manufacturer,
                 model=discovery_info.model
             )
-            database.save(discovery)
+            database.create(discovery)
 
     def discover_mdns(self, ip_address: str) -> DiscoveryInfo | None:
         """Discover device information using mDNS."""      

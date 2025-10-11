@@ -57,7 +57,7 @@ class MacService:
                 last_seen=datetime.now(timezone.utc)
             )
 
-            database.save(mac)
+            database.create(mac)
 
         return mac
     
