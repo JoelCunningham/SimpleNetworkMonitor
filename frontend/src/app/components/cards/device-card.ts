@@ -9,6 +9,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -22,7 +23,7 @@ import { interval, Subscription } from 'rxjs';
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss',
 })
-export class DeviceCard implements OnInit, OnDestroy {
+export class DeviceCard implements OnInit, OnChanges, OnDestroy {
   @Input() device: Device | null = null;
   @Input() owner: Owner | null = null;
   @Input() showLink: boolean = false;
@@ -45,17 +46,19 @@ export class DeviceCard implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.updateDeviceData();
     this.updateStatus();
 
     this.statusSubscription = interval(60000).subscribe(() => {
       this.updateStatus();
       this.cdr.detectChanges();
     });
+  }
 
-    if (this.device) {
-      this.displayName = this.utilitiesService.getDisplayName(this.device);
-      this.portalUrl = this.utilitiesService.getDeviceHttpUrl(this.device);
-    }
+  ngOnChanges() {
+    this.updateDeviceData();
+    this.updateStatus();
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy() {
@@ -72,7 +75,14 @@ export class DeviceCard implements OnInit, OnDestroy {
     }
   }
 
-  updateStatus() {
+  private updateDeviceData() {
+    if (this.device) {
+      this.displayName = this.utilitiesService.getDisplayName(this.device);
+      this.portalUrl = this.utilitiesService.getDeviceHttpUrl(this.device);
+    }
+  }
+
+  private updateStatus() {
     if (!this.device) return;
     this.statusText = this.utilitiesService.getLastSeenStatus(this.device);
     this.statusClass = this.utilitiesService.getDeviceStatus(this.device);

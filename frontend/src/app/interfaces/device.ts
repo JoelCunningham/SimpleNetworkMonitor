@@ -15,7 +15,6 @@ export interface Device {
 }
 
 export interface DeviceRequest {
-  id: number | null;
   name: string | null;
   model: string | null;
   category_id: number | null;

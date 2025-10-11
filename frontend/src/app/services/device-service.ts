@@ -1,7 +1,8 @@
 import { Device, DeviceRequest } from '#interfaces/device';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, interval, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
@@ -25,9 +26,14 @@ export class DeviceService {
   }
 
   private loadDevices(): void {
-    this.http.get<Device[]>(this.apiUrl).subscribe((devices) => {
-      this.devicesSubject.next(devices);
-      this.lastRefreshSubject.next(new Date());
+    this.http.get<Device[]>(this.apiUrl).subscribe({
+      next: (devices) => {
+        this.devicesSubject.next(devices);
+        this.lastRefreshSubject.next(new Date());
+      },
+      error: (error) => {
+        console.error('Failed to load devices:', error);
+      },
     });
   }
 
@@ -35,20 +41,28 @@ export class DeviceService {
     return this.devices;
   }
 
-  getDevice(id: number): Observable<Device> {
-    return this.http.get<Device>(`${this.apiUrl}/${id}`);
-  }
-
   createDevice(device: DeviceRequest): Observable<Device> {
-    return this.http.post<Device>(this.apiUrl, device);
+    return this.http.post<Device>(this.apiUrl, device).pipe(
+      tap(() => {
+        this.loadDevices();
+      })
+    );
   }
 
-  updateDevice(device: DeviceRequest): Observable<Device> {
-    return this.http.put<Device>(`${this.apiUrl}/${device.id}`, device);
+  updateDevice(id: number, device: DeviceRequest): Observable<Device> {
+    return this.http.put<Device>(`${this.apiUrl}/${id}`, device).pipe(
+      tap(() => {
+        this.loadDevices();
+      })
+    );
   }
 
   deleteDevice(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => {
+        this.loadDevices();
+      })
+    );
   }
 
   setAutoRefresh(enabled: boolean): void {

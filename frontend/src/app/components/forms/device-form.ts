@@ -21,10 +21,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -33,13 +35,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './device-form.html',
   styleUrl: './device-form.scss',
 })
-export class DeviceForm implements OnInit, OnChanges {
+export class DeviceForm implements OnInit, OnChanges, OnDestroy {
   @Input() device!: Device;
   @Input() mode!: FormMode;
   @Output() onClose = new EventEmitter<void>();
-  @Output() onSubmit = new EventEmitter<Device>();
-  @Output() onDelete = new EventEmitter<Device>();
   @Output() modeChange = new EventEmitter<FormMode>();
+
+  private subscriptions: Subscription = new Subscription();
 
   protected macs: Mac[] = [];
   protected macOptions: Option[] = [];
@@ -91,34 +93,42 @@ export class DeviceForm implements OnInit, OnChanges {
       throw new Error('DeviceForm: mode is required');
     }
 
-    this.categoryService.currentCategories().subscribe((categories) => {
-      this.categoryOptions = categories.map((category) => ({
-        label: category.name,
-        value: category.id,
-      }));
-    });
+    this.subscriptions.add(
+      this.categoryService.currentCategories().subscribe((categories) => {
+        this.categoryOptions = categories.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }));
+      })
+    );
 
-    this.locationService.currentLocations().subscribe((locations) => {
-      this.locationOptions = locations.map((location) => ({
-        label: location.name,
-        value: location.id,
-      }));
-    });
+    this.subscriptions.add(
+      this.locationService.currentLocations().subscribe((locations) => {
+        this.locationOptions = locations.map((location) => ({
+          label: location.name,
+          value: location.id,
+        }));
+      })
+    );
 
-    this.ownerService.currentOwners().subscribe((owners) => {
-      this.ownerOptions = owners.map((owner) => ({
-        label: owner.name,
-        value: owner.id,
-      }));
-    });
+    this.subscriptions.add(
+      this.ownerService.currentOwners().subscribe((owners) => {
+        this.ownerOptions = owners.map((owner) => ({
+          label: owner.name,
+          value: owner.id,
+        }));
+      })
+    );
 
-    this.deviceService.currentDevices().subscribe((devices) => {
-      this.macs = devices.flatMap((device) => device.macs || []);
-      this.macOptions = this.macs.map((mac) => ({
-        label: mac.address,
-        value: mac.id,
-      }));
-    });
+    this.subscriptions.add(
+      this.deviceService.currentDevices().subscribe((devices) => {
+        this.macs = devices.flatMap((device) => device.macs || []);
+        this.macOptions = this.macs.map((mac) => ({
+          label: mac.address,
+          value: mac.id,
+        }));
+      })
+    );
 
     this.displayName = this.utilitiesService.getDisplayName(this.device);
 
@@ -130,9 +140,15 @@ export class DeviceForm implements OnInit, OnChanges {
       this.clearErrors();
     }
     if (this.device) {
+      this.displayName = this.utilitiesService.getDisplayName(this.device);
       this.deviceStatus = this.utilitiesService.getDeviceStatus(this.device);
       this.currentMac = this.device.primary_mac;
     }
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   isViewMode(): boolean {
@@ -154,6 +170,7 @@ export class DeviceForm implements OnInit, OnChanges {
 
   initMode() {
     if (this.device && (this.isEditMode() || this.isViewMode())) {
+      this.newName = this.device.name || null;
       this.newModel = this.device.model || '';
       this.newMacs = this.device.macs || [];
 
@@ -296,7 +313,6 @@ export class DeviceForm implements OnInit, OnChanges {
     if (!this.validateForm()) return;
 
     const request: DeviceRequest = {
-      id: this.isEditMode() ? this.device.id : 0,
       name: this.newName,
       model: this.newModel,
       owner_id: this.selectedOwner.value,
@@ -305,34 +321,26 @@ export class DeviceForm implements OnInit, OnChanges {
       mac_ids: this.newMacs.map((mac) => mac.id),
     };
 
-    const handleError = () => {
+    const handleError = (error: any) => {
+      console.error('Device operation error:', error);
       this.genericError = true;
       this.setNotification('An unexpected error occurred. Please try again.');
       this.cdr.detectChanges();
     };
 
     if (this.isEditMode() && this.device) {
-      this.deviceService.updateDevice(request).subscribe({
+      this.deviceService.updateDevice(this.device.id, request).subscribe({
         next: (updatedDevice: Device) => {
           this.device = updatedDevice;
           this.setMode(FormMode.View);
           this.setNotification('Device updated successfully.');
-          this.onSubmit.emit(updatedDevice);
           this.cdr.detectChanges();
         },
-        error: (e) => {
-          this.genericError = true;
-          this.setNotification(
-            'An unexpected error occurred. Please try again.'
-          );
-          console.error(e);
-          this.cdr.detectChanges();
-        },
+        error: handleError,
       });
     } else {
       this.deviceService.createDevice(request).subscribe({
-        next: (newDevice: Device) => {
-          this.onSubmit.emit(newDevice);
+        next: () => {
           this.closeForm();
         },
         error: handleError,
@@ -345,7 +353,6 @@ export class DeviceForm implements OnInit, OnChanges {
     this.deviceService.deleteDevice(this.device.id).subscribe({
       next: () => {
         this.setNotification('Device deleted successfully.');
-        this.onDelete.emit(this.device!);
         this.closeForm();
       },
       error: () => {

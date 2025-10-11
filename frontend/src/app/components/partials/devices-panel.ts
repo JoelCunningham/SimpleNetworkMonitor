@@ -1,4 +1,6 @@
 import { DeviceCard } from '#components/cards/device-card';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Notification } from '#components/common/notification';
 import { DeviceForm } from '#components/forms/device-form';
 import { Select } from '#components/inputs/select';
@@ -14,7 +16,6 @@ import { LocationService } from '#services/location-service';
 import { OwnerService } from '#services/owner-service';
 import { FormMode } from '#types/form-mode';
 import { NotificationType } from '#types/notification-type';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -23,7 +24,9 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
   templateUrl: './devices-panel.html',
   styleUrl: './devices-panel.scss',
 })
-export class DevicesPanel implements OnInit {
+export class DevicesPanel implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
+
   private devices: Device[] = [];
   protected deviceList: Device[] = [];
   protected currentDevice: Device | null = null;
@@ -55,38 +58,51 @@ export class DevicesPanel implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.deviceService.currentDevices().subscribe((devices) => {
-      this.devices = devices;
-      this.deviceList = this.sortDevices(devices);
-      this.cdr.detectChanges();
-    });
+    this.subscriptions.add(
+      this.deviceService.currentDevices().subscribe((devices) => {
+        this.devices = devices;
+        this.deviceList = this.sortDevices(devices);
+        this.applyFilters();
+        this.cdr.detectChanges();
+      })
+    );
 
-    this.ownerService.currentOwners().subscribe((owners) => {
-      this.owners = owners;
-      this.ownerOptions = owners.map((owner) => ({
-        value: owner.id,
-        label: owner.name,
-      }));
-      this.cdr.detectChanges();
-    });
+    this.subscriptions.add(
+      this.ownerService.currentOwners().subscribe((owners) => {
+        this.owners = owners;
+        this.ownerOptions = owners.map((owner) => ({
+          value: owner.id,
+          label: owner.name,
+        }));
+        this.cdr.markForCheck();
+      })
+    );
 
-    this.locationService.currentLocations().subscribe((locations) => {
-      this.locations = locations;
-      this.locationOptions = locations.map((location) => ({
-        value: location.id,
-        label: location.name,
-      }));
-      this.cdr.detectChanges();
-    });
+    this.subscriptions.add(
+      this.locationService.currentLocations().subscribe((locations) => {
+        this.locations = locations;
+        this.locationOptions = locations.map((location) => ({
+          value: location.id,
+          label: location.name,
+        }));
+        this.cdr.markForCheck();
+      })
+    );
 
-    this.categoryService.currentCategories().subscribe((categories) => {
-      this.categories = categories;
-      this.categoryOptions = categories.map((category) => ({
-        value: category.id,
-        label: category.name,
-      }));
-      this.cdr.detectChanges();
-    });
+    this.subscriptions.add(
+      this.categoryService.currentCategories().subscribe((categories) => {
+        this.categories = categories;
+        this.categoryOptions = categories.map((category) => ({
+          value: category.id,
+          label: category.name,
+        }));
+        this.cdr.markForCheck();
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   selectOwner(ownerId: Value) {
@@ -168,21 +184,6 @@ export class DevicesPanel implements OnInit {
       this.currentDevice = null;
       this.cdr.detectChanges();
     }, 100);
-  }
-
-  handleDeviceUpdate(device: Device) {
-    const deviceIndex = this.devices.findIndex((d) => d.id === device.id);
-    if (deviceIndex !== -1) {
-      this.devices[deviceIndex] = device;
-    } else {
-      this.devices.push(device);
-    }
-  }
-
-  handleDeviceDelete(device: Device) {
-    this.devices = this.devices.filter((d) => d.id !== device.id);
-    this.currentDevice = null;
-    this.showDeviceModal = false;
   }
 
   private sortDevices(devices: Device[]): Device[] {
