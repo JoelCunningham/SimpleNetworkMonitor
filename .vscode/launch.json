@@ -9,13 +9,44 @@
             "args": [
                 "app:create_app",
                 "--factory",
-                "--reload"
+                "--reload",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8000"
             ],
             "jinja": true,
             "justMyCode": true,
             "env": {},
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Run Angular (npm start)",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/frontend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "start"
+            ],
+            "console": "integratedTerminal",
+            "windows": {
+                "runtimeExecutable": "npm.cmd"
+            },
+            "env": {}
+        },
+        {
+            "name": "Attach to Chrome - Frontend",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/frontend",
+            "runtimeExecutable": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+            "windows": {
+                "runtimeExecutable": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+            }
         }
-    ]
+    ],
 }
