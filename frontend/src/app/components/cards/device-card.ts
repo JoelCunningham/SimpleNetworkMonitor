@@ -37,6 +37,7 @@ export class DeviceCard implements OnInit, OnChanges, OnDestroy {
   protected statusClass: string = DeviceStatus.OFFLINE;
   protected displayName: string = 'Unknown Device';
   protected portalUrl: string | null = null;
+  protected iconName: string = 'unknown';
 
   private statusSubscription?: Subscription;
 
@@ -65,10 +66,6 @@ export class DeviceCard implements OnInit, OnChanges, OnDestroy {
     this.statusSubscription?.unsubscribe();
   }
 
-  deviceIcon(): string {
-    return this.device?.category?.name.toLowerCase() || 'unknown';
-  }
-
   openInNewTab(): void {
     if (this.portalUrl) {
       window.open(this.portalUrl, '_blank');
@@ -79,6 +76,7 @@ export class DeviceCard implements OnInit, OnChanges, OnDestroy {
     if (this.device) {
       this.displayName = this.utilitiesService.getDisplayName(this.device);
       this.portalUrl = this.utilitiesService.getDeviceHttpUrl(this.device);
+      this.iconName = this.device?.category?.name.toLowerCase() || 'unknown';
     }
   }
 
