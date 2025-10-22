@@ -5,8 +5,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from api.response.category_response import CategoryResponse
-from api.response.error_response import ErrorResponse
+from api.response import CategoryResponse, ErrorResponse
 from app import container
 
 router = APIRouter()

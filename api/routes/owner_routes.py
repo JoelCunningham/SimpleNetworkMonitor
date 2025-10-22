@@ -5,11 +5,10 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from api.request.owner_request import OwnerRequest
-from api.response.error_response import ErrorResponse
-from api.response.owner_response import OwnerResponse
+from api.request import OwnerRequest
+from api.response import ErrorResponse, OwnerResponse
 from app import container
-from common.objects.owner_input import OwnerInput
+from common.objects import OwnerInput
 
 router = APIRouter()
 

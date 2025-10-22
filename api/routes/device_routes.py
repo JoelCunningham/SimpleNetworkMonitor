@@ -3,11 +3,10 @@ API interface routes (FastAPI version).
 """
 from fastapi import APIRouter, HTTPException
 
-from api.request.device_request import DeviceRequest
-from api.response.device_response import DeviceResponse
-from api.response.error_response import ErrorResponse
+from api.request import DeviceRequest
+from api.response import DeviceResponse, ErrorResponse
 from app import container
-from common.objects.device_input import DeviceInput
+from common.objects import DeviceInput
 
 router = APIRouter()
 
