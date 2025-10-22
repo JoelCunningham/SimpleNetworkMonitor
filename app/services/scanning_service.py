@@ -81,6 +81,6 @@ class ScanningService:
             self.last_scan_time = datetime.now()
             
         except Exception as e:
-            print(f"Scan error during {"full" if full_scan else "basic"} scan: {e}")
+            print(f"Scan error during {'full' if full_scan else 'basic'} scan: {e}")
         finally:
             self.is_scanning = False
