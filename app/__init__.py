@@ -16,8 +16,7 @@ from app.container import Container
 from app.database import Database
 
 config = Config()
-database = Database(config.database_url)
-container = Container(database=database)
+
 
 def create_app() -> FastAPI:
     app = FastAPI(title="SimpleNetworkMonitor", lifespan=lifespan)
@@ -31,19 +30,33 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Mount API app
+    # Include API router
     from api import create_api_app
     api_app = create_api_app()
-    app.mount("/api", api_app)
+    app.include_router(api_app, prefix="/api")
 
     return app
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    thread = threading.Thread(target=start_scanning_task, daemon=True)
+    database = Database(config.database_url)
+    app.state.container = Container(database=database)
+    thread = threading.Thread(target=start_scanning_task, args=(app.state.container,), daemon=True)
     thread.start()
-    yield
-    
-def start_scanning_task():
+
+    try:
+        yield
+    finally:
+        db = getattr(app.state.container, "_database", None)
+        try:
+            if db is not None and hasattr(db, "dispose"):
+                db.dispose()
+        except Exception:
+            pass
+
+def start_scanning_task(container: Container):
     time.sleep(5)
-    container.scanning_service().start_continuous_scan()
+    try:
+        container.scanning_service().start_continuous_scan()
+    except Exception:
+        return

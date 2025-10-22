@@ -5,6 +5,8 @@ Handles the complex dependency injection for services with many dependencies.
 """
 from typing import Any, Optional
 
+from fastapi import Request, Depends
+
 from app.database import Database
 from app.services.interfaces import (CategoryServiceInterface,
                                      DeviceServiceInterface,
@@ -143,3 +145,32 @@ class Container:
         if self._scanning_service is None:
             self._scanning_service = ScanningService(self.scan_service())
         return self._scanning_service
+
+
+def get_container(request: Request) -> Container:
+    """Return the application Container instance from app.state.
+
+    Designed for use with FastAPI Depends so endpoints and tests can
+    obtain or override service providers.
+    """
+    container = getattr(request.app.state, "container", None)
+    if container is None:
+        raise RuntimeError("Application container is not initialized")
+    return container
+
+
+def get_device_service(container: Container = Depends(get_container)):
+    return container.device_service()
+
+
+def get_owner_service(container: Container = Depends(get_container)):
+    return container.owner_service()
+
+
+def get_category_service(container: Container = Depends(get_container)):
+    return container.category_service()
+
+
+def get_location_service(container: Container = Depends(get_container)):
+    return container.location_service()
+
