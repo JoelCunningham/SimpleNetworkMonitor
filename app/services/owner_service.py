@@ -1,48 +1,53 @@
-from app import database
-from app.models.device import Device
-from app.models.owner import Owner
-from common.objects.owner_input import OwnerInput
+from app.database import Database
+from app.models import Device, Owner
+from app.services.interfaces import OwnerServiceInterface
+from common.objects import OwnerInput
 
 
-class OwnerService:
+class OwnerService(OwnerServiceInterface):
     """Service for handling owner-related operations."""
-    
+
+    def __init__(self, database: Database) -> None:
+        self.database = database
+
     def get_owners(self) -> list[Owner]:
         """Get all owners."""
-        return database.select_all(Owner).all()
+        return self.database.select_all(Owner).all()
 
     def add_owner(self, owner: OwnerInput) -> Owner:
         """Add a new owner to the database."""
         new_owner = Owner(
             name=owner.name,
-            devices=database.select_all(Device).where_in(Device.id, owner.device_ids).all()
+            devices=self.database.select_all(Device).where_in(Device.id, owner.device_ids).all(),
         )
-    
-        database.create(new_owner)
-        
+
+        self.database.create(new_owner)
+
         return new_owner
 
     def update_owner(self, id: int, owner: OwnerInput) -> Owner:
         """Update an existing owner."""
-        existing_owner = database.select_all(Owner).where(Owner.id == id).first()
+        existing_owner = self.database.select_by_id(Owner, id).first()
         if not existing_owner:
             raise ValueError("Owner not found")
 
-        existing_owner = Owner(
+        # replace with updated owner instance
+        updated = Owner(
             id=id,
             name=owner.name,
-            devices=database.select_all(Device).where_in(Device.id, owner.device_ids).all()
+            devices=self.database.select_all(Device).where_in(Device.id, owner.device_ids).all(),
         )
-        
-        database.create(existing_owner)
 
-        return existing_owner
-    
-    def delete_owner(self, owner_id: int) -> None:
+        # use create to upsert for simplicity (tests rely on returned object)
+        self.database.create(updated)
+
+        return updated
+
+    def delete_owner(self, id: int) -> None:
         """Delete an owner from the database."""
-        owner = database.select_by_id(Owner, owner_id).first()
+        owner = self.database.select_by_id(Owner, id).first()
         if owner:
-            database.delete(owner)
+            self.database.delete(owner)
         else:
             raise ValueError("Owner not found")
         return None

@@ -1,10 +1,11 @@
 import socket
 import struct
 
-from app import config, database
-from app.models.discovery import Discovery
-from app.models.mac import Mac
-from app.objects.discovery_info import DiscoveryInfo
+from app import config
+from app.database import Database
+from app.models import Discovery, Mac
+from app.objects import DiscoveryInfo
+from app.services.interfaces import DiscoveryServiceInterface
 
 MDNS_ADDITIONAL_COUNT = 0
 MDNS_ANSWERS_COUNT = 0
@@ -62,19 +63,22 @@ ENCODING_ERROR_HANDLING = 'ignore'
 SOCKET_BUFFER_SIZE = 1024
 STRUCT_PACK_FORMAT = '>HHHHHH'
 
-class DiscoveryService():
+class DiscoveryService(DiscoveryServiceInterface):
     """Service for managing network discovery operations."""
-    
+
+    def __init__(self, database: Database) -> None:
+        self.database = database
+
     def save_discoveries(self, mac: Mac, discoveries: list[DiscoveryInfo]) -> None:
         """Save discovery data for a MAC address."""
         if not discoveries:
             raise Exception("AddressData does not contain discovery information.")
 
         # Remove existing discovery data for this MAC
-        existing_discoveries = database.select_all(Discovery).where(Discovery.mac_id == mac.id).all()
+        existing_discoveries = self.database.select_all(Discovery).where(Discovery.mac_id == mac.id).all()
         for discovery in existing_discoveries:
-            database.delete(discovery)
-        
+            self.database.delete(discovery)
+
         # Add new discovery data
         for discovery_info in discoveries:
             discovery = Discovery(
@@ -83,12 +87,11 @@ class DiscoveryService():
                 device_name=discovery_info.device_name,
                 device_type=discovery_info.device_type,
                 manufacturer=discovery_info.manufacturer,
-                model=discovery_info.model
+                model=discovery_info.model,
             )
-            database.create(discovery)
+            self.database.create(discovery)
 
     def discover_mdns(self, ip_address: str) -> DiscoveryInfo | None:
-        """Discover device information using mDNS."""      
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.settimeout(config.discovery_timeout_ms / 1000)
@@ -109,7 +112,7 @@ class DiscoveryService():
             
             try:
                 response, _ = sock.recvfrom(SOCKET_BUFFER_SIZE)
-                device_name = self.parse_mdns_response(response, ip_address)
+                device_name = self._parse_mdns_response(response, ip_address)
                 
                 if device_name:
                     return DiscoveryInfo(
@@ -129,7 +132,6 @@ class DiscoveryService():
         return None
 
     def discover_netbios(self, ip_address: str) -> DiscoveryInfo | None:
-        """Discover device information using NetBIOS Name Service."""      
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.settimeout(config.discovery_timeout_ms / 1000)
@@ -171,7 +173,6 @@ class DiscoveryService():
         return None
     
     def discover_upnp(self, ip_address: str) -> DiscoveryInfo | None:
-        """Discover device information using UPnP/SSDP."""        
         try:
             timeout = config.discovery_timeout_ms / 1000    
                         
@@ -210,7 +211,7 @@ class DiscoveryService():
         
         return None
     
-    def parse_mdns_response(self, response: bytes, ip_address: str) -> str | None:
+    def _parse_mdns_response(self, response: bytes, ip_address: str) -> str | None:
         """Parse mDNS response to extract device information."""
         try:
             if len(response) > MDNS_HEADER_LENGTH:

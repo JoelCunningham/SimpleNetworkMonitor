@@ -4,8 +4,9 @@ import socket
 import subprocess
 
 from app import config
-from app.objects.ping_command import PingCommand
-from app.utilities.timer import Time, time_operation
+from app.objects import PingCommand
+from app.services.interfaces import PingServiceInterface
+from app.utilities import Time, time_operation
 
 PLATFORM_WINDOWS = "Windows"
 PLATFORM_LINUX = "Linux"
@@ -28,22 +29,19 @@ TTL_OS_MAPPING = {
     255: "Cisco/Network Device"
 }
 
-class PingService:
+class PingService(PingServiceInterface):
     """Service responsible for ping operations."""
-    
+
     def __init__(self) -> None:
         system = platform.system()
         if system not in PING_COMMANDS:
             raise Exception(f"Unsupported operating system: {system}")
-        
-        command = PING_COMMANDS[system]
     
-        self._ping_instruction = command.instruction
-        self._ping_count_flag = command.count_flag
-        self._ping_timeout_flag = command.timeout_flag
+        self._ping_count_flag = PING_COMMANDS[system].count_flag
+        self._ping_instruction = PING_COMMANDS[system].instruction
+        self._ping_timeout_flag = PING_COMMANDS[system].timeout_flag
     
     def ping(self, ip_address: str) -> tuple[bool | None, int, str | None]:
-        """Ping an IP address."""
         ping_timeout_ms = config.ping_timeout_ms
         ping_count = config.ping_count
         ping_time = Time()
@@ -70,15 +68,14 @@ class PingService:
             success = result.returncode == SUCCESSFUL_PING_EXIT_CODE
             return (success, int(ping_time.value), result.stdout if success else None)
             
-        except (subprocess.TimeoutExpired) as e:
-           return None, 0, None
-       
-        except (subprocess.SubprocessError) as e:
+        except subprocess.TimeoutExpired:
+            return None, 0, None
+
+        except subprocess.SubprocessError as e:
             print(f"WARN ping error for {ip_address}: {e}")
             return None, 0, None
 
     def get_hostname(self, ip_address: str) -> str | None:
-        """Resolve hostname from IP address."""
         try:
             socket.setdefaulttimeout(config.hostname_timeout_ms / 1000)
             hostname, _, _ = socket.gethostbyaddr(ip_address)
@@ -89,7 +86,6 @@ class PingService:
             socket.setdefaulttimeout(None)
 
     def get_ttl_from_ping(self, ping_result: str) -> int | None:
-        """Extract TTL value from ping output."""
         try:
             ttl_match = re.search(TTL_REGEX, ping_result)
             if ttl_match:
@@ -99,7 +95,6 @@ class PingService:
         return None
 
     def get_os_from_ttl(self, ttl: int) -> str:
-        """Detect operating system based on TTL value."""
         if ttl in TTL_OS_MAPPING:
             return TTL_OS_MAPPING[ttl]
         

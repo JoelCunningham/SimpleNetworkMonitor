@@ -1,18 +1,18 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 
 from sqlalchemy import text
 
-from app import config, database
-from app.models.mac import Mac
-from app.objects.address_data import AddressData
-from app.objects.scan_options import ScanOptions
-from app.services.discovery_service import DiscoveryService
-from app.services.mac_service import MacService
-from app.services.ping_service import PingService
-from app.services.port_service import PortService
-from app.services.protocol_service import ProtocolService
+from app import config
+from app.database import Database
+from app.models import Mac
+from app.objects import AddressData, ScanOptions
+from app.services.interfaces import (DiscoveryServiceInterface,
+                                     MacServiceInterface, PingServiceInterface,
+                                     PortServiceInterface,
+                                     ProtocolServiceInterface,
+                                     ScanServiceInterface)
 
 BANNER_SERVICE_NAMES = ["telnet", "smtp", "pop3", "imap", "ftp"]
 COMMON_PORTS = [21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 993, 995, 1723, 3389, 5900, 8080]
@@ -22,15 +22,19 @@ SSH_PORT = 22
 SSH_SERVICE_NAME = "ssh"
 MAX_MESSAGE_LENGTH = 80
         
-class ScanService:
+class ScanService(ScanServiceInterface):
     """Service for handling network scanning operations."""
-    
-    def __init__(self, 
-                 ping_service: PingService,
-                 mac_service: MacService,
-                 port_service: PortService,
-                 discovery_service: DiscoveryService,
-                 protocol_service: ProtocolService) -> None:
+
+    def __init__(
+        self,
+        database: Database,
+        ping_service: PingServiceInterface,
+        mac_service: MacServiceInterface,
+        port_service: PortServiceInterface,
+        discovery_service: DiscoveryServiceInterface,
+        protocol_service: ProtocolServiceInterface,
+    ) -> None:
+        self.database = database
         self.ping_service = ping_service
         self.mac_service = mac_service
         self.port_service = port_service
@@ -55,7 +59,7 @@ class ScanService:
             
     def get_latest_scan_date(self) -> datetime | None:
         """Get the date of the latest scan."""
-        latest_scan = database.select_all(Mac).order_by(text("last_seen DESC")).first()
+        latest_scan = self.database.select_all(Mac).order_by(text("last_seen DESC")).first()
         if latest_scan:
             return latest_scan.last_seen
         return None

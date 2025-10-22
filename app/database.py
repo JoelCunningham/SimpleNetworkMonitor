@@ -65,12 +65,14 @@ class Database:
         with Session(self.engine) as session:
             session.add(instance)
             session.commit()
+            session.refresh(instance)
     
     def update(self, instance: BaseModel) -> None:
         """Update an existing instance in the database."""
         with Session(self.engine) as session:
-            session.merge(instance)
+            merged = session.merge(instance)
             session.commit()
+            session.refresh(merged)
     
     def delete(self, instance: BaseModel) -> None:
         """Delete an instance from the database."""

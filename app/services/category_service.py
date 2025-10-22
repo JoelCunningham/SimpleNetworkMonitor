@@ -1,9 +1,11 @@
-from app import database
-from app.models.category import Category
+from app.database import Database
+from app.models import Category
+from app.services.interfaces import CategoryServiceInterface
 
 
-class CategoryService:
-    """Service for handling category-related operations."""
+class CategoryService(CategoryServiceInterface):
+    def __init__(self, database: Database) -> None:
+        self.database = database
 
     def get_categories(self) -> list[Category]:
-        return database.select_all(Category).all()
+        return self.database.select_all(Category).all()

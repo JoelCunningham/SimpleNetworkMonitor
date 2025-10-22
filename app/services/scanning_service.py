@@ -4,14 +4,14 @@ from datetime import datetime, timedelta
 from app import config
 from app.objects.address_data import AddressData
 from app.objects.scan_options import ScanOptions
-from app.services.scan_service import ScanService
+from app.services.interfaces import ScanServiceInterface
 
 SCAN_CHECK_INTERVAL = 60 
 
 class ScanningService:
     """Scan services that manages scanning operations."""
 
-    def __init__(self, scan_service: ScanService) -> None:
+    def __init__(self, scan_service: ScanServiceInterface) -> None:
         self.scan_service = scan_service
         
         self.scanning_thread: threading.Thread | None = None

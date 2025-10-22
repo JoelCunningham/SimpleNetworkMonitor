@@ -17,7 +17,7 @@ from app.database import Database
 
 config = Config()
 database = Database(config.database_url)
-container = Container()
+container = Container(database=database)
 
 def create_app() -> FastAPI:
     app = FastAPI(title="SimpleNetworkMonitor", lifespan=lifespan)

@@ -1,12 +1,13 @@
-from app import database
-from app.models.location import Location
+from app.database import Database
+from app.models import Location
+from app.services.interfaces import LocationServiceInterface
 
 
-class LocationService:
+class LocationService(LocationServiceInterface):
     """Service for handling location-related operations."""
 
+    def __init__(self, database: Database) -> None:
+        self.database = database
+
     def get_locations(self) -> list[Location]:
-        """Get all device locations."""
-        return database.select_all(Location).all()
-    
-    
+        return self.database.select_all(Location).all()

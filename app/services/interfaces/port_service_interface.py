@@ -1,11 +1,16 @@
-from typing import Protocol, Any
+from typing import Protocol
+
+from app.models.mac import Mac
+from app.objects import PortInfo, ServiceInfo
 
 
 class PortServiceInterface(Protocol):
     """Interface for port scanning and storage."""
 
-    def scan_ports(self, ip_address: str, ports: list[int]) -> list[Any]:
+    def scan_ports(self, ip_address: str, ports: list[int]) -> list[PortInfo]:
+        """Scan specified ports on an IP address and return open PortInfo entries."""
         ...
 
-    def save_port(self, mac_record: Any, open_ports: list[Any], services_info: dict[Any, Any]) -> None:
+    def save_port(self, mac_record: Mac, open_ports: list[PortInfo], services_info: dict[int, ServiceInfo] | None) -> None:
+        """Persist open port information for a MAC address."""
         ...

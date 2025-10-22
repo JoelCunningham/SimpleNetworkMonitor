@@ -6,23 +6,26 @@ from mac_vendor_lookup import MacLookup  # type: ignore
 from scapy.all import ARP, Ether, get_if_addr, get_if_list, srp  # type: ignore
 from scapy.packet import Packet
 
-from app import config, database
-from app.models.mac import Mac
-from app.objects.address_data import AddressData
-from app.utilities.timer import Time, time_operation
+from app import config
+from app.database import Database
+from app.models import Mac
+from app.objects import AddressData
+from app.services.interfaces import MacServiceInterface
+from app.utilities import Time, time_operation
 
 BROADCAST_MAC_ADDRESS = "ff:ff:ff:ff:ff:ff"
 MAC_ADDRESS_ATTR = "hwsrc"
 MAC_OUI_LENGTH = 6
 
-class MacService:
+class MacService(MacServiceInterface):
     """Service for handling MAC address related operations."""
     
-    def __init__(self) -> None:
+
+    def __init__(self, database: Database) -> None:
+        self.database = database
         self.lock = threading.Lock()
-        
+
     def save_mac(self, address_data: AddressData, preserve: bool = False) -> Mac:
-        """Save or update MAC address data."""
         if address_data.mac_address is None:
             raise Exception("AddressData does not contain a MAC address.")
     
@@ -57,16 +60,14 @@ class MacService:
                 last_seen=datetime.now(timezone.utc)
             )
 
-            database.create(mac)
+            self.database.create(mac)
 
         return mac
     
     def get_mac_by_address(self, mac_address: str) -> Mac | None:
-        """Get MAC address by address string."""
-        return database.select_all(Mac).where(Mac.address == mac_address).first()
+        return self.database.select_all(Mac).where(Mac.address == mac_address).first()
 
     def resolve_mac_address(self, ip_address: str) -> tuple[str, int] | None:
-        """Resolve MAC address for IP."""   
         arp: Packet = ARP(pdst=ip_address)  # type: ignore
         ether: Packet = Ether(dst=BROADCAST_MAC_ADDRESS)  # type: ignore
         packet: Packet = ether / arp  # type: ignore
@@ -93,7 +94,6 @@ class MacService:
         return None
 
     def get_vendor_from_mac(self, mac_address: str) -> str | None:
-        """Get vendor information from MAC address."""
         if not mac_address or len(mac_address) < MAC_OUI_LENGTH:
             return None
         

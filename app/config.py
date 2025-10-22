@@ -44,3 +44,12 @@ class Config(BaseSettings):
         env_file_encoding = 'utf-8'
         case_sensitive = False
         extra = 'ignore'
+
+_config = Config()
+
+
+def __getattr__(name: str):
+    try:
+        return getattr(_config, name)
+    except AttributeError as exc:
+        raise AttributeError(f"module {__name__} has no attribute {name}") from exc

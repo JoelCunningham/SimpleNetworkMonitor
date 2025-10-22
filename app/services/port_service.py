@@ -2,11 +2,11 @@ import socket
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from app import config, database
-from app.models.mac import Mac
-from app.models.port import Port
-from app.objects.port_info import PortInfo
-from app.objects.service_info import ServiceInfo
+from app import config
+from app.database import Database
+from app.models import Mac, Port
+from app.objects import PortInfo, ServiceInfo
+from app.services.interfaces import PortServiceInterface
 
 MAX_WORKERS = 20
 OPEN_PORT_RESULT = 0
@@ -31,46 +31,46 @@ PORT_SERVICE_MAP = {
     8080: "http-alt"
 }
 
-class PortService:
+class PortService(PortServiceInterface):
     """Service for handling port-related operations."""
-    
-    def __init__(self) -> None:
+
+    def __init__(self, database: Database) -> None:
+        self.database = database
         self.lock = threading.Lock()
 
-    def save_port(self, mac: Mac, ports: list[PortInfo], services: dict[int, ServiceInfo] | None) -> None:
+    def save_port(self, mac_record: Mac, open_ports: list[PortInfo], services_info: dict[int, ServiceInfo] | None) -> None:
         """Save port data for a MAC address."""
-        if not ports:
+        if not open_ports:
             raise Exception("AddressData does not contain open ports.")
 
         # Remove existing port data for this MAC
-        existing_ports = database.select_all(Port).where(Port.mac_id == mac.id).all()
+        existing_ports = self.database.select_all(Port).where(Port.mac_id == mac_record.id).all()
         for port in existing_ports:
-            database.delete(port)
+            self.database.delete(port)
 
-        for port_info in ports:
+        for port_info in open_ports:
             service_name = port_info.service
             banner = port_info.banner
-            
+
             # Override with service detection data if available
-            if services and port_info.port in services:
-                service_info = services[port_info.port]
+            if services_info and port_info.port in services_info:
+                service_info = services_info[port_info.port]
                 if service_info.service_name:
                     service_name = service_info.service_name
                     if service_info.version:
                         service_name += f" {service_info.version}"
-            
+
             port = Port(
-                mac_id=mac.id,
+                mac_id=mac_record.id,
                 port=port_info.port,
                 protocol=port_info.protocol,
                 service=service_name,
-                banner=banner
+                banner=banner,
             )
 
-            database.create(port)
+            self.database.create(port)
         
     def scan_ports(self, ip_address: str, ports: list[int]) -> list[PortInfo]:
-        """Scan specified ports on the given IP address."""        
         open_ports: list[PortInfo] = []
         timeout = config.port_scan_timeout_ms / 1000
         

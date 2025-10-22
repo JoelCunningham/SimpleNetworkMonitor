@@ -6,11 +6,10 @@ from fastapi import APIRouter, HTTPException
 from api.request.device_request import DeviceRequest
 from api.response.device_response import DeviceResponse
 from api.response.error_response import ErrorResponse
-from app.container import Container
+from app import container
 from common.objects.device_input import DeviceInput
 
 router = APIRouter()
-container = Container()
 
 @router.get("", response_model=list[DeviceResponse], responses={500: {"model": ErrorResponse}})
 async def get_devices():

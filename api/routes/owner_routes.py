@@ -8,11 +8,10 @@ from fastapi import APIRouter, HTTPException
 from api.request.owner_request import OwnerRequest
 from api.response.error_response import ErrorResponse
 from api.response.owner_response import OwnerResponse
-from app.container import Container
+from app import container
 from common.objects.owner_input import OwnerInput
 
 router = APIRouter()
-container = Container()
 
 @router.get("", response_model=List[OwnerResponse], responses={500: {"model": ErrorResponse}})
 async def get_owners():
