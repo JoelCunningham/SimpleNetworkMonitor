@@ -17,6 +17,10 @@
     }
   }
 
+  &.device-view .form-group {
+    margin-bottom: 1rem;
+  }
+
   .form-group {
     display: flex;
     flex-direction: column;
@@ -98,4 +102,7 @@
       gap: 1rem;
     }
   }
+}
+app-checkbox {
+  margin-top: 1.8rem;
 }

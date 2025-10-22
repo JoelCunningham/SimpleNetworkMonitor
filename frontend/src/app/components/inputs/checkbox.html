@@ -1,0 +1,8 @@
+<label class="checkbox" (click)="toggle()" tabindex="0">
+  <span class="box interactive" [class.checked]="checked" aria-hidden="true">
+    @if (checked) {
+    <app-icon name="tick" size="25"></app-icon>
+    }
+  </span>
+  <span class="label-text">{{ label }}</span>
+</label>

@@ -8,13 +8,23 @@
 <div class="device-form device-view">
   <div class="form-row">
     <div class="form-group">
-      <label>Device Name</label>
-      <span>{{ displayName }}</span>
-    </div>
-
-    <div class="form-group">
-      <label>Device Model</label>
+      <label>Model</label>
       <span>{{ device.model || "N/A" }}</span>
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <span>{{ device.category.name }}</span>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Location</label>
+      <span>{{ device.location?.name || "N/A" }}</span>
+    </div>
+    <div class="form-group">
+      <label>Owner</label>
+      <span>{{ device.owner?.name || "N/A" }}</span>
     </div>
   </div>
 
@@ -117,6 +127,42 @@
 </div>
 } @else {
 <form (ngSubmit)="submitForm()" class="device-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="deviceName">Name</label>
+      @if (!autoName) {
+      <input
+        type="text"
+        id="deviceName"
+        name="deviceName"
+        placeholder="Enter the device name"
+        class="input secondary interactive"
+        [class.error]="nameError"
+        (input)="clearErrors()"
+        [(ngModel)]="newName"
+      />
+      } @else {
+      <input
+        type="text"
+        id="deviceName"
+        name="deviceName"
+        class="input secondary interactive"
+        [class.error]="nameError"
+        [value]="getAutoName(selectedCategory, selectedLocation, selectedOwner)"
+        disabled
+      />
+      }
+    </div>
+    <div class="form-group">
+      <app-checkbox
+        id="deviceAutoName"
+        name="deviceAutoName"
+        [label]="'Automatically generate name'"
+        [checked]="autoName"
+        (checkedChange)="toggleAutoName($event)"
+      ></app-checkbox>
+    </div>
+  </div>
   <div class="form-row">
     <div class="form-group">
       <label for="deviceModel">Device Model</label>

@@ -1,6 +1,7 @@
 import { BasicCard } from '#components/cards/basic-card';
 import { Notification } from '#components/common/notification';
 import { FormSection } from '#components/forms/form-section';
+import { Checkbox } from '#components/inputs/checkbox';
 import { Select } from '#components/inputs/select';
 import { Device, DeviceRequest } from '#interfaces/device';
 import { Discovery } from '#interfaces/discovery';
@@ -31,7 +32,14 @@ import { Subscription } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-device-form',
-  imports: [FormsModule, Select, Notification, BasicCard, FormSection],
+  imports: [
+    FormsModule,
+    Select,
+    Notification,
+    BasicCard,
+    FormSection,
+    Checkbox,
+  ],
   templateUrl: './device-form.html',
   styleUrl: './device-form.scss',
 })
@@ -58,8 +66,10 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
   protected newName: string | null = null;
   protected newModel: string = '';
   protected newMacs: Mac[] = [];
+  protected autoName: boolean = true;
 
   protected genericError: boolean = false;
+  protected nameError: boolean = false;
   protected modelError: boolean = false;
   protected categoryError: boolean = false;
   protected locationError: boolean = false;
@@ -72,7 +82,6 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
 
   protected editMode: FormMode = FormMode.Edit;
   protected deviceStatus: DeviceStatus | null = null;
-  protected displayName: string = 'Unknown Device';
 
   protected currentMac: Mac | null = null;
 
@@ -130,8 +139,6 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
       })
     );
 
-    this.displayName = this.utilitiesService.getDisplayName(this.device);
-
     this.initMode();
   }
 
@@ -140,9 +147,8 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
       this.clearErrors();
     }
     if (this.device) {
-      this.displayName = this.utilitiesService.getDisplayName(this.device);
-      this.deviceStatus = this.utilitiesService.getDeviceStatus(this.device);
       this.currentMac = this.device.primary_mac;
+      this.deviceStatus = this.utilitiesService.getDeviceStatus(this.device);
     }
     this.cdr.detectChanges();
   }
@@ -173,6 +179,7 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
       this.newName = this.device.name || null;
       this.newModel = this.device.model || '';
       this.newMacs = this.device.macs || [];
+      this.autoName = !this.device.name;
 
       this.selectedCategory = this.getSelectedOption(
         this.device.category?.id,
@@ -274,6 +281,10 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     this.clearErrors();
   }
 
+  toggleAutoName(checked: boolean) {
+    this.autoName = checked;
+  }
+
   getPortText(port: Port) {
     const portNumber = port.port || 'Unknown';
     const service = port.service ? ` (${port.service})` : '';
@@ -295,6 +306,21 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     return discoveryDetails.length > 0
       ? `${name} (${discoveryDetails.join(', ')})`
       : name;
+  }
+
+  getAutoName(
+    category: Option | null | undefined,
+    location: Option | null | undefined,
+    owner: Option | null | undefined
+  ): string {
+    const ownerName = owner ? owner.label : '';
+    const locationName = location ? location.label : '';
+    const categoryName = category ? category.label : '';
+    return this.utilitiesService.getDisplayNameEx(
+      ownerName,
+      locationName,
+      categoryName
+    );
   }
 
   validateForm() {

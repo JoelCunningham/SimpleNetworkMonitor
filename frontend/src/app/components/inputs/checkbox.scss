@@ -1,0 +1,30 @@
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+
+  .box {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--colour-primary);
+    border-radius: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+
+    &.checked {
+      background: var(--colour-white);
+      color: var(--colour-primary);
+    }
+  }
+
+  .label-text {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--colour-light-grey);
+  }
+}

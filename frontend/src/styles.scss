@@ -158,6 +158,11 @@ main {
   &.error {
     border: 2px solid var(--colour-error);
   }
+
+  &:disabled {
+    background-color: var(--colour-dropdown-background);
+    cursor: not-allowed;
+  }
 }
 
 .icon-button {

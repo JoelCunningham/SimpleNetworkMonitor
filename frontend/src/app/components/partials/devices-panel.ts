@@ -1,6 +1,4 @@
 import { DeviceCard } from '#components/cards/device-card';
-import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { Notification } from '#components/common/notification';
 import { DeviceForm } from '#components/forms/device-form';
 import { Select } from '#components/inputs/select';
@@ -14,8 +12,12 @@ import { CategoryService } from '#services/category_service';
 import { DeviceService } from '#services/device-service';
 import { LocationService } from '#services/location-service';
 import { OwnerService } from '#services/owner-service';
+import { UtilitiesService } from '#services/utilities-service';
 import { FormMode } from '#types/form-mode';
 import { NotificationType } from '#types/notification-type';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -54,6 +56,7 @@ export class DevicesPanel implements OnInit, OnDestroy {
     private ownerService: OwnerService,
     private locationService: LocationService,
     private categoryService: CategoryService,
+    private utilitiesService: UtilitiesService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -62,6 +65,14 @@ export class DevicesPanel implements OnInit, OnDestroy {
       this.deviceService.currentDevices().subscribe((devices) => {
         this.devices = devices;
         this.deviceList = this.sortDevices(devices);
+
+        if (this.currentDevice) {
+          this.currentDevice =
+            this.devices.find(
+              (device) => device.id === this.currentDevice!.id
+            ) || null;
+        }
+
         this.applyFilters();
         this.cdr.detectChanges();
       })
@@ -157,7 +168,7 @@ export class DevicesPanel implements OnInit, OnDestroy {
       case FormMode.Add:
         return 'Add Device';
       case FormMode.View:
-        return 'View Device';
+        return this.utilitiesService.getDisplayName(this.currentDevice);
       case FormMode.Edit:
         return 'Edit Device';
       default:
