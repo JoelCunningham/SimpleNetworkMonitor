@@ -9,7 +9,7 @@ from typing import List
 
 from app.objects import PortInfo, DiscoveryInfo, ServiceInfo
 
-from app import database
+from app.database import Database
 from app.services.mac_service import MacService
 from app.services.scan_service import ScanService
 from app.objects.address_data import AddressData
@@ -17,9 +17,9 @@ from app.models.mac import Mac
 
 
 def test_get_latest_scan_date():
-    # create a mac via MacService which will set last_seen
+    database = Database("sqlite:///:memory:")
     mac_svc = MacService(database)
-    ad = AddressData(
+    address_data = AddressData(
         mac_address="aa:bb:cc:dd:ee:99",
         ip_address="192.0.2.99",
         ping_time_ms=1,
@@ -29,9 +29,8 @@ def test_get_latest_scan_date():
         os_guess=None,
         ttl=64,
     )
-    mac_svc.save_mac(ad, preserve=False)
+    mac_svc.save_mac(address_data, preserve=False)
 
-    # construct minimal ScanService with dependencies; use simple fakes for services
     class FakePing:
         def ping(self, ip_address: str) -> tuple[bool | None, int, str | None]:
             # success, rtt_ms, stdout (or None)
@@ -79,7 +78,7 @@ def test_get_latest_scan_date():
         def detect_banner(self, ip: str, port: int, service_name: str) -> ServiceInfo | None:
             return None
 
-    svc = ScanService(database, FakePing(), mac_svc, FakePort(), FakeDiscovery(), FakeProtocol())
+    service = ScanService(database, FakePing(), mac_svc, FakePort(), FakeDiscovery(), FakeProtocol())
 
-    latest = svc.get_latest_scan_date()
+    latest = service.get_latest_scan_date()
     assert isinstance(latest, datetime)

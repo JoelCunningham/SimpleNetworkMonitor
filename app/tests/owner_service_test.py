@@ -4,12 +4,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from app import database
+from app.database import Database
 from app.services import OwnerService
 from common.objects import OwnerInput
 
 
 def test_get_owners_empty():
+    database = Database("sqlite:///:memory:")
     svc = OwnerService(database)
 
     owners = svc.get_owners()
@@ -18,6 +19,7 @@ def test_get_owners_empty():
 
 
 def test_add_owner_and_get():
+    database = Database("sqlite:///:memory:")
     svc = OwnerService(database)
 
     oi = OwnerInput(name="Alice", device_ids=[])

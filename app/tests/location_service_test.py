@@ -4,25 +4,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from app import database
+from app.database import Database
 from app.models import Location
 from app.services import LocationService
 
 
 def test_get_locations_empty():
-    svc = LocationService(database)
+    database = Database("sqlite:///:memory:")
+    service = LocationService(database)
 
-    locs = svc.get_locations()
-    assert isinstance(locs, list)
-    assert len(locs) == 0
+    locations = service.get_locations()
+    assert isinstance(locations, list)
+    assert len(locations) == 0
 
 
 def test_get_locations_after_create():
-    svc = LocationService(database)
+    database = Database("sqlite:///:memory:")
+    service = LocationService(database)
 
-    loc = Location(name="Lab")
-    database.create(loc)
+    location = Location(name="Lab")
+    database.create(location)
 
-    locs = svc.get_locations()
-    assert len(locs) == 1
-    assert locs[0].name == "Lab"
+    locations = service.get_locations()
+    assert len(locations) == 1
+    assert locations[0].name == "Lab"

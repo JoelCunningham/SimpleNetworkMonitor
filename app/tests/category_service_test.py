@@ -4,25 +4,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from app import database
+from app.database import Database
 from app.models import Category
 from app.services import CategoryService
 
 
 def test_get_categories_empty():
-    svc = CategoryService(database)
+    database = Database("sqlite:///:memory:")
+    service = CategoryService(database)
 
-    cats = svc.get_categories()
-    assert isinstance(cats, list)
-    assert len(cats) == 0
+    categories = service.get_categories()
+    assert isinstance(categories, list)
+    assert len(categories) == 0
 
 
 def test_get_categories_after_create():
-    svc = CategoryService(database)
+    database = Database("sqlite:///:memory:")
+    service = CategoryService(database)
 
-    cat = Category(name="Routers")
-    database.create(cat)
+    category = Category(name="Routers")
+    database.create(category)
 
-    cats = svc.get_categories()
-    assert len(cats) == 1
-    assert cats[0].name == "Routers"
+    categories = service.get_categories()
+    assert len(categories) == 1
+    assert categories[0].name == "Routers"
