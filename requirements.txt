@@ -7,3 +7,4 @@ SQLAlchemy==2.0.43
 sqlmodel==0.0.24
 typing_extensions==4.15.0
 uvicorn==0.35.0
+pytest>=7.4.0
