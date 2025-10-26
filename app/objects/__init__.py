@@ -4,6 +4,8 @@ from .ping_command import PingCommand
 from .port_info import PortInfo
 from .scan_options import ScanOptions
 from .service_info import ServiceInfo
+from .owner_input import OwnerInput
+from .device_input import DeviceInput
 
 __all__ = [
     "AddressData",
@@ -12,4 +14,6 @@ __all__ = [
     "PortInfo",
     "ScanOptions",
     "ServiceInfo",
+    "OwnerInput",
+    "DeviceInput",
 ]

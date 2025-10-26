@@ -1,7 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
-@dataclass
-class DeviceInput:
+
+class DeviceInput(BaseModel):
     name: str | None
     model: str | None
     category_id: int

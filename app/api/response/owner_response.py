@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from api.response.device_summary import DeviceSummary
+from app.api.response.device_summary import DeviceSummary
 
 
 class OwnerResponse(BaseModel):   

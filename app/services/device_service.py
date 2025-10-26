@@ -2,8 +2,8 @@ from typing import Any
 
 from app.database import Database
 from app.models import Device, Mac
+from app.objects import DeviceInput
 from app.services.interfaces import DeviceServiceInterface, MacServiceInterface
-from common.objects import DeviceInput
 
 
 class DeviceService(DeviceServiceInterface):

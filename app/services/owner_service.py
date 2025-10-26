@@ -1,7 +1,7 @@
 from app.database import Database
 from app.models import Device, Owner
+from app.objects import OwnerInput
 from app.services.interfaces import OwnerServiceInterface
-from common.objects import OwnerInput
 
 
 class OwnerService(OwnerServiceInterface):

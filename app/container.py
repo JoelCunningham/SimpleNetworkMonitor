@@ -1,176 +1,167 @@
-"""
-Service factory for creating properly configured service instances.
+"""Simple Dependency Injection Container for SimpleNetworkMonitor"""
+import threading
+from contextlib import asynccontextmanager
+from typing import Any, Type, TypeVar
 
-Handles the complex dependency injection for services with many dependencies.
-"""
-from typing import Any, Optional
+from fastapi import Request
 
-from fastapi import Request, Depends
-
+from app.config import Config
 from app.database import Database
-from app.services.interfaces import (CategoryServiceInterface,
-                                     DeviceServiceInterface,
-                                     DiscoveryServiceInterface,
-                                     LocationServiceInterface,
-                                     MacServiceInterface,
-                                     OwnerServiceInterface,
-                                     PingServiceInterface,
-                                     PortServiceInterface,
-                                     ProtocolServiceInterface,
-                                     ScanServiceInterface)
+from app.services import *
+from app.services.interfaces import *
+
+T = TypeVar('T')
 
 
 class Container:
-    """Factory class for creating properly configured service instances."""
-    _database : Optional[Database] = None
+    """Simple DI container for service management."""
     
-    _scanning_service: Optional[Any] = None
-    _device_controller: Optional[Any] = None
+    def __init__(self):
+        self._services: dict[Type[Any], Any] = {}
+        self._config: Config | None = None
+        self._database: Database | None = None
     
-    _scan_service: Optional[ScanServiceInterface] = None
-    _mac_service: Optional[MacServiceInterface] = None
-    _device_service: Optional[DeviceServiceInterface] = None
-    _owner_service: Optional[OwnerServiceInterface] = None
-    _category_service: Optional[CategoryServiceInterface] = None
-    _location_service: Optional[LocationServiceInterface] = None
-    _port_service: Optional[PortServiceInterface] = None
-    _discovery_service: Optional[DiscoveryServiceInterface] = None
-    _protocol_service: Optional[ProtocolServiceInterface] = None
-    _ping_service: Optional[PingServiceInterface] = None
+    def register(self, service_type: Type[T], instance: T) -> 'Container':
+        """Register a service instance."""
+        self._services[service_type] = instance
+        return self
     
-    def __init__(self, database: Database) -> None:
+    def get(self, service_type: Type[T]) -> T:
+        """Get a service instance."""
+        if service_type not in self._services:
+            raise ValueError(f"Service {service_type.__name__} not registered")
+        return self._services[service_type]
+    
+    def set_config(self, config: Config):
+        """Set configuration."""
+        self._config = config
+    
+    def set_database(self, database: Database):
+        """Set database."""
         self._database = database
 
-    def database(self) -> Database:
-        """Get the shared Database instance."""
-        if self._database is None:
-            raise ValueError("Database instance is not set in the container.")
-        return self._database
 
-    def mac_service(self) -> MacServiceInterface:
-        """Get or create a shared MacService instance."""
-        from app.services.mac_service import MacService
+def create_services(config: Config, database: Database) -> Container:
+    """Create and register all services."""
+    container = Container()
+    container.set_config(config)
+    container.set_database(database)
 
-        if self._mac_service is None:
-            self._mac_service = MacService(self.database())
-        return self._mac_service
-    
-    def ping_service(self) -> Any:
-        """Get or create a PingService instance."""
-        from app.services.ping_service import PingService
+    # Create service instances
+    ping_service = PingService(config)
+    mac_service = MacService(database)
+    port_service = PortService(database)
+    discovery_service = DiscoveryService(database)
+    protocol_service = ProtocolService()
+    scan_service = ScanService(database, ping_service, mac_service, port_service, discovery_service, protocol_service)
+    scanning_service = ScanningService(scan_service)
+    device_service = DeviceService(database, mac_service, scanning_service)
+    owner_service = OwnerService(database)
+    category_service = CategoryService(database)
+    location_service = LocationService(database)
 
-        if self._ping_service is None:
-            self._ping_service = PingService()
-        return self._ping_service
-    
-    def device_service(self) -> DeviceServiceInterface:
-        """Get or create a DeviceService instance with all dependencies."""
-        from app.services.device_service import DeviceService
+    # Register services
+    container.register(Config, config)
+    container.register(Database, database)
+    container.register(PingServiceInterface, ping_service)
+    container.register(MacServiceInterface, mac_service)
+    container.register(PortServiceInterface, port_service)
+    container.register(DiscoveryServiceInterface, discovery_service)
+    container.register(ProtocolServiceInterface, protocol_service)
+    container.register(ScanServiceInterface, scan_service)
+    container.register(ScanningServiceInterface, scanning_service)
+    container.register(DeviceServiceInterface, device_service)
+    container.register(OwnerServiceInterface, owner_service)
+    container.register(CategoryServiceInterface, category_service)
+    container.register(LocationServiceInterface, location_service)
 
-        if self._device_service is None:
-            self._device_service = DeviceService(
-                self.database(),
-                self.mac_service(),
-                self.scanning_service(),
-            )
-        return self._device_service
-    
-    def owner_service(self) -> OwnerServiceInterface:
-        """Get or create an OwnerService instance with all dependencies."""
-        from app.services.owner_service import OwnerService
-
-        if self._owner_service is None:
-            self._owner_service = OwnerService(self.database())
-        return self._owner_service
-    
-    def category_service(self) -> CategoryServiceInterface:
-        """Get or create a CategoryService instance."""
-        from app.services.category_service import CategoryService
-
-        if self._category_service is None:
-            self._category_service = CategoryService(self.database())
-        return self._category_service
-    
-    def location_service(self) -> LocationServiceInterface:
-        """Get or create a LocationService instance."""
-        from app.services.location_service import LocationService
-
-        if self._location_service is None:
-            self._location_service = LocationService(self.database())
-        return self._location_service
-    
-    def scan_service(self) -> ScanServiceInterface:
-        """Get or create a NetworkScannerService instance with all dependencies."""
-        from app.services.scan_service import ScanService
-
-        if self._scan_service is None:
-            self._scan_service = ScanService(
-                self.database(),
-                self.ping_service(),
-                self.mac_service(),
-                self.port_service(),
-                self.discovery_service(),
-                self.protocol_service(),
-            )
-        return self._scan_service
-
-    def port_service(self) -> PortServiceInterface:
-        """Get or create a PortService instance. Tests can inject a fake via `impl`."""
-        from app.services.port_service import PortService
-
-        if self._port_service is None:
-            self._port_service = PortService(self.database())
-        return self._port_service
-
-    def discovery_service(self) -> DiscoveryServiceInterface:
-        """Get or create a DiscoveryService instance. Tests can inject a fake via `impl`."""
-        from app.services.discovery_service import DiscoveryService
-
-        if self._discovery_service is None:
-            self._discovery_service = DiscoveryService(self.database())
-        return self._discovery_service
-
-    def protocol_service(self) -> ProtocolServiceInterface:
-        """Get or create a ProtocolService instance. Tests can inject a fake via `impl`."""
-        from app.services.protocol_service import ProtocolService
-
-        if self._protocol_service is None:
-            self._protocol_service = ProtocolService()
-        return self._protocol_service
-    
-    def scanning_service(self) -> Any:
-        """Get or create a BackgroundScannerService instance."""
-        from app.services.scanning_service import ScanningService
-
-        if self._scanning_service is None:
-            self._scanning_service = ScanningService(self.scan_service())
-        return self._scanning_service
-
-
-def get_container(request: Request) -> Container:
-    """Return the application Container instance from app.state.
-
-    Designed for use with FastAPI Depends so endpoints and tests can
-    obtain or override service providers.
-    """
-    container = getattr(request.app.state, "container", None)
-    if container is None:
-        raise RuntimeError("Application container is not initialized")
     return container
 
 
-def get_device_service(container: Container = Depends(get_container)):
-    return container.device_service()
+# FastAPI dependency functions
+def get_database(request: Request) -> Database:
+    """Get database from request state."""
+    return request.app.state.database
 
 
-def get_owner_service(container: Container = Depends(get_container)):
-    return container.owner_service()
+def get_mac_service(request: Request) -> MacServiceInterface:
+    """Get MAC service from container."""
+    return request.app.state.container.get(MacServiceInterface)
 
 
-def get_category_service(container: Container = Depends(get_container)):
-    return container.category_service()
+def get_ping_service(request: Request) -> PingServiceInterface:
+    """Get ping service from container."""
+    return request.app.state.container.get(PingServiceInterface)
 
 
-def get_location_service(container: Container = Depends(get_container)):
-    return container.location_service()
+def get_port_service(request: Request) -> PortServiceInterface:
+    """Get port service from container."""
+    return request.app.state.container.get(PortServiceInterface)
 
+
+def get_discovery_service(request: Request) -> DiscoveryServiceInterface:
+    """Get discovery service from container."""
+    return request.app.state.container.get(DiscoveryServiceInterface)
+
+
+def get_protocol_service(request: Request) -> ProtocolServiceInterface:
+    """Get protocol service from container."""
+    return request.app.state.container.get(ProtocolServiceInterface)
+
+
+def get_scan_service(request: Request) -> ScanServiceInterface:
+    """Get scan service from container."""
+    return request.app.state.container.get(ScanServiceInterface)
+
+
+def get_scanning_service(request: Request) -> ScanningServiceInterface:
+    """Get scanning service from container."""
+    return request.app.state.container.get(ScanningServiceInterface)
+
+
+def get_device_service(request: Request) -> DeviceServiceInterface:
+    """Get device service from container."""
+    return request.app.state.container.get(DeviceServiceInterface)
+
+
+def get_owner_service(request: Request) -> OwnerServiceInterface:
+    """Get owner service from container."""
+    return request.app.state.container.get(OwnerServiceInterface)
+
+
+def get_category_service(request: Request) -> CategoryServiceInterface:
+    """Get category service from container."""
+    return request.app.state.container.get(CategoryServiceInterface)
+
+
+def get_location_service(request: Request) -> LocationServiceInterface:
+    """Get location service from container."""
+    return request.app.state.container.get(LocationServiceInterface)
+
+
+@asynccontextmanager
+async def container_lifespan(app: Any):
+    """Lifespan manager that sets up the DI container and starts scanning."""
+    from app.config import Config
+
+    # Create config and database
+    config = Config()
+    database = Database(config.database_url)
+    
+    # Create services container
+    container = create_services(config, database)
+    
+    # Store in app state
+    app.state.database = database
+    app.state.container = container
+    
+    # Start background scanning
+    scanning_service = container.get(ScanningServiceInterface)
+    thread = threading.Thread(target=scanning_service.start_continuous_scan(), args=(scanning_service,), daemon=True)
+    thread.start()
+    
+    try:
+        yield
+    finally:
+        # Cleanup - database will be garbage collected
+        pass

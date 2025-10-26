@@ -2,8 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from api.response.discovery_response import DiscoveryResponse
-from api.response.port_response import PortResponse
+from app.api.response.discovery_response import DiscoveryResponse
+from app.api.response.port_response import PortResponse
 
 
 class MacResponse(BaseModel):

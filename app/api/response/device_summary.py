@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
-from api.response.category_response import CategoryResponse
-from api.response.location_response import LocationResponse
-from api.response.mac_response import MacResponse
+from app.api.response.category_response import CategoryResponse
+from app.api.response.location_response import LocationResponse
+from app.api.response.mac_response import MacResponse
 
 
 class DeviceSummary(BaseModel):

@@ -1,9 +1,6 @@
 from fastapi import APIRouter
 
-from api.routes.category_routes import router as category_router
-from api.routes.device_routes import router as device_router
-from api.routes.location_routes import router as location_router
-from api.routes.owner_routes import router as owner_router
+from app.api.routes import *
 
 
 def create_api_app() -> APIRouter:

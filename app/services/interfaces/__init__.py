@@ -8,6 +8,7 @@ from .ping_service_interface import PingServiceInterface
 from .port_service_interface import PortServiceInterface
 from .protocol_service_interface import ProtocolServiceInterface
 from .scan_service_interface import ScanServiceInterface
+from .scanning_service_interface import ScanningServiceInterface
 
 __all__ = [
     "CategoryServiceInterface",
@@ -20,4 +21,5 @@ __all__ = [
     "PortServiceInterface",
     "ProtocolServiceInterface",
     "ScanServiceInterface",
+    "ScanningServiceInterface",
 ]

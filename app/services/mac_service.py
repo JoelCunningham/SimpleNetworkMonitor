@@ -20,7 +20,6 @@ MAC_OUI_LENGTH = 6
 class MacService(MacServiceInterface):
     """Service for handling MAC address related operations."""
     
-
     def __init__(self, database: Database) -> None:
         self.database = database
         self.lock = threading.Lock()

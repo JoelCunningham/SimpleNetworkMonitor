@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from app.models import Device
-from common.objects import DeviceInput
+from app.objects import DeviceInput
 
 
 class DeviceServiceInterface(Protocol):

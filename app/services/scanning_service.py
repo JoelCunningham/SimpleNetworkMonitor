@@ -4,11 +4,12 @@ from datetime import datetime, timedelta
 from app import config
 from app.objects.address_data import AddressData
 from app.objects.scan_options import ScanOptions
-from app.services.interfaces import ScanServiceInterface
+from app.services.interfaces import (ScanningServiceInterface,
+                                     ScanServiceInterface)
 
 SCAN_CHECK_INTERVAL = 60 
 
-class ScanningService:
+class ScanningService(ScanningServiceInterface):
     """Scan services that manages scanning operations."""
 
     def __init__(self, scan_service: ScanServiceInterface) -> None:
@@ -26,14 +27,20 @@ class ScanningService:
         self.full_scan_interval = config.background_full_scan_interval_s
         
     def get_latest_results(self) -> list[AddressData]:
-        """Get the latest scan results."""
         return self.last_scan_results
         
     def start_continuous_scan(self):
-        """Start the background scanning service."""
         self.stop_event.clear()
         self.scanning_thread = threading.Thread(target=self._scan_loop, daemon=True)
         self.scanning_thread.start()
+        
+    def stop_continuous_scan(self) -> None:
+        if self.scanning_thread and self.scanning_thread.is_alive():
+            self.stop_event.set()
+            self.scanning_thread.join(timeout=5)
+    
+    def get_last_scan_time(self) -> datetime | None:
+        return self.last_scan_time
         
     def _scan_loop(self):
         """Main scanning loop that runs in background thread."""        
@@ -84,3 +91,5 @@ class ScanningService:
             print(f"Scan error during {'full' if full_scan else 'basic'} scan: {e}")
         finally:
             self.is_scanning = False
+    
+ 

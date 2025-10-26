@@ -2,8 +2,9 @@ import platform
 import re
 import socket
 import subprocess
+from typing import Optional
 
-from app import config
+from app.config import Config
 from app.objects import PingCommand
 from app.services.interfaces import PingServiceInterface
 from app.utilities import Time, time_operation
@@ -32,7 +33,8 @@ TTL_OS_MAPPING = {
 class PingService(PingServiceInterface):
     """Service responsible for ping operations."""
 
-    def __init__(self) -> None:
+    def __init__(self, config: Optional[Config] = None) -> None:
+        self.config = config
         system = platform.system()
         if system not in PING_COMMANDS:
             raise Exception(f"Unsupported operating system: {system}")
@@ -42,8 +44,8 @@ class PingService(PingServiceInterface):
         self._ping_timeout_flag = PING_COMMANDS[system].timeout_flag
     
     def ping(self, ip_address: str) -> tuple[bool | None, int, str | None]:
-        ping_timeout_ms = config.ping_timeout_ms
-        ping_count = config.ping_count
+        ping_timeout_ms = self.config.ping_timeout_ms if self.config else 2000
+        ping_count = self.config.ping_count if self.config else 3
         ping_time = Time()
         
         if platform.system() == PLATFORM_WINDOWS:
@@ -77,7 +79,8 @@ class PingService(PingServiceInterface):
 
     def get_hostname(self, ip_address: str) -> str | None:
         try:
-            socket.setdefaulttimeout(config.hostname_timeout_ms / 1000)
+            timeout = (self.config.hostname_timeout_ms if self.config else 1000) / 1000
+            socket.setdefaulttimeout(timeout)
             hostname, _, _ = socket.gethostbyaddr(ip_address)
             return hostname
         except (socket.herror, socket.gaierror, socket.timeout):
