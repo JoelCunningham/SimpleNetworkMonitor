@@ -177,14 +177,16 @@ export class DevicesPanel implements OnInit, OnDestroy {
   }
 
   openViewModal(device: Device) {
-    this.currentDevice = device;
-    this.deviceFormMode = FormMode.View;
-    this.showDeviceModal = true;
+    this.openModal(device, FormMode.View);
   }
 
-  openAddModal() {
-    this.currentDevice = null;
-    this.deviceFormMode = FormMode.Add;
+  openAddModal(device: Device) {
+    this.openModal(device, FormMode.Add);
+  }
+
+  openModal(device: Device, form: FormMode) {
+    this.currentDevice = device;
+    this.deviceFormMode = form;
     this.showDeviceModal = true;
   }
 

@@ -55,13 +55,13 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
   protected macOptions: Option[] = [];
 
   protected categoryOptions: Option[] = [];
-  protected selectedCategory!: Option;
+  protected selectedCategory?: Option;
 
   protected locationOptions: Option[] = [];
-  protected selectedLocation!: Option;
+  protected selectedLocation?: Option;
 
   protected ownerOptions: Option[] = [];
-  protected selectedOwner!: Option;
+  protected selectedOwner?: Option;
 
   protected newName: string | null = null;
   protected newModel: string = '';
@@ -178,42 +178,26 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     if (this.device && (this.isEditMode() || this.isViewMode())) {
       this.newName = this.device.name || null;
       this.newModel = this.device.model || '';
-      this.newMacs = this.device.macs || [];
       this.autoName = !this.device.name;
 
       this.selectedCategory = this.getSelectedOption(
         this.device.category?.id,
-        this.categoryOptions,
-        'category'
+        this.categoryOptions
       );
       this.selectedLocation = this.getSelectedOption(
         this.device.location?.id,
-        this.locationOptions,
-        'location'
+        this.locationOptions
       );
       this.selectedOwner = this.getSelectedOption(
         this.device.owner?.id,
-        this.ownerOptions,
-        'owner'
+        this.ownerOptions
       );
-
-      if (
-        !this.selectedCategory ||
-        !this.selectedLocation ||
-        !this.selectedOwner
-      ) {
-        throw new Error('DeviceForm: Invalid category, location, or owner');
-      }
     }
-    if (this.isAddMode()) {
-    }
+    this.newMacs = this.device.macs || [];
   }
 
-  getSelectedOption(id: number | undefined, options: Option[], name: string) {
-    const option = options.find((option) => option.value === id) || null;
-    if (!option) {
-      throw new Error(`DeviceForm: Invalid ${name}`);
-    }
+  getSelectedOption(id: number | undefined, options: Option[]) {
+    const option = options.find((option) => option.value === id) || undefined;
     return option;
   }
 
@@ -341,9 +325,9 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     const request: DeviceRequest = {
       name: this.autoName ? null : this.newName,
       model: this.newModel,
-      owner_id: this.selectedOwner.value,
-      category_id: this.selectedCategory.value,
-      location_id: this.selectedLocation.value,
+      owner_id: this.selectedOwner?.value ?? null,
+      category_id: this.selectedCategory?.value ?? null,
+      location_id: this.selectedLocation?.value ?? null,
       mac_ids: this.newMacs.map((mac) => mac.id),
     };
 

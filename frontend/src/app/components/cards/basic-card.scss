@@ -52,6 +52,17 @@
     display: flex;
   }
 
+  &.disabled {
+    &:hover {
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .data-info {
+      color: var(--colour-black);
+    }
+  }
   .remove-button {
     color: var(--colour-primary);
     margin-left: 0.5rem;

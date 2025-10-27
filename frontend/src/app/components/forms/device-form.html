@@ -6,6 +6,7 @@
 />
 @if (isViewMode()) {
 <div class="device-form device-view">
+  @if (device.id) {
   <div class="form-row">
     <div class="form-group">
       <label>Model</label>
@@ -41,7 +42,17 @@
       }
     </ul>
   </div>
-
+  } @else {
+  <div class="form-group macs-group">
+    <ul class="mac-list">
+      <app-basic-card
+        [data]="{ value: 0, label: device.primary_mac.address }"
+        [disabled]="true"
+        padding="0.75rem"
+      ></app-basic-card>
+    </ul>
+  </div>
+  }
   <app-form-section title="Network Information" [collapsible]="true">
     <div class="form-row">
       <div class="form-group">
@@ -110,6 +121,7 @@
     </div>
   </app-form-section>
 
+  @if(device.id) {
   <div class="form-actions">
     <div class="form-buttons">
       <button
@@ -124,6 +136,20 @@
       </button>
     </div>
   </div>
+  } @else {
+  <div class="form-actions">
+    <div class="form-buttons">
+      <button
+        class="input primary interactive"
+        (click)="setMode(editMode)"
+        [disabled]="!device"
+      >
+        Add device
+      </button>
+    </div>
+  </div>
+
+  }
 </div>
 } @else {
 <form (ngSubmit)="submitForm()" class="device-form">
@@ -250,7 +276,9 @@
       >
         Cancel
       </button>
-      <button type="submit" class="input primary interactive">Add owner</button>
+      <button type="submit" class="input primary interactive">
+        Add device
+      </button>
       }
     </div>
   </div>

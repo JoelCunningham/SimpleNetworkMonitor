@@ -17,6 +17,7 @@ export class BasicCard {
   @Input() padding: string = '1rem';
   @Input() fullWidth: Boolean = false;
   @Input() showRemove: boolean = false;
+  @Input() disabled: boolean = false;
 
   @Output() onClick = new EventEmitter<Value | null>();
   @Output() onRemove = new EventEmitter<Value | null>();
