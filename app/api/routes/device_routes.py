@@ -28,7 +28,7 @@ async def save_device(device: DeviceRequest, device_service: DeviceServiceInterf
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save device: {str(e)}")
 
-@device_router.put("/{id}", response_model=DeviceResponse, responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}})
+@device_router.put("/{device_id}", response_model=DeviceResponse, responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}})
 async def update_device(device_id: int, device: DeviceRequest, device_service: DeviceServiceInterface = Depends(get_device_service)):
     """Update a device by ID."""
     try:

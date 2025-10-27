@@ -339,7 +339,7 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     if (!this.validateForm()) return;
 
     const request: DeviceRequest = {
-      name: this.newName,
+      name: this.autoName ? null : this.newName,
       model: this.newModel,
       owner_id: this.selectedOwner.value,
       category_id: this.selectedCategory.value,
