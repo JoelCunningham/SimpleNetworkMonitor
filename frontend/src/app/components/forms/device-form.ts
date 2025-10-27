@@ -89,6 +89,8 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
 
   protected currentMac: Mac | null = null;
 
+  protected cachedUrls: { [key: number]: string | null } = {};
+
   constructor(
     private deviceService: DeviceService,
     private categoryService: CategoryService,
@@ -274,36 +276,21 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
   }
 
   getPortText(port: Port) {
-    const portNumber = port.port || 'Unknown';
-    const service = port.service ? ` (${port.service})` : '';
-    return `${portNumber}${service}`;
+    const service = port.service ? ` (${port.service.split(' ')[0]})` : '';
+    return `${port.port}${service}`;
   }
 
   getPortHttpUrl(ip: string | undefined, port: number): string | null {
     if (!ip) return null;
-    return this.utilitiesService.getPortHttpUrl(ip, port);
+    if (this.cachedUrls[port] === undefined) {
+      this.cachedUrls[port] = this.utilitiesService.getPortHttpUrl(ip, port);
+    }
+    return this.cachedUrls[port];
   }
 
   getSortedPorts(mac: Mac | null): Port[] {
     if (!mac || !mac.ports) return [];
     return [...mac.ports].sort((a, b) => (a.port || 0) - (b.port || 0));
-  }
-
-  getDiscoveryText(discovery: Discovery) {
-    const name = discovery.device_name || discovery.device_type || 'Unknown';
-    let discoveryDetails = [];
-    if (discovery.manufacturer) {
-      discoveryDetails.push(`Mfg: ${discovery.manufacturer}`);
-    }
-    if (discovery.model) {
-      discoveryDetails.push(`Model: ${discovery.model}`);
-    }
-    if (discovery.protocol) {
-      discoveryDetails.push(`via ${discovery.protocol}`);
-    }
-    return discoveryDetails.length > 0
-      ? `${name} (${discoveryDetails.join(', ')})`
-      : name;
   }
 
   getAutoName(

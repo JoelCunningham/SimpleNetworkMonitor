@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './form-section.scss',
 })
 export class FormSection {
-  @Input() title: string = '';
+  @Input() sectionTitle: string = '';
   @Input() collapsible: boolean = false;
 
   protected collapsed: boolean = false;

@@ -89,47 +89,50 @@
     </div>
   </app-form-section>
 
-  <app-form-section title="Ports">
-    <div class="tags">
-      @for (port of getSortedPorts(currentMac); track port.id) { @if
-      (getPortHttpUrl(currentMac?.last_ip, port.port)) {
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        [href]="getPortHttpUrl(currentMac?.last_ip, port.port)"
-      >
-        <div class="tag port-tag interactive">
-          {{ getPortText(port) }}
-          <app-icon [name]="'external-link'" size="16"></app-icon>
-        </div>
-      </a>
-      } @else {
-      <div class="tag port-tag">{{ getPortText(port) }}</div>
-      } } @if (currentMac?.ports?.length === 0) {
-      <app-notification
-        [message]="'No ports detected'"
-        [type]="infoNotificationType"
-        [closeable]="false"
-      />
-      }
-    </div>
-  </app-form-section>
-
-  <app-form-section title="Services">
-    <div class="tags">
-      @for (discovery of currentMac?.discoveries; track discovery.id) {
-      <div class="tag discovery-tag">
-        {{ getDiscoveryText(discovery) }}
+  <div class="form-columns">
+    <app-form-section sectionTitle="Ports">
+      <div class="tags">
+        @for (port of getSortedPorts(currentMac); track port.id) { @if
+        (getPortHttpUrl(currentMac?.last_ip, port.port)) {
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          [href]="getPortHttpUrl(currentMac?.last_ip, port.port)"
+          [title]="getPortHttpUrl(currentMac?.last_ip, port.port)"
+        >
+          <div class="tag port-tag interactive">
+            {{ getPortText(port) }}
+            <app-icon [name]="'external-link'" size="16"></app-icon>
+          </div>
+        </a>
+        } @else {
+        <div class="tag port-tag">{{ getPortText(port) }}</div>
+        } } @if (currentMac?.ports?.length === 0) {
+        <app-notification
+          [message]="'No ports detected'"
+          [type]="infoNotificationType"
+          [closeable]="false"
+        />
+        }
       </div>
-      } @if (currentMac?.discoveries?.length === 0) {
-      <app-notification
-        [message]="'No services detected'"
-        [type]="infoNotificationType"
-        [closeable]="false"
-      />
-      }
-    </div>
-  </app-form-section>
+    </app-form-section>
+
+    <app-form-section sectionTitle="Services">
+      <div class="tags">
+        @for (discovery of currentMac?.discoveries; track discovery.id) {
+        <div class="tag discovery-tag" [title]="discovery.device_name">
+          {{ discovery.protocol }}
+        </div>
+        } @if (currentMac?.discoveries?.length === 0) {
+        <app-notification
+          [message]="'No services detected'"
+          [type]="infoNotificationType"
+          [closeable]="false"
+        />
+        }
+      </div>
+    </app-form-section>
+  </div>
 
   @if(device.id) {
   <div class="form-actions">
