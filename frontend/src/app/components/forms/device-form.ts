@@ -1,4 +1,5 @@
 import { BasicCard } from '#components/cards/basic-card';
+import { Icon } from '#components/common/icon';
 import { Notification } from '#components/common/notification';
 import { FormSection } from '#components/forms/form-section';
 import { Checkbox } from '#components/inputs/checkbox';
@@ -39,6 +40,7 @@ import { Subscription } from 'rxjs';
     BasicCard,
     FormSection,
     Checkbox,
+    Icon,
   ],
   templateUrl: './device-form.html',
   styleUrl: './device-form.scss',
@@ -273,6 +275,16 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     const portNumber = port.port || 'Unknown';
     const service = port.service ? ` (${port.service})` : '';
     return `${portNumber}${service}`;
+  }
+
+  getPortHttpUrl(ip: string | undefined, port: number): string | null {
+    if (!ip) return null;
+    return this.utilitiesService.getPortHttpUrl(ip, port);
+  }
+
+  getSortedPorts(mac: Mac | null): Port[] {
+    if (!mac || !mac.ports) return [];
+    return [...mac.ports].sort((a, b) => (a.port || 0) - (b.port || 0));
   }
 
   getDiscoveryText(discovery: Discovery) {

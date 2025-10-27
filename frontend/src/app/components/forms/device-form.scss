@@ -69,11 +69,21 @@
 
       &.port-tag {
         background: var(--colour-info);
+
+        app-icon {
+          top: 3px;
+          position: relative;
+        }
       }
 
       &.discovery-tag {
         background: var(--colour-success);
       }
+    }
+
+    a {
+      color: var(--colour-white);
+      text-decoration: none;
     }
 
     app-notification {

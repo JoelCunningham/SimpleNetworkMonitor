@@ -104,14 +104,17 @@ export class UtilitiesService {
       return a.port - b.port;
     });
 
-    const selectedPort = sortedPorts[0];
-    const protocol = selectedPort.isHttps ? 'https' : 'http';
-    const portSuffix =
-      (selectedPort.port === 80 && !selectedPort.isHttps) ||
-      (selectedPort.port === 443 && selectedPort.isHttps)
-        ? ''
-        : `:${selectedPort.port}`;
+    return this.getPortHttpUrl(ip, sortedPorts[0].port);
+  }
 
-    return `${protocol}${'://'}${ip}${portSuffix}`;
+  httpPorts = [80, 8080];
+  httpsPorts = [443, 8443];
+
+  getPortHttpUrl(ip: string, port: number): string | null {
+    if (!this.httpPorts.includes(port) && !this.httpsPorts.includes(port)) {
+      return null;
+    }
+    const protocol = this.httpsPorts.includes(port) ? 'https' : 'http';
+    return `${protocol}${'://'}${ip}:${port}`;
   }
 }
