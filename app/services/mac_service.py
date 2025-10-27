@@ -1,6 +1,6 @@
 import socket
 import threading
-from datetime import datetime, timezone
+from datetime import datetime
 
 from mac_vendor_lookup import MacLookup  # type: ignore
 from scapy.all import ARP, Ether, get_if_addr, get_if_list, srp  # type: ignore
@@ -34,7 +34,7 @@ class MacService(MacServiceInterface):
             mac.ping_time_ms = address_data.ping_time_ms
             mac.arp_time_ms = address_data.arp_time_ms
             mac.last_ip = address_data.ip_address
-            mac.last_seen = datetime.now(timezone.utc)
+            mac.last_seen = datetime.now()
             
             if preserve:
                 mac.hostname = address_data.hostname or mac.hostname
@@ -59,7 +59,7 @@ class MacService(MacServiceInterface):
                 vendor=address_data.mac_vendor,
                 os_guess=address_data.os_guess,
                 ttl=address_data.ttl,
-                last_seen=datetime.now(timezone.utc)
+                last_seen=datetime.now()
             )
 
             self.database.create(mac)

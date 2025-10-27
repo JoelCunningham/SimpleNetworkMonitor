@@ -8,7 +8,7 @@ Represents a network MAC address with associated network information.
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Column, DateTime, Field, Relationship, func
+from sqlmodel import Field, Relationship
 
 from app.models.base import BaseModel
 
@@ -21,7 +21,7 @@ class Mac(BaseModel, table=True):
     """MAC address model."""
     address: str = Field(nullable=False, unique=True, max_length=17)
     last_ip: str = Field(nullable=False, max_length=45)
-    last_seen: datetime = Field(sa_column=Column(DateTime, default=func.now()))
+    last_seen: datetime = Field(nullable=False)
 
     ping_time_ms: int | None = Field(default=None)
     arp_time_ms: int | None = Field(default=None)

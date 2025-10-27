@@ -17,6 +17,7 @@ import { UtilitiesService } from '#services/utilities-service';
 import { DeviceStatus } from '#types/device-status';
 import { FormMode } from '#types/form-mode';
 import { NotificationType } from '#types/notification-type';
+import { DatePipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -34,6 +35,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   selector: 'app-device-form',
   imports: [
+    DatePipe,
     FormsModule,
     Select,
     Notification,
