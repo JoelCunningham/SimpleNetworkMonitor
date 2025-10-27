@@ -5,9 +5,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from app.database import Database
-from app.objects import AddressData
+from app.objects import AddressData, DeviceInput
 from app.services import DeviceService, MacService
-from common.objects import DeviceInput
 
 
 def make_mac(database: Database, address: str = "aa:bb:cc:dd:ee:01") -> int:
