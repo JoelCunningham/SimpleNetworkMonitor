@@ -46,6 +46,9 @@ class MacService(MacServiceInterface):
                 mac.vendor = address_data.mac_vendor
                 mac.os_guess = address_data.os_guess
                 mac.ttl = address_data.ttl
+                
+            self.database.update(mac)
+            
         else:
             mac = Mac(
                 address=address_data.mac_address,
