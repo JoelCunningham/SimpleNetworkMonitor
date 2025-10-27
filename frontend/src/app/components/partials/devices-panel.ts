@@ -190,6 +190,12 @@ export class DevicesPanel implements OnInit, OnDestroy {
     this.showDeviceModal = true;
   }
 
+  onAddedToDevice(device: Device) {
+    this.currentDevice = device;
+    this.deviceFormMode = FormMode.View;
+    this.showDeviceModal = true;
+  }
+
   closeModal() {
     this.showDeviceModal = false;
     setTimeout(() => {

@@ -137,11 +137,7 @@
   @if(device.id) {
   <div class="form-actions">
     <div class="form-buttons">
-      <button
-        class="input secondary interactive"
-        (click)="setMode(editMode)"
-        [disabled]="!device"
-      >
+      <button class="input secondary interactive" (click)="setMode(editMode)">
         Edit
       </button>
       <button class="input primary interactive" (click)="deleteDevice()">
@@ -152,12 +148,16 @@
   } @else {
   <div class="form-actions">
     <div class="form-buttons">
-      <button
-        class="input primary interactive"
-        (click)="setMode(editMode)"
-        [disabled]="!device"
-      >
-        Add device
+      <app-select
+        [css]="'secondary left'"
+        [options]="deviceOptions"
+        [placeholder]="'Add to device'"
+        [isClearable]="false"
+        [isPersistent]="false"
+        (optionSelected)="addToDevice($event); clearErrors()"
+      />
+      <button class="input primary interactive" (click)="setMode(editMode)">
+        Create device
       </button>
     </div>
   </div>

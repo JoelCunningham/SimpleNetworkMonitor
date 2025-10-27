@@ -5,7 +5,6 @@ import { FormSection } from '#components/forms/form-section';
 import { Checkbox } from '#components/inputs/checkbox';
 import { Select } from '#components/inputs/select';
 import { Device, DeviceRequest } from '#interfaces/device';
-import { Discovery } from '#interfaces/discovery';
 import { Mac } from '#interfaces/mac';
 import { Option, Value } from '#interfaces/option';
 import { Port } from '#interfaces/port';
@@ -52,11 +51,15 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
   @Input() mode!: FormMode;
   @Output() onClose = new EventEmitter<void>();
   @Output() modeChange = new EventEmitter<FormMode>();
+  @Output() addedToDevice = new EventEmitter<Device>();
 
   private subscriptions: Subscription = new Subscription();
 
   protected macs: Mac[] = [];
   protected macOptions: Option[] = [];
+
+  protected devices: Device[] = [];
+  protected deviceOptions: Option[] = [];
 
   protected categoryOptions: Option[] = [];
   protected selectedCategory?: Option;
@@ -137,6 +140,11 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
 
     this.subscriptions.add(
       this.deviceService.currentDevices().subscribe((devices) => {
+        this.devices = devices.filter((device) => device.id);
+        this.deviceOptions = this.devices.map((device) => ({
+          label: this.utilitiesService.getDisplayName(device),
+          value: device.id,
+        }));
         this.macs = devices.flatMap((device) => device.macs || []);
         this.macOptions = this.macs.map((mac) => ({
           label: mac.address,
@@ -359,6 +367,33 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  addToDevice(deviceId: Value) {
+    const toDevice = this.devices.find((d) => d.id === deviceId);
+    if (!toDevice || !this.device) return;
+
+    const request: DeviceRequest = {
+      name: toDevice.name,
+      model: toDevice.model,
+      owner_id: toDevice.owner?.id ?? null,
+      category_id: toDevice.category?.id ?? null,
+      location_id: toDevice.location?.id ?? null,
+      mac_ids: toDevice.macs
+        .map((mac) => mac.id)
+        .concat(this.device.primary_mac.id),
+    };
+
+    this.deviceService.updateDevice(toDevice.id, request).subscribe({
+      next: (updatedDevice: Device) => {
+        this.addedToDevice.emit(updatedDevice);
+        this.setNotification('Added to device successfully.');
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.setNotification('An unexpected error occurred. Please try again.');
+      },
+    });
+  }
+
   deleteDevice() {
     if (!this.device) return;
     this.deviceService.deleteDevice(this.device.id).subscribe({
@@ -367,7 +402,7 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
         this.closeForm();
       },
       error: () => {
-        this.setNotification('An error occurred while deleting the device.');
+        this.setNotification('An unexpected error occurred. Please try again.');
       },
     });
   }
