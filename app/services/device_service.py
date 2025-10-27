@@ -26,8 +26,14 @@ class DeviceService(DeviceServiceInterface):
                 if not has_device:
                     mac_data = self.mac_service.get_mac_by_address(device_data.mac_address)
                     if mac_data:
-                        if mac_data.device is not None:
-                            devices.append(mac_data.device)
+                        new_device = Device(
+                            model="",
+                            category_id=0,
+                            location_id=None,
+                            owner_id=None,
+                            macs=[mac_data],
+                        )
+                        devices.append(new_device)
 
         return devices
 

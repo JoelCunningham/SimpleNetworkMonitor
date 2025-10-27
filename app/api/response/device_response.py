@@ -7,10 +7,10 @@ from app.api.response.owner_summary import OwnerSummary
 
 
 class DeviceResponse(BaseModel):
-    id: int
+    id: int | None
     name: str | None
     model: str | None
-    category: CategoryResponse
+    category: CategoryResponse | None
     location: LocationResponse | None
     owner: OwnerSummary | None
     macs: list[MacResponse]
