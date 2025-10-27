@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Any, Generic, Type, TypeVar
 
 from sqlalchemy import Engine
@@ -62,6 +63,7 @@ class Database:
 
     def create(self, instance: BaseModel) -> None:
         """Add an instance to the database."""
+        instance.created_at = datetime.now(timezone.utc)
         with Session(self.engine) as session:
             session.add(instance)
             session.commit()
@@ -69,6 +71,7 @@ class Database:
     
     def update(self, instance: BaseModel) -> None:
         """Update an existing instance in the database."""
+        instance.updated_at = datetime.now(timezone.utc)
         with Session(self.engine) as session:
             merged = session.merge(instance)
             session.commit()

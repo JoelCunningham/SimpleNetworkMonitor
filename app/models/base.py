@@ -12,4 +12,3 @@ class BaseModel(SQLModel):
     deleted: bool = Field(default=False, nullable=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
-    #TODO make updated_at update on every update automatically
