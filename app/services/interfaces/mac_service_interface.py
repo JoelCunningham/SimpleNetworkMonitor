@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from app.database.models import Mac
-from app.objects import AddressData
+from app.common.objects import AddressData
 
 
 class MacServiceInterface(Protocol):

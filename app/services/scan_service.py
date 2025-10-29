@@ -7,7 +7,7 @@ from sqlalchemy import text
 from app import config
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Mac
-from app.objects import AddressData, ScanOptions
+from app.common.objects import AddressData, ScanOptions
 from app.services.interfaces import (DiscoveryServiceInterface,
                                      MacServiceInterface, PingServiceInterface,
                                      PortServiceInterface,

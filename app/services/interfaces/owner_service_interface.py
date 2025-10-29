@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from app.database.models import Owner
-from app.objects import OwnerInput
+from app.common.objects import OwnerInput
 
 
 class OwnerServiceInterface(Protocol):

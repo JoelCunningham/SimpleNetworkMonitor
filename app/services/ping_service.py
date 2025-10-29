@@ -5,9 +5,9 @@ import subprocess
 from typing import Optional
 
 from app.config import Config
-from app.objects import PingCommand
+from app.common.objects import PingCommand
 from app.services.interfaces import PingServiceInterface
-from app.utilities import Time, time_operation
+from app.common.utilities import Time, time_operation
 
 PLATFORM_WINDOWS = "Windows"
 PLATFORM_LINUX = "Linux"

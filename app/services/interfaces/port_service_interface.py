@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from app.database.models import Mac
-from app.objects import PortInfo, ServiceInfo
+from app.common.objects import PortInfo, ServiceInfo
 
 
 class PortServiceInterface(Protocol):

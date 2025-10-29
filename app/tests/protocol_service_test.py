@@ -10,8 +10,8 @@ from pytest import MonkeyPatch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-import app.services.protocol_service as ps
-from app.objects import ServiceInfo
+import app.services as ps
+from app.common.objects import ServiceInfo
 from app.services import ProtocolService
 
 

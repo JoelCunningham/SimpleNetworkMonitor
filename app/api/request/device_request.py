@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from app.objects.device_input import DeviceInput
+from app.common.objects.device_input import DeviceInput
 
 
 class DeviceRequest(BaseModel):

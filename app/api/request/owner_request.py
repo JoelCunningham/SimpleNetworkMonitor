@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from app.objects.owner_input import OwnerInput
+from app.common.objects.owner_input import OwnerInput
 
 
 class OwnerRequest(BaseModel):

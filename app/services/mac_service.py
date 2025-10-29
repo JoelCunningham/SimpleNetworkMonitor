@@ -9,9 +9,9 @@ from scapy.packet import Packet
 from app import config
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Mac
-from app.objects import AddressData
+from app.common.objects import AddressData
 from app.services.interfaces import MacServiceInterface
-from app.utilities import Time, time_operation
+from app.common.utilities import Time, time_operation
 
 BROADCAST_MAC_ADDRESS = "ff:ff:ff:ff:ff:ff"
 MAC_ADDRESS_ATTR = "hwsrc"

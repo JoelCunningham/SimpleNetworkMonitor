@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from app.database.models import Mac
-from app.objects import DiscoveryInfo
+from app.common.objects import DiscoveryInfo
 
 
 class DiscoveryServiceInterface(Protocol):

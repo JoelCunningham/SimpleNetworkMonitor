@@ -3,7 +3,7 @@ import urllib.error
 import urllib.request
 
 from app import config
-from app.objects import ServiceInfo
+from app.common.objects import ServiceInfo
 from app.services.interfaces import ProtocolServiceInterface
 
 HTTP_DEFAULT_SERVER = 'Unknown HTTP Server'

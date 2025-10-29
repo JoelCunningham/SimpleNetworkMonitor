@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from app.objects.service_info import ServiceInfo
+from app.common.objects.service_info import ServiceInfo
 
 
 class ProtocolServiceInterface(Protocol):

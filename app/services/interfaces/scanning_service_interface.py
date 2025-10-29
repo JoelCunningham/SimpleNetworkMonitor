@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Protocol
 
-from app.objects import AddressData
+from app.common.objects import AddressData
 
 
 class ScanningServiceInterface(Protocol):

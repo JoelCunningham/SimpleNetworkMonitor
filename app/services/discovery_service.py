@@ -4,7 +4,7 @@ import struct
 from app import config
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Discovery, Mac
-from app.objects import DiscoveryInfo
+from app.common.objects import DiscoveryInfo
 from app.services.interfaces import DiscoveryServiceInterface
 
 MDNS_ADDITIONAL_COUNT = 0

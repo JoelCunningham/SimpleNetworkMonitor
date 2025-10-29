@@ -6,7 +6,7 @@ sys.path.insert(0, str(ROOT))
 
 from app.database import Database
 from app.database.models import Discovery
-from app.objects import AddressData, DiscoveryInfo
+from app.common.objects import AddressData, DiscoveryInfo
 from app.services import DiscoveryService, MacService
 
 

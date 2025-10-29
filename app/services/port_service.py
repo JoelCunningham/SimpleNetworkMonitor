@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from app import config
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Mac, Port
-from app.objects import PortInfo, ServiceInfo
+from app.common.objects import PortInfo, ServiceInfo
 from app.services.interfaces import PortServiceInterface
 
 MAX_WORKERS = 20

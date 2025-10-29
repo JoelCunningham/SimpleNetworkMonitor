@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from app.objects.discovery_info import DiscoveryInfo
-from app.objects.port_info import PortInfo
-from app.objects.service_info import ServiceInfo
+from app.common.objects.discovery_info import DiscoveryInfo
+from app.common.objects.port_info import PortInfo
+from app.common.objects.service_info import ServiceInfo
 
 
 @dataclass

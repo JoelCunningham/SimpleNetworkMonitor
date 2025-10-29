@@ -9,7 +9,7 @@ from typing import List
 
 from app.database import Database
 from app.database.models import Mac
-from app.objects import AddressData, DiscoveryInfo, PortInfo, ServiceInfo
+from app.common.objects import AddressData, DiscoveryInfo, PortInfo, ServiceInfo
 from app.services import MacService, ScanService
 
 

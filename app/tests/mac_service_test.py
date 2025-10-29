@@ -8,7 +8,7 @@ sys.path.insert(0, str(ROOT))
 
 from app.database import Database
 from app.database.models import Mac
-from app.objects import AddressData
+from app.common.objects import AddressData
 from app.services import MacService
 
 
