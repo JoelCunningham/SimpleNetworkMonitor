@@ -24,6 +24,7 @@ export class Select implements OnChanges {
   @Input() initialOption?: Option;
   @Input() isClearable: boolean = false;
   @Input() isPersistent: boolean = false;
+  @Input() IsReversed: boolean = false;
 
   @Output() optionSelected = new EventEmitter<Value>();
 

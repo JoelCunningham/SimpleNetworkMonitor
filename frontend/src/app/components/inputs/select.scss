@@ -92,4 +92,25 @@
       left: auto;
     }
   }
+
+  &.up {
+    .select-dropdown {
+      top: auto;
+      bottom: 110%;
+    }
+
+    .select-body {
+      app-icon {
+        transform: rotate(180deg) translateY(3px);
+      }
+    }
+
+    &.closed {
+      .select-body {
+        app-icon {
+          transform: rotate(0) translateY(0);
+        }
+      }
+    }
+  }
 }
