@@ -128,30 +128,30 @@ class ScanService(ScanServiceInterface):
         
         #Step 8: Service detection
         for port_info in scan_result.open_ports:
-            self._print_status(f"{ip_address}:{port_info.port} Service detection started")
+            self._print_status(f"{ip_address}:{port_info.number} Service detection started")
             service_name = port_info.service.lower() if port_info.service else "unknown"
         
             # Step 8.1: HTTP detection
-            if scan_options.detect_http and (port_info.port in HTTP_PORTS or HTTP_SERVICE_NAME in service_name):
-                self._print_status(f"{ip_address}:{port_info.port} Checking HTTP service")
-                result = self.protocol_service.detect_http(ip_address, port_info.port)
+            if scan_options.detect_http and (port_info.number in HTTP_PORTS or HTTP_SERVICE_NAME in service_name):
+                self._print_status(f"{ip_address}:{port_info.number} Checking HTTP service")
+                result = self.protocol_service.detect_http(ip_address, port_info.number)
                 if result:
-                    scan_result.services_info[port_info.port] = result
-            
+                    scan_result.services_info[port_info.number] = result
+
             # Step 8.2: SSH detection
-            if scan_options.detect_ssh and (port_info.port == SSH_PORT or SSH_SERVICE_NAME in service_name):
-                self._print_status(f"{ip_address}:{port_info.port} Checking SSH service")
-                result = self.protocol_service.detect_ssh(ip_address, port_info.port)
+            if scan_options.detect_ssh and (port_info.number == SSH_PORT or SSH_SERVICE_NAME in service_name):
+                self._print_status(f"{ip_address}:{port_info.number} Checking SSH service")
+                result = self.protocol_service.detect_ssh(ip_address, port_info.number)
                 if result:
-                    scan_result.services_info[port_info.port] = result
-            
+                    scan_result.services_info[port_info.number] = result
+
             # Step 8.3: Generic banner detection
             if scan_options.detect_banners and service_name in BANNER_SERVICE_NAMES:
-                self._print_status(f"{ip_address}:{port_info.port} Checking banner")
-                result = self.protocol_service.detect_banner(ip_address, port_info.port, service_name)
+                self._print_status(f"{ip_address}:{port_info.number} Checking banner")
+                result = self.protocol_service.detect_banner(ip_address, port_info.number, service_name)
                 if result:
-                    scan_result.services_info[port_info.port] = result
-        
+                    scan_result.services_info[port_info.number] = result
+
         # Step 9: Device discovery
         if scan_options.discover_netbios:
             self._print_status(f"{ip_address} Discovering NetBIOS devices")

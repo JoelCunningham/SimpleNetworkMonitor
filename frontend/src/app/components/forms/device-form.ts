@@ -285,7 +285,7 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
 
   getPortText(port: Port) {
     const service = port.service ? ` (${port.service.split(' ')[0]})` : '';
-    return `${port.port}${service}`;
+    return `${port.number}${service}`;
   }
 
   getPortHttpUrl(ip: string | undefined, port: number): string | null {
@@ -298,7 +298,7 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
 
   getSortedPorts(mac: Mac | null): Port[] {
     if (!mac || !mac.ports) return [];
-    return [...mac.ports].sort((a, b) => (a.port || 0) - (b.port || 0));
+    return [...mac.ports].sort((a, b) => (a.number || 0) - (b.number || 0));
   }
 
   getAutoName(

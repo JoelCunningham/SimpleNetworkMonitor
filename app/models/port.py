@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class Port(BaseModel, table=True):
     """Network port model."""    
-    port: int = Field(nullable=False)
+    number: int = Field(nullable=False)
     protocol: str = Field(default="tcp", nullable=False, max_length=10)
     service: str | None = Field(default=None, max_length=100)
     banner: str | None = Field(default=None)

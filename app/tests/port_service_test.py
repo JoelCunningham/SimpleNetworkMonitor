@@ -17,12 +17,12 @@ def test_save_port_persists():
     mac = mac_service.save_mac(address_data, preserve=False)
 
     port_service = PortService(database)
-    ports = [PortInfo(port=22, protocol='tcp', service='ssh')]
+    ports = [PortInfo(number=22, protocol='tcp', service='ssh')]
     services = {22: ServiceInfo(service_name='ssh', version=None)}
 
     port_service.save_port(mac, ports, services)
 
     found = database.select_all(Port).where(Port.mac_id == mac.id).all()
     assert len(found) == 1
-    assert found[0].port == 22
+    assert found[0].number == 22
     assert found[0].service is not None and 'ssh' in found[0].service

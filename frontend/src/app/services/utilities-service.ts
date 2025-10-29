@@ -70,7 +70,7 @@ export class UtilitiesService {
         if (mac.ports) {
           mac.ports.forEach((port) => {
             if (port) {
-              const portNumber = port.port;
+              const portNumber = port.number;
               const service = port.service?.toLowerCase() || '';
               if (
                 [80, 443, 8080, 8443].includes(portNumber) ||

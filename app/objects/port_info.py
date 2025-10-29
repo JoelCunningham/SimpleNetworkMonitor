@@ -5,7 +5,7 @@ from dataclasses import dataclass
 @dataclass
 class PortInfo:
     """Information about an open port."""
-    port: int
+    number: int
     protocol: str = "tcp"
     service: str | None = None
     banner: str | None = None

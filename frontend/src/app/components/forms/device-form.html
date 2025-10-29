@@ -93,12 +93,12 @@
     <app-form-section sectionTitle="Ports">
       <div class="tags">
         @for (port of getSortedPorts(currentMac); track port.id) { @if
-        (getPortHttpUrl(currentMac?.last_ip, port.port)) {
+        (getPortHttpUrl(currentMac?.last_ip, port.number)) {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          [href]="getPortHttpUrl(currentMac?.last_ip, port.port)"
-          [title]="getPortHttpUrl(currentMac?.last_ip, port.port)"
+          [href]="getPortHttpUrl(currentMac?.last_ip, port.number)"
+          [title]="getPortHttpUrl(currentMac?.last_ip, port.number)"
         >
           <div class="tag port-tag interactive">
             {{ getPortText(port) }}

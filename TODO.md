@@ -1,3 +1,3 @@
-[ ] Remove services
-[ ] Port -> number
-[ ] Add to device dropdown
+- [ ] Remove services
+- [ ] Add to device dropdown
+- [ ] Constants

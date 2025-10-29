@@ -53,8 +53,8 @@ class PortService(PortServiceInterface):
             banner = port_info.banner
 
             # Override with service detection data if available
-            if services_info and port_info.port in services_info:
-                service_info = services_info[port_info.port]
+            if services_info and port_info.number in services_info:
+                service_info = services_info[port_info.number]
                 if service_info.service_name:
                     service_name = service_info.service_name
                     if service_info.version:
@@ -62,7 +62,7 @@ class PortService(PortServiceInterface):
 
             port = Port(
                 mac_id=mac_record.id,
-                port=port_info.port,
+                number=port_info.number,
                 protocol=port_info.protocol,
                 service=service_name,
                 banner=banner,
@@ -97,7 +97,7 @@ class PortService(PortServiceInterface):
                 if result == OPEN_PORT_RESULT:
                     service_name = self._get_service_name(port)
                     return PortInfo(
-                        port=port,
+                        number=port,
                         protocol="tcp",
                         service=service_name
                     )
