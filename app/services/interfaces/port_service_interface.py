@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from app.models.mac import Mac
+from app.database.models import Mac
 from app.objects import PortInfo, ServiceInfo
 
 

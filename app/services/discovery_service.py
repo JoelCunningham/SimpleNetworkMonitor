@@ -2,8 +2,8 @@ import socket
 import struct
 
 from app import config
-from app.database import Database
-from app.models import Discovery, Mac
+from app.database.interfaces import DatabaseInterface
+from app.database.models import Discovery, Mac
 from app.objects import DiscoveryInfo
 from app.services.interfaces import DiscoveryServiceInterface
 
@@ -66,7 +66,7 @@ STRUCT_PACK_FORMAT = '>HHHHHH'
 class DiscoveryService(DiscoveryServiceInterface):
     """Service for managing network discovery operations."""
 
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: DatabaseInterface) -> None:
         self.database = database
 
     def save_discoveries(self, mac: Mac, discoveries: list[DiscoveryInfo]) -> None:

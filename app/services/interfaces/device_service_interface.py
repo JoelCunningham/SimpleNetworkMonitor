@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from app.models import Device
+from app.database.models import Device
 from app.objects import DeviceInput
 
 

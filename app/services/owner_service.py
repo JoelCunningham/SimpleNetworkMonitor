@@ -1,5 +1,5 @@
-from app.database import Database
-from app.models import Device, Owner
+from app.database.interfaces import DatabaseInterface
+from app.database.models import Device, Owner
 from app.objects import OwnerInput
 from app.services.interfaces import OwnerServiceInterface
 
@@ -7,7 +7,7 @@ from app.services.interfaces import OwnerServiceInterface
 class OwnerService(OwnerServiceInterface):
     """Service for handling owner-related operations."""
 
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: DatabaseInterface) -> None:
         self.database = database
 
     def get_owners(self) -> list[Owner]:

@@ -10,12 +10,10 @@ from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship
 
-from app.models.base import BaseModel
+from app.database.models import BaseModel
 
 if TYPE_CHECKING:
-    from app.models.device import Device
-    from app.models.discovery import Discovery
-    from app.models.port import Port
+    from app.database.models import Device, Discovery, Port
     
 class Mac(BaseModel, table=True):
     """MAC address model."""

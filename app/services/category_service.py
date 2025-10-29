@@ -1,10 +1,10 @@
-from app.database import Database
-from app.models import Category
+from app.database.interfaces import DatabaseInterface
+from app.database.models import Category
 from app.services.interfaces import CategoryServiceInterface
 
 
 class CategoryService(CategoryServiceInterface):
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: DatabaseInterface) -> None:
         self.database = database
 
     def get_categories(self) -> list[Category]:

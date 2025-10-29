@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from app.database import Database
-from app.models import Mac
+from app.database.models import Mac
 from app.objects import AddressData
 from app.services import MacService
 

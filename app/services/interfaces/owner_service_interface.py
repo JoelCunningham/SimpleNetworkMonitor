@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from app.models import Owner
+from app.database.models import Owner
 from app.objects import OwnerInput
 
 

@@ -8,10 +8,10 @@ from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship
 
-from app.models.base import BaseModel
+from app.database.models import BaseModel
 
 if TYPE_CHECKING:
-    from app.models.mac import Mac
+    from app.database.models import Mac
 
 class Port(BaseModel, table=True):
     """Network port model."""    

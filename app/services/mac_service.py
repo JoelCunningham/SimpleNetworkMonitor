@@ -7,8 +7,8 @@ from scapy.all import ARP, Ether, get_if_addr, get_if_list, srp  # type: ignore
 from scapy.packet import Packet
 
 from app import config
-from app.database import Database
-from app.models import Mac
+from app.database.interfaces import DatabaseInterface
+from app.database.models import Mac
 from app.objects import AddressData
 from app.services.interfaces import MacServiceInterface
 from app.utilities import Time, time_operation
@@ -20,7 +20,7 @@ MAC_OUI_LENGTH = 6
 class MacService(MacServiceInterface):
     """Service for handling MAC address related operations."""
     
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: DatabaseInterface) -> None:
         self.database = database
         self.lock = threading.Lock()
 

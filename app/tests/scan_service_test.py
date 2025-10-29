@@ -1,19 +1,16 @@
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from typing import List
 
-from app.objects import PortInfo, DiscoveryInfo, ServiceInfo
-
 from app.database import Database
-from app.services.mac_service import MacService
-from app.services.scan_service import ScanService
-from app.objects.address_data import AddressData
-from app.models.mac import Mac
+from app.database.models import Mac
+from app.objects import AddressData, DiscoveryInfo, PortInfo, ServiceInfo
+from app.services import MacService, ScanService
 
 
 def test_get_latest_scan_date():

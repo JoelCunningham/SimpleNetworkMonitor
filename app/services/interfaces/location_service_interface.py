@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from app.models import Location
+from app.database.models import Location
 
 
 class LocationServiceInterface(Protocol):

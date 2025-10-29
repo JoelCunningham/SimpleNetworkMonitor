@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from app.database import Database
-from app.models import Category
+from app.database.models import Category
 from app.services import CategoryService
 
 

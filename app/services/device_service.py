@@ -1,13 +1,13 @@
 from typing import Any
 
-from app.database import Database
-from app.models import Device, Mac
+from app.database.interfaces import DatabaseInterface
+from app.database.models import Device, Mac
 from app.objects import DeviceInput
 from app.services.interfaces import DeviceServiceInterface, MacServiceInterface
 
 
 class DeviceService(DeviceServiceInterface):
-    def __init__(self, database: Database, mac_service: MacServiceInterface, scanning_service: Any) -> None:
+    def __init__(self, database: DatabaseInterface, mac_service: MacServiceInterface, scanning_service: Any) -> None:
         self.database = database
         self.mac_service = mac_service
         self.scanning_service = scanning_service

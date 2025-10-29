@@ -8,13 +8,10 @@ from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship
 
-from app.models.base import BaseModel
+from app.database.models import BaseModel
 
 if TYPE_CHECKING:
-    from app.models.category import Category
-    from app.models.location import Location
-    from app.models.mac import Mac
-    from app.models.owner import Owner
+    from app.database.models import Category, Location, Mac, Owner
 
 class Device(BaseModel, table=True):
     """Device model representing a network device.""" 

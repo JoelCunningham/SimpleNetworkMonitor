@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from app.models.category import Category
+from app.database.models import Category
 
 
 class CategoryServiceInterface(Protocol):

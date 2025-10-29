@@ -5,8 +5,8 @@ from datetime import datetime
 from sqlalchemy import text
 
 from app import config
-from app.database import Database
-from app.models import Mac
+from app.database.interfaces import DatabaseInterface
+from app.database.models import Mac
 from app.objects import AddressData, ScanOptions
 from app.services.interfaces import (DiscoveryServiceInterface,
                                      MacServiceInterface, PingServiceInterface,
@@ -27,7 +27,7 @@ class ScanService(ScanServiceInterface):
 
     def __init__(
         self,
-        database: Database,
+        database: DatabaseInterface,
         ping_service: PingServiceInterface,
         mac_service: MacServiceInterface,
         port_service: PortServiceInterface,

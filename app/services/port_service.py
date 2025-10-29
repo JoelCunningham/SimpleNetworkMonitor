@@ -3,8 +3,8 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from app import config
-from app.database import Database
-from app.models import Mac, Port
+from app.database.interfaces import DatabaseInterface
+from app.database.models import Mac, Port
 from app.objects import PortInfo, ServiceInfo
 from app.services.interfaces import PortServiceInterface
 
@@ -34,7 +34,7 @@ PORT_SERVICE_MAP = {
 class PortService(PortServiceInterface):
     """Service for handling port-related operations."""
 
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: DatabaseInterface) -> None:
         self.database = database
         self.lock = threading.Lock()
 

@@ -7,6 +7,7 @@ from fastapi import Request
 
 from app.config import Config
 from app.database import Database
+from app.database.interfaces import DatabaseInterface
 from app.services import *
 from app.services.interfaces import *
 
@@ -19,7 +20,7 @@ class Container:
     def __init__(self):
         self._services: dict[Type[Any], Any] = {}
         self._config: Config | None = None
-        self._database: Database | None = None
+        self._database: DatabaseInterface | None = None
     
     def register(self, service_type: Type[T], instance: T) -> 'Container':
         """Register a service instance."""
@@ -36,12 +37,12 @@ class Container:
         """Set configuration."""
         self._config = config
     
-    def set_database(self, database: Database):
+    def set_database(self, database: DatabaseInterface):
         """Set database."""
         self._database = database
 
 
-def create_services(config: Config, database: Database) -> Container:
+def create_services(config: Config, database: DatabaseInterface) -> Container:
     """Create and register all services."""
     container = Container()
     container.set_config(config)
@@ -62,7 +63,7 @@ def create_services(config: Config, database: Database) -> Container:
 
     # Register services
     container.register(Config, config)
-    container.register(Database, database)
+    container.register(DatabaseInterface, database)
     container.register(PingServiceInterface, ping_service)
     container.register(MacServiceInterface, mac_service)
     container.register(PortServiceInterface, port_service)
@@ -79,7 +80,7 @@ def create_services(config: Config, database: Database) -> Container:
 
 
 # FastAPI dependency functions
-def get_database(request: Request) -> Database:
+def get_database(request: Request) -> DatabaseInterface:
     """Get database from request state."""
     return request.app.state.database
 

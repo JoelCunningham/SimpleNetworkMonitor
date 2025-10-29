@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship
 
-from app.models.base import BaseModel
+from app.database.models import BaseModel
 
 if TYPE_CHECKING:
-    from app.models.device import Device
+    from app.database.models import Device
 
 class Category(BaseModel, table=True):
     """Device category model."""    

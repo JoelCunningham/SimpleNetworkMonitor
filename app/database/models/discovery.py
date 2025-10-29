@@ -8,10 +8,11 @@ from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship
 
-from app.models.base import BaseModel
+from app.database.models import BaseModel
 
 if TYPE_CHECKING:
-    from app.models.mac import Mac
+    from app.database.models import Mac
+    
 class Discovery(BaseModel, table=True):
     """Discovery information model."""    
     protocol: str = Field(default="unknown", nullable=False, max_length=50)
