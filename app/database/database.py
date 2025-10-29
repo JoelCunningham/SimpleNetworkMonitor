@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any, TypeVar
 
 from sqlalchemy import Engine
@@ -53,14 +53,14 @@ class Database(DatabaseInterface):
         return self.select_all(model).where(model.id == id)
 
     def create(self, instance: BaseModel) -> None:
-        instance.created_at = datetime.now(timezone.utc)
+        instance.created_at = datetime.now()
         with Session(self.engine) as session:
             session.add(instance)
             session.commit()
             session.refresh(instance)
     
     def update(self, instance: BaseModel) -> None:
-        instance.updated_at = datetime.now(timezone.utc)
+        instance.updated_at = datetime.now()
         with Session(self.engine) as session:
             merged = session.merge(instance)
             session.commit()
