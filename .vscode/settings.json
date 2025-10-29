@@ -1,5 +1,20 @@
 {
     "explorer.fileNesting.patterns": {
         "*.ts": "${capture}.js, ${capture}.html, ${capture}.scss, ${capture}.spec.ts, ${capture}.config.ts, ${capture}.routes.ts"
-    }
+    },
+    "cSpell.words": [
+        "Bonjour",
+        "DGRAM",
+        "gaierror",
+        "gethostbyaddr",
+        "getservbyport",
+        "hwsrc",
+        "imaps",
+        "mdns",
+        "msrpc",
+        "pdst",
+        "pptp",
+        "SSDP",
+        "upnp"
+    ]
 }
