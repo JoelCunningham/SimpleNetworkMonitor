@@ -1,6 +1,9 @@
 .select {
   position: relative;
   z-index: 1;
+  &:not(.closed) {
+    z-index: 2;
+  }
 
   .select-body {
     display: flex;
@@ -31,10 +34,7 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     overflow-y: hidden;
     transition: max-height var(--duration-fast) cubic-bezier(0.4, 0.2, 0.2, 1);
-
-    &:hover {
-      z-index: 2;
-    }
+    z-index: 2;
 
     .select-option {
       padding: 0.5rem 1rem;
@@ -76,20 +76,6 @@
   &.disabled {
     .select-dropdown {
       display: none;
-    }
-  }
-
-  &.left {
-    .select-dropdown {
-      left: 0;
-      right: auto;
-    }
-  }
-
-  &.right {
-    .select-dropdown {
-      right: 0;
-      left: auto;
     }
   }
 
