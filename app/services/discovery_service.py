@@ -2,66 +2,12 @@ import socket
 import struct
 
 from app import config
+from app.common.constants import *
+from app.common.objects import DiscoveryInfo
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Discovery, Mac
-from app.common.objects import DiscoveryInfo
 from app.services.interfaces import DiscoveryServiceInterface
 
-MDNS_ADDITIONAL_COUNT = 0
-MDNS_ANSWERS_COUNT = 0
-MDNS_AUTHORITY_COUNT = 0
-MDNS_DEVICE_NAME_PREFIX = "mDNS-"
-MDNS_DEVICE_TYPE = "mDNS/Bonjour Device"
-MDNS_FLAGS = 0x0000
-MDNS_HEADER_LENGTH = 12
-MDNS_PORT = 5353
-MDNS_PROTOCOL_NAME = "mdns"
-MDNS_QUESTIONS_COUNT = 1
-MDNS_SERVICE_QUERY = b'\x09_services\x07_dns-sd\x04_udp\x05local\x00\x00\x0c\x00\x01'
-MDNS_TRANSACTION_ID = 0x0000
-
-NETBIOS_ADDITIONAL_COUNT = 0
-NETBIOS_ANSWERS_COUNT = 0
-NETBIOS_AUTHORITY_COUNT = 0
-NETBIOS_HEADER_LENGTH = 12
-NETBIOS_MAX_NAME_LENGTH = 15
-NETBIOS_MIN_RESPONSE_LENGTH = 50
-NETBIOS_MIN_WORD_LENGTH = 2
-NETBIOS_NAME_LENGTH = b'\x20'
-NETBIOS_PORT = 137
-NETBIOS_PROTOCOL_NAME = "netbios"
-NETBIOS_QUERY_FLAGS = 0x0110
-NETBIOS_QUERY_SUFFIX = b'\x00\x00\x20\x00\x01'
-NETBIOS_QUESTIONS_COUNT = 1
-NETBIOS_TRANSACTION_ID = 0x1234
-NETBIOS_WILDCARD = b'A' * 31
-
-UPNP_DEVICE_TYPE = "UPnP Device"
-SSDP_HOST_HEADER = "HOST: 239.255.255.250:1900\r\n"
-SSDP_MAN_HEADER = 'MAN: "ssdp:discover"\r\n'
-SSDP_MX_PREFIX = "MX: "
-SSDP_REQUEST_LINE = "M-SEARCH * HTTP/1.1\r\n"
-SSDP_ST_HEADER = "ST: upnp:rootdevice\r\n"
-UPNP_HEADER_SEPARATOR = ':'
-UPNP_PORT = 1900
-UPNP_PROTOCOL_NAME = "upnp"
-UPNP_SERVER_HEADER_PREFIX = 'SERVER:'
-UPNP_SPLIT_LIMIT = 1
-
-DEVICE_INFO_SERVICE_TYPE = b'_device-info._tcp'
-HTTP_SERVICE_TYPE = b'_http._tcp'
-IP_SEPARATOR = '.'
-LAST_OCTET_INDEX = -1
-ASCII_ENCODING = 'ascii'
-WINDOWS_DEVICE_TYPE = "Windows/SMB Device"
-HTTP_OK_RESPONSE = "HTTP/1.1 200 OK"
-ST_HEADER_PREFIX = 'ST:'
-
-CRLF = "\r\n"
-DEFAULT_ENCODING = 'utf-8'
-ENCODING_ERROR_HANDLING = 'ignore'
-SOCKET_BUFFER_SIZE = 1024
-STRUCT_PACK_FORMAT = '>HHHHHH'
 
 class DiscoveryService(DiscoveryServiceInterface):
     """Service for managing network discovery operations."""

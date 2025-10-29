@@ -5,23 +5,13 @@ from datetime import datetime
 from sqlalchemy import text
 
 from app import config
+from app.common.constants import *
+from app.common.objects import AddressData, ScanOptions
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Mac
-from app.common.objects import AddressData, ScanOptions
-from app.services.interfaces import (DiscoveryServiceInterface,
-                                     MacServiceInterface, PingServiceInterface,
-                                     PortServiceInterface,
-                                     ProtocolServiceInterface,
-                                     ScanServiceInterface)
+from app.services.interfaces import *
 
-BANNER_SERVICE_NAMES = ["telnet", "smtp", "pop3", "imap", "ftp"]
-COMMON_PORTS = [21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 993, 995, 1723, 3389, 5900, 8080]
-HTTP_PORTS = [80, 443, 8080, 8443]
-HTTP_SERVICE_NAME = "http"
-SSH_PORT = 22
-SSH_SERVICE_NAME = "ssh"
-MAX_MESSAGE_LENGTH = 80
-        
+
 class ScanService(ScanServiceInterface):
     """Service for handling network scanning operations."""
 

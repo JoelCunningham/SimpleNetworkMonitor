@@ -1,6 +1,6 @@
+from app.common.objects import OwnerInput
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Device, Owner
-from app.common.objects import OwnerInput
 from app.services.interfaces import OwnerServiceInterface
 
 

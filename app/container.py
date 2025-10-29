@@ -49,7 +49,7 @@ def create_services(config: Config, database: DatabaseInterface) -> Container:
     container.set_database(database)
 
     # Create service instances
-    ping_service = PingService(config)
+    ping_service = PingService()
     mac_service = MacService(database)
     port_service = PortService(database)
     discovery_service = DiscoveryService(database)

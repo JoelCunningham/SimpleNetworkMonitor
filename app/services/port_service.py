@@ -3,33 +3,12 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from app import config
+from app.common.constants import *
+from app.common.objects import PortInfo, ServiceInfo
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Mac, Port
-from app.common.objects import PortInfo, ServiceInfo
 from app.services.interfaces import PortServiceInterface
 
-MAX_WORKERS = 20
-OPEN_PORT_RESULT = 0
-UNKNOWN_PORT_TEMPLATE = "unknown-{port}"
-PORT_SERVICE_MAP = {
-    21: "ftp",
-    22: "ssh",
-    23: "telnet",
-    25: "smtp",
-    53: "dns",
-    80: "http",
-    110: "pop3",
-    135: "msrpc",
-    139: "netbios-ssn",
-    143: "imap",
-    443: "https",
-    993: "imaps",
-    995: "pop3s",
-    1723: "pptp",
-    3389: "rdp",
-    5900: "vnc",
-    8080: "http-alt"
-}
 
 class PortService(PortServiceInterface):
     """Service for handling port-related operations."""

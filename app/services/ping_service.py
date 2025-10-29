@@ -2,39 +2,24 @@ import platform
 import re
 import socket
 import subprocess
-from typing import Optional
 
-from app.config import Config
+from app import config
+from app.common.constants import *
 from app.common.objects import PingCommand
-from app.services.interfaces import PingServiceInterface
 from app.common.utilities import Time, time_operation
+from app.services.interfaces import PingServiceInterface
 
-PLATFORM_WINDOWS = "Windows"
-PLATFORM_LINUX = "Linux"
-PLATFORM_MACOS = "Darwin"
-SUCCESSFUL_PING_EXIT_CODE = 0
-TTL_REGEX = r'[tT][tT][lL][=](\d+)'
-ROUTER_TTL_TEMPLATE = "{os_name} (via router)"
-UNKNOWN_OS_TEMPLATE = "Unknown (TTL: {ttl})"
-PING_COMMANDS = {
-    PLATFORM_WINDOWS: PingCommand("ping", "-n", "-w"),
-    PLATFORM_LINUX: PingCommand("ping", "-c", "-W"),
-    PLATFORM_MACOS: PingCommand("ping", "-c", "-W"),
-}
-TTL_OS_MAPPING = {
-    30: "Android",
-    32: "Windows 95/98/ME",
-    60: "Other Linux",
-    64: "Linux/Unix/macOS", 
-    128: "Windows XP/Vista/7/8/10/11",
-    255: "Cisco/Network Device"
-}
 
 class PingService(PingServiceInterface):
     """Service responsible for ping operations."""
 
-    def __init__(self, config: Optional[Config] = None) -> None:
-        self.config = config
+    def __init__(self) -> None:
+        PING_COMMANDS = {
+            PLATFORM_WINDOWS: PingCommand("ping", "-n", "-w"),
+            PLATFORM_LINUX: PingCommand("ping", "-c", "-W"),
+            PLATFORM_MACOS: PingCommand("ping", "-c", "-W"),
+        }
+        
         system = platform.system()
         if system not in PING_COMMANDS:
             raise Exception(f"Unsupported operating system: {system}")
@@ -44,8 +29,8 @@ class PingService(PingServiceInterface):
         self._ping_timeout_flag = PING_COMMANDS[system].timeout_flag
     
     def ping(self, ip_address: str) -> tuple[bool | None, int, str | None]:
-        ping_timeout_ms = self.config.ping_timeout_ms if self.config else 2000
-        ping_count = self.config.ping_count if self.config else 3
+        ping_timeout_ms = config.ping_timeout_ms if config else 2000
+        ping_count = config.ping_count if config else 3
         ping_time = Time()
         
         if platform.system() == PLATFORM_WINDOWS:
@@ -79,7 +64,7 @@ class PingService(PingServiceInterface):
 
     def get_hostname(self, ip_address: str) -> str | None:
         try:
-            timeout = (self.config.hostname_timeout_ms if self.config else 1000) / 1000
+            timeout = (config.hostname_timeout_ms if config else 1000) / 1000
             socket.setdefaulttimeout(timeout)
             hostname, _, _ = socket.gethostbyaddr(ip_address)
             return hostname

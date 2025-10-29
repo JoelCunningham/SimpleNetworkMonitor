@@ -1,8 +1,8 @@
 from typing import Any
 
+from app.common.objects import DeviceInput
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Device, Mac
-from app.common.objects import DeviceInput
 from app.services.interfaces import DeviceServiceInterface, MacServiceInterface
 
 

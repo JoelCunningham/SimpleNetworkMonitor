@@ -3,30 +3,10 @@ import urllib.error
 import urllib.request
 
 from app import config
+from app.common.constants import *
 from app.common.objects import ServiceInfo
 from app.services.interfaces import ProtocolServiceInterface
 
-HTTP_DEFAULT_SERVER = 'Unknown HTTP Server'
-HTTP_INFO_TEMPLATE = "Status: {status}"
-HTTP_SCHEME = "http"
-HTTPS_SCHEME = "https"
-HTTP_SERVICE_NAME = "http"
-HTTP_URL_TEMPLATE = "{protocol_scheme}://{ip_address}:{port}/"
-HTTPS_PORT = 443
-
-SSH_DEFAULT_PRODUCT = "SSH Server"
-SSH_BANNER_PREFIX = 'SSH-'
-SSH_SERVICE_NAME = "ssh"
-
-MAX_BANNER_LENGTH = 100
-
-DEFAULT_VERSION = "Unknown"
-DEFAULT_ENCODING = 'utf-8'
-ENCODING_ERROR_HANDLING = 'ignore'
-SOCKET_BUFFER_SIZE = 1024
-SERVER_HEADER = 'Server'
-USER_AGENT_HEADER = "User-Agent"
-USER_AGENT_VALUE = 'NetworkMonitor/1.0'
 
 class ProtocolService(ProtocolServiceInterface):
     """Detector for HTTP services."""

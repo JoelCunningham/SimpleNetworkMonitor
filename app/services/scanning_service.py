@@ -2,12 +2,12 @@ import threading
 from datetime import datetime, timedelta
 
 from app import config
+from app.common.constants import *
 from app.common.objects.address_data import AddressData
 from app.common.objects.scan_options import ScanOptions
 from app.services.interfaces import (ScanningServiceInterface,
                                      ScanServiceInterface)
 
-SCAN_CHECK_INTERVAL = 60 
 
 class ScanningService(ScanningServiceInterface):
     """Scan services that manages scanning operations."""
