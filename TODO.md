@@ -1,3 +1,0 @@
-- [ ] Remove services
-- [ ] Add to device dropdown
-- [ ] Constants
