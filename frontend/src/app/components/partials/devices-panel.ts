@@ -81,10 +81,12 @@ export class DevicesPanel implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.ownerService.currentOwners().subscribe((owners) => {
         this.owners = owners;
-        this.ownerOptions = owners.map((owner) => ({
-          value: owner.id,
-          label: owner.name,
-        }));
+        this.ownerOptions = owners
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((owner) => ({
+            value: owner.id,
+            label: owner.name,
+          }));
         this.cdr.markForCheck();
       })
     );
@@ -92,10 +94,12 @@ export class DevicesPanel implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.locationService.currentLocations().subscribe((locations) => {
         this.locations = locations;
-        this.locationOptions = locations.map((location) => ({
-          value: location.id,
-          label: location.name,
-        }));
+        this.locationOptions = locations
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((location) => ({
+            value: location.id,
+            label: location.name,
+          }));
         this.cdr.markForCheck();
       })
     );
@@ -103,10 +107,12 @@ export class DevicesPanel implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.categoryService.currentCategories().subscribe((categories) => {
         this.categories = categories;
-        this.categoryOptions = categories.map((category) => ({
-          value: category.id,
-          label: category.name,
-        }));
+        this.categoryOptions = categories
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((category) => ({
+            value: category.id,
+            label: category.name,
+          }));
         this.cdr.markForCheck();
       })
     );

@@ -141,10 +141,16 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(
       this.deviceService.currentDevices().subscribe((devices) => {
         this.devices = devices.filter((device) => device.id);
-        this.deviceOptions = this.devices.map((device) => ({
-          label: this.utilitiesService.getDisplayName(device),
-          value: device.id,
-        }));
+        this.deviceOptions = this.devices
+          .sort((a, b) =>
+            this.utilitiesService
+              .getDisplayName(a)
+              .localeCompare(this.utilitiesService.getDisplayName(b))
+          )
+          .map((device) => ({
+            label: this.utilitiesService.getDisplayName(device),
+            value: device.id,
+          }));
         this.macs = devices.flatMap((device) => device.macs || []);
         this.macOptions = this.macs.map((mac) => ({
           label: mac.address,

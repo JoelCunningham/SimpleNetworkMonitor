@@ -71,6 +71,11 @@ export class OwnerForm implements OnInit, OnChanges {
       this.deviceOptions = this.devices
         .filter((device) => !device.owner || device.owner === null)
         .filter((device) => device.id)
+        .sort((a, b) =>
+          this.utilitiesService
+            .getDisplayName(a)
+            .localeCompare(this.utilitiesService.getDisplayName(b))
+        )
         .map((device) => ({
           value: device.id,
           label: this.utilitiesService.getDisplayName(device),
