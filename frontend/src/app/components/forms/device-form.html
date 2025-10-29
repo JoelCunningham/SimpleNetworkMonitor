@@ -53,7 +53,7 @@
     </ul>
   </div>
   }
-  <app-form-section title="Network Information" [collapsible]="true">
+  <app-form-section sectionTitle="Network Information" [collapsible]="true">
     <div class="form-row">
       <div class="form-group">
         <label>IP Address</label>
@@ -154,6 +154,7 @@
         [placeholder]="'Add to device'"
         [isClearable]="false"
         [isPersistent]="false"
+        [IsReversed]="true"
         (optionSelected)="addToDevice($event); clearErrors()"
       />
       <button class="input primary interactive" (click)="setMode(editMode)">
