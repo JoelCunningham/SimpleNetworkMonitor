@@ -19,7 +19,7 @@ async def get_devices(device_service: DeviceServiceInterface = Depends(get_devic
         raise HTTPException(status_code=500, detail=f"Failed to get devices: {str(e)}")
 
 @device_router.post("", response_model=DeviceResponse, responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}})
-async def save_device(device: DeviceRequest, device_service: DeviceServiceInterface = Depends(get_device_service)):
+async def create_device(device: DeviceRequest, device_service: DeviceServiceInterface = Depends(get_device_service)):
     """Save a device to the database."""
     try:
         return device_service.add_device(device.toDeviceInput())
