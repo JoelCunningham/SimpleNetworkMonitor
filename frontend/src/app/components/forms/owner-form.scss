@@ -20,13 +20,27 @@
       text-transform: uppercase;
     }
 
-    ul {
+    .devices-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1.5rem;
 
-      li {
-        list-style: none;
+      .card {
+        border-radius: var(--radius-panel);
+        padding: 1.25rem;
+        display: flex;
+        justify-content: center;
+
+        img {
+          width: 1.5rem;
+          height: 1.5rem;
+          margin-right: 0.5rem;
+        }
+
+        span {
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
       }
     }
   }

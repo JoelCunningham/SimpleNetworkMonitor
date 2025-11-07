@@ -14,17 +14,11 @@
   <div class="form-group">
     <label>Devices</label>
     @if (owner.devices.length !== 0) {
-    <ul>
+    <div class="devices-grid">
       @for (device of owner.devices; track device.id) {
-      <li>
-        <app-device-card
-          [device]="device"
-          [owner]="owner"
-          [showRemove]="false"
-        />
-      </li>
+      <app-device-card [device]="device" [owner]="owner" [showRemove]="false" />
       }
-    </ul>
+    </div>
     } @else {
     <span>No devices assigned</span>
     }
@@ -65,18 +59,16 @@
   @if (newDevices.length > 0) {
   <div class="form-group">
     <label>Devices</label>
-    <ul>
+    <div class="devices-grid">
       @for (device of newDevices; track device.id) {
-      <li>
-        <app-device-card
-          [device]="device"
-          [owner]="owner"
-          [showRemove]="true"
-          (cardRemoved)="removeDevice($event); clearErrors()"
-        />
-      </li>
+      <app-device-card
+        [device]="device"
+        [owner]="owner"
+        [showRemove]="true"
+        (cardRemoved)="removeDevice($event); clearErrors()"
+      />
       }
-    </ul>
+    </div>
   </div>
   }
 
