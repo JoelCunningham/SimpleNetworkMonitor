@@ -6,9 +6,10 @@ Represents an open network port on a MAC address.
 
 from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Field, Relationship
+from sqlmodel import Field
 
 from app.database.models import BaseModel
+from app.database.relation import Relation
 
 if TYPE_CHECKING:
     from app.database.models import Mac
@@ -22,4 +23,4 @@ class Port(BaseModel, table=True):
     state: str = Field(default="open", nullable=False, max_length=20)
 
     mac_id: int = Field(foreign_key="mac.id")
-    mac: Optional["Mac"] = Relationship(back_populates="ports")
+    mac: Optional["Mac"] = Relation().backward("Port", "Mac")

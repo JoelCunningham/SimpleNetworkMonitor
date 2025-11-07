@@ -6,9 +6,10 @@ Represents network devices discovered during scans.
 
 from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Field, Relationship
+from sqlmodel import Field
 
 from app.database.models import BaseModel
+from app.database.relation import Relation
 
 if TYPE_CHECKING:
     from app.database.models import Category, Location, Mac, Owner
@@ -22,10 +23,10 @@ class Device(BaseModel, table=True):
     location_id: int | None = Field(default=None, foreign_key="location.id")
     owner_id: int | None = Field(default=None, foreign_key="owner.id")
 
-    category: Optional["Category"] = Relationship(back_populates="devices")
-    location: Optional["Location"] = Relationship(back_populates="devices")
-    owner: Optional["Owner"] = Relationship(back_populates="devices")
-    macs: list["Mac"] = Relationship(back_populates="device")
+    category: Optional["Category"] = Relation().backward("Device", "Category")
+    location: Optional["Location"] = Relation().backward("Device", "Location")
+    owner: Optional["Owner"] = Relation().backward("Device", "Owner")
+    macs: list["Mac"] = Relation().forward("Device", "Mac")
 
     @property
     def primary_mac(self) -> Optional["Mac"]:

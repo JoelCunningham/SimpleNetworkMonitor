@@ -6,9 +6,10 @@ Represents discovery information from network protocols.
 
 from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Field, Relationship
+from sqlmodel import Field
 
 from app.database.models import BaseModel
+from app.database.relation import Relation
 
 if TYPE_CHECKING:
     from app.database.models import Mac
@@ -22,4 +23,4 @@ class Discovery(BaseModel, table=True):
     model: str | None = Field(default=None, max_length=255)
 
     mac_id: int = Field(foreign_key="mac.id")
-    mac: Optional["Mac"] = Relationship(back_populates="discoveries")
+    mac: Optional["Mac"] = Relation().backward("Discovery", "Mac")

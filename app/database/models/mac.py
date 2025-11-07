@@ -8,9 +8,10 @@ Represents a network MAC address with associated network information.
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Field, Relationship
+from sqlmodel import Field
 
 from app.database.models import BaseModel
+from app.database.relation import Relation
 
 if TYPE_CHECKING:
     from app.database.models import Device, Discovery, Port
@@ -31,6 +32,6 @@ class Mac(BaseModel, table=True):
 
     device_id: int | None = Field(default=None, foreign_key="device.id")
 
-    device: Optional["Device"] = Relationship(back_populates="macs")
-    ports: list["Port"] = Relationship(back_populates="mac")
-    discoveries: list["Discovery"] = Relationship(back_populates="mac")
+    device: Optional["Device"] = Relation().backward("Mac", "Device")
+    ports: list["Port"] = Relation().forward("Mac", "Port")
+    discoveries: list["Discovery"] = Relation().forward("Mac", "Discovery")
