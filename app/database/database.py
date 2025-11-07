@@ -53,7 +53,7 @@ class Database(DatabaseInterface):
         SQLModel.metadata.create_all(self.engine)
     
     def select(self, model: type[T]) -> Query[T]:
-        return Query(self.engine, model)
+        return Query(self.engine, model).where(model.deleted == False)  
 
     def create(self, instance: BaseModel) -> None:
         instance.created_at = datetime.now()
@@ -70,6 +70,9 @@ class Database(DatabaseInterface):
             session.refresh(merged)
     
     def delete(self, instance: BaseModel) -> None:
+        instance.updated_at = datetime.now()
+        instance.deleted = True
         with Session(self.engine) as session:
-            session.delete(instance)
+            merged = session.merge(instance)
             session.commit()
+            session.refresh(merged)
