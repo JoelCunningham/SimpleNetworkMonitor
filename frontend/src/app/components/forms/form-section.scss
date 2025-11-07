@@ -6,6 +6,7 @@
   max-height: 25rem;
   overflow: hidden;
   transition: max-height var(--duration-fast) ease-in-out;
+  height: -webkit-fill-available;
 
   header {
     display: flex;
