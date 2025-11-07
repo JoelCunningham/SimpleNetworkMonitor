@@ -138,6 +138,8 @@ main {
 
 .inactive {
   background: var(--gradient-grey);
+  color: var(--colour-white);
+  border: none !important;
 }
 
 .input {
