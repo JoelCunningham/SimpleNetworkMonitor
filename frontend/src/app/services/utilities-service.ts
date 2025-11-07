@@ -6,15 +6,22 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class UtilitiesService {
+  defaultDeviceName = 'Unknown Device';
+
   getDisplayName(device: Device | null): string {
-    if (!device) return 'Unknown Device';
+    if (!device) return this.defaultDeviceName;
     if (device.name) return device.name;
 
-    return this.getDisplayNameEx(
+    const displayName = this.getDisplayNameEx(
       device?.owner?.name || '',
       device?.location?.name || '',
       device?.category?.name || ''
     );
+
+    if (displayName == this.defaultDeviceName) {
+      return this.defaultDeviceName + ' ' + device.primary_mac.address;
+    }
+    return displayName;
   }
 
   getDisplayNameEx(owner: string, location: string, category: string): string {
@@ -23,7 +30,7 @@ export class UtilitiesService {
     displayName += location ? location + ' ' : '';
     displayName += category ? category : '';
 
-    return displayName.trim() || 'Unknown Device';
+    return displayName.trim() || this.defaultDeviceName;
   }
 
   getLastSeenStatus(device: Device): string {
