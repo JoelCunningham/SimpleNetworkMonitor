@@ -37,3 +37,14 @@ async def update_device(device_id: int, device: DeviceRequest, device_service: D
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update device: {str(e)}")
+
+@device_router.delete("/{device_id}", responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}})
+async def delete_device(device_id: int, device_service: DeviceServiceInterface = Depends(get_device_service)):
+    """Delete a device by ID."""
+    try:
+        device_service.delete_device(device_id)
+        return {"detail": "Device deleted successfully"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete device: {str(e)}")

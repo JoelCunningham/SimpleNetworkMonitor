@@ -64,3 +64,11 @@ class DeviceService(DeviceServiceInterface):
         if not database_device:
             raise ValueError("Device not found")
         return database_device
+    
+    def delete_device(self, id: int) -> None:
+        device = self.database.select(Device).by_id(id)
+        if device:
+            self.database.delete(device)
+        else:
+            raise ValueError("Device not found")
+        return None

@@ -18,3 +18,7 @@ class DeviceServiceInterface(Protocol):
     def update_device(self, id: int, device: DeviceInput) -> Device:
         """Update an existing device by id and return the updated model."""
         ...
+
+    def delete_device(self, id: int) -> None:
+        """Delete a device by id."""
+        ...
