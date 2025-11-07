@@ -14,7 +14,7 @@ device_router = APIRouter()
 async def get_devices(device_service: DeviceServiceInterface = Depends(get_device_service)):
     """Get all known devices from the latest scan."""
     try:      
-        return device_service.get_current_devices()
+        return device_service.get_devices()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get devices: {str(e)}")
 

@@ -56,7 +56,7 @@ def create_services(config: Config, database: DatabaseInterface) -> Container:
     protocol_service = ProtocolService()
     scan_service = ScanService(database, ping_service, mac_service, port_service, discovery_service, protocol_service)
     scanning_service = ScanningService(scan_service)
-    device_service = DeviceService(database, mac_service, scanning_service)
+    device_service = DeviceService(database, mac_service)
     owner_service = OwnerService(database)
     category_service = CategoryService(database)
     location_service = LocationService(database)

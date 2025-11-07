@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 
 from app import config
 from app.common.constants import *
-from app.common.objects.address_data import AddressData
 from app.common.objects.scan_options import ScanOptions
 from app.services.interfaces import (ScanningServiceInterface,
                                      ScanServiceInterface)
@@ -26,8 +25,6 @@ class ScanningService(ScanningServiceInterface):
         self.basic_scan_interval = config.background_scan_interval_s
         self.full_scan_interval = config.background_full_scan_interval_s
         
-    def get_latest_results(self) -> list[AddressData]:
-        return self.last_scan_results
         
     def start_continuous_scan(self):
         self.stop_event.clear()

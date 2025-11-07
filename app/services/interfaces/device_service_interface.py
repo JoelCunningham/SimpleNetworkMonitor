@@ -7,7 +7,7 @@ from app.common.objects import DeviceInput
 class DeviceServiceInterface(Protocol):
     """Interface for device related operations."""
 
-    def get_current_devices(self) -> list[Device]:
+    def get_devices(self) -> list[Device]:
         """Return a list of devices representing the current known devices."""
         ...
 

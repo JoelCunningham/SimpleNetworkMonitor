@@ -4,8 +4,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from app.database import Database
 from app.common.objects import AddressData, DeviceInput
+from app.database import Database
 from app.services import DeviceService, MacService
 
 
@@ -29,11 +29,8 @@ def test_add_device_creates_device():
     database = Database("sqlite:///:memory:")
     mac_id = make_mac(database)
     mac_service = MacService(database)
-    class FakeScanner:
-        def get_latest_results(self) -> list[AddressData]:
-            return []
 
-    device_service = DeviceService(database, mac_service, FakeScanner())
+    device_service = DeviceService(database, mac_service)
 
     device_input = DeviceInput(name="TestDevice", model="ModelX", category_id=0, location_id=None, owner_id=None, mac_ids=[mac_id])
     device = device_service.add_device(device_input)
@@ -48,11 +45,8 @@ def test_update_device_updates_fields():
     database = Database("sqlite:///:memory:")
     mac_id = make_mac(database, "aa:bb:cc:dd:ee:02")
     mac_service = MacService(database)
-    class FakeScanner:
-        def get_latest_results(self) -> list[AddressData]:
-            return []
 
-    service = DeviceService(database, mac_service, FakeScanner())
+    service = DeviceService(database, mac_service)
 
     device_input = DeviceInput(name="DeviceToUpdate", model="Old", category_id=0, location_id=None, owner_id=None, mac_ids=[mac_id])
     device = service.add_device(device_input)

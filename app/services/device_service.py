@@ -1,5 +1,3 @@
-from typing import Any
-
 from app.common.objects import DeviceInput
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Device, Mac
@@ -7,12 +5,11 @@ from app.services.interfaces import DeviceServiceInterface, MacServiceInterface
 
 
 class DeviceService(DeviceServiceInterface):
-    def __init__(self, database: DatabaseInterface, mac_service: MacServiceInterface, scanning_service: Any) -> None:
+    def __init__(self, database: DatabaseInterface, mac_service: MacServiceInterface) -> None:
         self.database = database
         self.mac_service = mac_service
-        self.scanning_service = scanning_service
 
-    def get_current_devices(self,) -> list[Device]:
+    def get_devices(self,) -> list[Device]:
         devices = self.database.select(Device).all()
         macs = self.database.select(Mac).all()
 
