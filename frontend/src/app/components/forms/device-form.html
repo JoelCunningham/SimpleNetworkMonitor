@@ -32,7 +32,7 @@
   <div class="form-group macs-group">
     <label>Macs</label>
     <ul class="mac-list">
-      @for (mac of device.macs; track mac.id) {
+      @for (mac of getSortedMacs(device.macs); track mac.id) {
       <app-basic-card
         [data]="{ value: mac.id, label: mac.address }"
         [selected]="mac.id === currentMac?.id"

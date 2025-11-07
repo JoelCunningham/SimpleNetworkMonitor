@@ -307,6 +307,17 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
     return [...mac.ports].sort((a, b) => (a.number || 0) - (b.number || 0));
   }
 
+  getSortedMacs(macs: Mac[] | null | undefined): Mac[] {
+    if (!macs) return [];
+    return [...macs].sort((a, b) => {
+      const aTime = a && a.last_seen ? new Date(a.last_seen).getTime() : 0;
+      const bTime = b && b.last_seen ? new Date(b.last_seen).getTime() : 0;
+      const aVal = isNaN(aTime) ? 0 : aTime;
+      const bVal = isNaN(bTime) ? 0 : bTime;
+      return bVal - aVal;
+    });
+  }
+
   getAutoName(
     category: Option | null | undefined,
     location: Option | null | undefined,
