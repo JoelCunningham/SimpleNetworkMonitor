@@ -4,8 +4,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from app.database import Database
 from app.common.objects import OwnerInput
+from app.database import Database
 from app.services import OwnerService
 
 

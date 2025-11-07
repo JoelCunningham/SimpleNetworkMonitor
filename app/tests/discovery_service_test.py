@@ -4,9 +4,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from app.common.objects import AddressData, DiscoveryInfo
 from app.database import Database
 from app.database.models import Discovery
-from app.common.objects import AddressData, DiscoveryInfo
 from app.services import DiscoveryService, MacService
 
 

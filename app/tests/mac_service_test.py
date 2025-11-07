@@ -6,9 +6,9 @@ from pytest import MonkeyPatch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from app.common.objects import AddressData
 from app.database import Database
 from app.database.models import Mac
-from app.common.objects import AddressData
 from app.services import MacService
 
 

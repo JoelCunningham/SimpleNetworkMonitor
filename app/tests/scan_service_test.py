@@ -7,9 +7,10 @@ sys.path.insert(0, str(ROOT))
 
 from typing import List
 
+from app.common.objects import (AddressData, DiscoveryInfo, PortInfo,
+                                ServiceInfo)
 from app.database import Database
 from app.database.models import Mac
-from app.common.objects import AddressData, DiscoveryInfo, PortInfo, ServiceInfo
 from app.services import MacService, ScanService
 
 
