@@ -353,7 +353,7 @@ export class DeviceForm implements OnInit, OnChanges, OnDestroy {
       this.cdr.detectChanges();
     };
 
-    if (this.isEditMode() && this.device) {
+    if (this.device.id) {
       this.deviceService.updateDevice(this.device.id, request).subscribe({
         next: (updatedDevice: Device) => {
           this.device = updatedDevice;
