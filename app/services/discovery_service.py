@@ -21,7 +21,7 @@ class DiscoveryService(DiscoveryServiceInterface):
             raise Exception("AddressData does not contain discovery information.")
 
         # Remove existing discovery data for this MAC
-        existing_discoveries = self.database.select_all(Discovery).where(Discovery.mac_id == mac.id).all()
+        existing_discoveries = self.database.select(Discovery).where(Discovery.mac_id == mac.id).all()
         for discovery in existing_discoveries:
             self.database.delete(discovery)
 

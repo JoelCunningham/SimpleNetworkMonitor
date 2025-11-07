@@ -27,3 +27,7 @@ class QueryInterface(Generic[T], Protocol):
     def first(self) -> T | None:
         """Execute the query and return the first result."""
         ...
+        
+    def by_id(self, id: int) -> T | None:
+        """Execute the query and return a single result by ID."""
+        ...

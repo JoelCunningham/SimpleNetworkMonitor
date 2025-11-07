@@ -20,6 +20,6 @@ def test_save_discoveries_persists():
     infos = [DiscoveryInfo(protocol="mdns", device_name="DeviceA", device_type="mDNS/Bonjour Device")]
     service.save_discoveries(mac, infos)
 
-    found = database.select_all(Discovery).where(Discovery.mac_id == mac.id).all()
+    found = database.select(Discovery).where(Discovery.mac_id == mac.id).all()
     assert len(found) == 1
     assert found[0].device_name == "DeviceA"

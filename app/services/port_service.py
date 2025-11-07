@@ -23,7 +23,7 @@ class PortService(PortServiceInterface):
             raise Exception("AddressData does not contain open ports.")
 
         # Remove existing port data for this MAC
-        existing_ports = self.database.select_all(Port).where(Port.mac_id == mac_record.id).all()
+        existing_ports = self.database.select(Port).where(Port.mac_id == mac_record.id).all()
         for port in existing_ports:
             self.database.delete(port)
 

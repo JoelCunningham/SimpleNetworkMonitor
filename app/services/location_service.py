@@ -10,4 +10,4 @@ class LocationService(LocationServiceInterface):
         self.database = database
 
     def get_locations(self) -> list[Location]:
-        return self.database.select_all(Location).all()
+        return self.database.select(Location).all()

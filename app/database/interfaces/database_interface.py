@@ -8,12 +8,8 @@ T = TypeVar("T", bound=BaseModel)
 class DatabaseInterface(Protocol):
     """Interface for handling category related operations."""
 
-    def select_all(self, model: type[T]) -> QueryInterface[T]:
-        """Return all records of a given model from the database."""
-        ...
-        
-    def select_by_id(self, model: type[T], id: int) -> QueryInterface[T]:
-        """Return a single record by ID for a given model from the database."""
+    def select(self, model: type[T]) -> QueryInterface[T]:
+        """Initiate a query for the specified model."""
         ...
         
     def create(self, instance: BaseModel) -> None:

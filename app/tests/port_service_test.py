@@ -22,7 +22,7 @@ def test_save_port_persists():
 
     port_service.save_port(mac, ports, services)
 
-    found = database.select_all(Port).where(Port.mac_id == mac.id).all()
+    found = database.select(Port).where(Port.mac_id == mac.id).all()
     assert len(found) == 1
     assert found[0].number == 22
     assert found[0].service is not None and 'ssh' in found[0].service

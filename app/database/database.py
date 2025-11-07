@@ -15,6 +15,7 @@ U = TypeVar("U", bound=Any)
 class Query(QueryInterface[T]):
     def __init__(self, engine: Engine, model: type[T]):
         self.engine = engine
+        self.model = model
         self.statement = select(model).options(joinedload("*"))
 
     def where(self, condition: Any) -> "Query[T]":
@@ -37,6 +38,11 @@ class Query(QueryInterface[T]):
         with Session(self.engine) as session:
             return session.exec(self.statement).unique().first()
         
+    def by_id(self, id: int) -> T | None:
+        with Session(self.engine) as session:
+            statement = select(self.model).options(joinedload("*")).where(self.model.id == id)
+            return session.exec(statement).unique().first()
+        
 class Database(DatabaseInterface):
     url: str
     engine: Engine
@@ -46,11 +52,8 @@ class Database(DatabaseInterface):
         self.engine = create_engine(self.url, connect_args={"check_same_thread": False})
         SQLModel.metadata.create_all(self.engine)
     
-    def select_all(self, model: type[T]) -> Query[T]:
+    def select(self, model: type[T]) -> Query[T]:
         return Query(self.engine, model)
-    
-    def select_by_id(self, model: type[T], id: int) -> Query[T]:
-        return self.select_all(model).where(model.id == id)
 
     def create(self, instance: BaseModel) -> None:
         instance.created_at = datetime.now()

@@ -49,7 +49,7 @@ class ScanService(ScanServiceInterface):
             
     def get_latest_scan_date(self) -> datetime | None:
         """Get the date of the latest scan."""
-        latest_scan = self.database.select_all(Mac).order_by(text("last_seen DESC")).first()
+        latest_scan = self.database.select(Mac).order_by(text("last_seen DESC")).first()
         if latest_scan:
             return latest_scan.last_seen
         return None

@@ -12,13 +12,13 @@ class OwnerService(OwnerServiceInterface):
 
     def get_owners(self) -> list[Owner]:
         """Get all owners."""
-        return self.database.select_all(Owner).all()
+        return self.database.select(Owner).all()
 
     def add_owner(self, owner: OwnerInput) -> Owner:
         """Add a new owner to the database."""
         new_owner = Owner(
             name=owner.name,
-            devices=self.database.select_all(Device).where_in(Device.id, owner.device_ids).all(),
+            devices=self.database.select(Device).where_in(Device.id, owner.device_ids).all(),
         )
 
         self.database.create(new_owner)
@@ -27,7 +27,7 @@ class OwnerService(OwnerServiceInterface):
 
     def update_owner(self, id: int, owner: OwnerInput) -> Owner:
         """Update an existing owner."""
-        existing_owner = self.database.select_by_id(Owner, id).first()
+        existing_owner = self.database.select(Owner).by_id(id)
         if not existing_owner:
             raise ValueError("Owner not found")
 
@@ -35,7 +35,7 @@ class OwnerService(OwnerServiceInterface):
         updated = Owner(
             id=id,
             name=owner.name,
-            devices=self.database.select_all(Device).where_in(Device.id, owner.device_ids).all(),
+            devices=self.database.select(Device).where_in(Device.id, owner.device_ids).all(),
         )
 
         # use create to upsert for simplicity (tests rely on returned object)
@@ -45,7 +45,7 @@ class OwnerService(OwnerServiceInterface):
 
     def delete_owner(self, id: int) -> None:
         """Delete an owner from the database."""
-        owner = self.database.select_by_id(Owner, id).first()
+        owner = self.database.select(Owner).by_id(id)
         if owner:
             self.database.delete(owner)
         else:

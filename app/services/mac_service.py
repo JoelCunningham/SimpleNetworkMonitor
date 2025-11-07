@@ -65,7 +65,7 @@ class MacService(MacServiceInterface):
         return mac
     
     def get_mac_by_address(self, mac_address: str) -> Mac | None:
-        return self.database.select_all(Mac).where(Mac.address == mac_address).first()
+        return self.database.select(Mac).where(Mac.address == mac_address).first()
 
     def resolve_mac_address(self, ip_address: str) -> tuple[str, int] | None:
         arp: Packet = ARP(pdst=ip_address)  # type: ignore

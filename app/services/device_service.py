@@ -44,18 +44,18 @@ class DeviceService(DeviceServiceInterface):
             category_id=device.category_id,
             location_id=device.location_id,
             owner_id=device.owner_id,
-            macs=self.database.select_all(Mac).where_in(Mac.id, device.mac_ids).all(),
+            macs=self.database.select(Mac).where_in(Mac.id, device.mac_ids).all(),
         )
 
         self.database.create(new_device)
         
-        database_device = self.database.select_by_id(Device, new_device.id).first()
+        database_device = self.database.select(Device).by_id(new_device.id)
         if not database_device:
             raise ValueError("Device not found")
         return database_device
 
     def update_device(self, id: int, device: DeviceInput) -> Device:
-        existing_device = self.database.select_by_id(Device, id).first()
+        existing_device = self.database.select(Device).by_id(id)
         if not existing_device:
             raise ValueError("Device not found")
         if not device.mac_ids:
@@ -66,11 +66,11 @@ class DeviceService(DeviceServiceInterface):
         existing_device.category_id = device.category_id
         existing_device.location_id = device.location_id
         existing_device.owner_id = device.owner_id
-        existing_device.macs = self.database.select_all(Mac).where_in(Mac.id, device.mac_ids).all()
+        existing_device.macs = self.database.select(Mac).where_in(Mac.id, device.mac_ids).all()
 
         self.database.update(existing_device)
 
-        database_device = self.database.select_by_id(Device, id).first()
+        database_device = self.database.select(Device).by_id(id)
         if not database_device:
             raise ValueError("Device not found")
         return database_device

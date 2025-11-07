@@ -8,4 +8,4 @@ class CategoryService(CategoryServiceInterface):
         self.database = database
 
     def get_categories(self) -> list[Category]:
-        return self.database.select_all(Category).all()
+        return self.database.select(Category).all()
