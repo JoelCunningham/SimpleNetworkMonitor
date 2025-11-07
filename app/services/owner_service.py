@@ -31,15 +31,13 @@ class OwnerService(OwnerServiceInterface):
         if not existing_owner:
             raise ValueError("Owner not found")
 
-        # replace with updated owner instance
         updated = Owner(
             id=id,
             name=owner.name,
             devices=self.database.select(Device).where_in(Device.id, owner.device_ids).all(),
         )
 
-        # use create to upsert for simplicity (tests rely on returned object)
-        self.database.create(updated)
+        self.database.update(updated)
 
         return updated
 

@@ -23,3 +23,7 @@ class DatabaseInterface(Protocol):
     def delete(self, instance: BaseModel) -> None:
         """Delete a record from the database."""
         ...
+
+    def hard_delete(self, instance: BaseModel) -> None:
+        """Permanently delete a record from the database."""
+        ...

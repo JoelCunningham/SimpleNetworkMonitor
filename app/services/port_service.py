@@ -25,7 +25,7 @@ class PortService(PortServiceInterface):
         # Remove existing port data for this MAC
         existing_ports = self.database.select(Port).where(Port.mac_id == mac_record.id).all()
         for port in existing_ports:
-            self.database.delete(port)
+            self.database.hard_delete(port)
 
         for port_info in open_ports:
             service_name = port_info.service

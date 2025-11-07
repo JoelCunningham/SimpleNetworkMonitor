@@ -23,7 +23,7 @@ class DiscoveryService(DiscoveryServiceInterface):
         # Remove existing discovery data for this MAC
         existing_discoveries = self.database.select(Discovery).where(Discovery.mac_id == mac.id).all()
         for discovery in existing_discoveries:
-            self.database.delete(discovery)
+            self.database.hard_delete(discovery)
 
         # Add new discovery data
         for discovery_info in discoveries:

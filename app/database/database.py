@@ -19,11 +19,11 @@ class Query(QueryInterface[T]):
         self.statement = select(model).options(joinedload("*"))
 
     def where(self, condition: Any) -> "Query[T]":
-        self.statement = self.statement.where(condition)
+        self.statement = self.statement.where(condition).where(self.model.deleted == False)
         return self
     
     def where_in(self, column: U, values: list[U]) -> "Query[T]":
-        self.statement = self.statement.where(column.in_(values))
+        self.statement = self.statement.where(column.in_(values)).where(self.model.deleted == False)
         return self
     
     def order_by(self, *criteria: Any) -> "Query[T]":
@@ -76,3 +76,9 @@ class Database(DatabaseInterface):
             merged = session.merge(instance)
             session.commit()
             session.refresh(merged)
+            
+    def hard_delete(self, instance: BaseModel) -> None:
+        with Session(self.engine) as session:
+            merged = session.merge(instance)
+            session.delete(merged)
+            session.commit()
