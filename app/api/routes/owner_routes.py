@@ -21,7 +21,7 @@ async def get_owners(owner_service: OwnerServiceInterface = Depends(get_owner_se
         raise HTTPException(status_code=500, detail=f"Failed to get owners: {str(e)}")
 
 @owner_router.post("", response_model=OwnerResponse, status_code=201, responses={500: {"model": ErrorResponse}})
-async def save_owner(owner: OwnerRequest, owner_service: OwnerServiceInterface = Depends(get_owner_service)):
+async def create_owner(owner: OwnerRequest, owner_service: OwnerServiceInterface = Depends(get_owner_service)):
     """Save a new owner."""
     try:
         return owner_service.add_owner(owner.toOwnerInput())

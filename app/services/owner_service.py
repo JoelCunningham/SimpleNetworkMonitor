@@ -22,8 +22,11 @@ class OwnerService(OwnerServiceInterface):
         )
 
         self.database.create(new_owner)
-
-        return new_owner
+        
+        database_owner = self.database.select(Owner).by_id(new_owner.id)
+        if not database_owner:
+            raise ValueError("Owner not found")
+        return database_owner
 
     def update_owner(self, id: int, owner: OwnerInput) -> Owner:
         """Update an existing owner."""
@@ -31,15 +34,18 @@ class OwnerService(OwnerServiceInterface):
         if not existing_owner:
             raise ValueError("Owner not found")
 
-        updated = Owner(
+        updated_owner = Owner(
             id=id,
             name=owner.name,
             devices=self.database.select(Device).where_in(Device.id, owner.device_ids).all(),
         )
 
-        self.database.update(updated)
+        self.database.update(updated_owner)
 
-        return updated
+        database_owner = self.database.select(Owner).by_id(updated_owner.id)
+        if not database_owner:
+            raise ValueError("Owner not found")
+        return database_owner
 
     def delete_owner(self, id: int) -> None:
         """Delete an owner from the database."""

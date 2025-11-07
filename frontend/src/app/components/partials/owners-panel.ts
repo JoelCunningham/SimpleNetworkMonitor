@@ -42,7 +42,7 @@ export class OwnersPanel implements OnInit {
   }
 
   openAddModal() {
-    this.currentOwner = null;
+    this.currentOwner = { id: 0, name: '', devices: [] };
     this.ownerFormMode = FormMode.Add;
     this.showOwnerModal = true;
   }
