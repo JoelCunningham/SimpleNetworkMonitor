@@ -25,6 +25,22 @@
       .clear-filters:hover {
         box-shadow: none;
       }
+
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      #timeLimit {
+        width: 5rem;
+        text-align: center;
+      }
+
+      label[for="timeLimit"] {
+        margin: auto;
+        padding-bottom: 4px;
+      }
     }
   }
 

@@ -1,12 +1,12 @@
 <section class="panel devices-panel">
   <header>
-    <h1>Devices</h1>
+    <h1>{{ titleText }}</h1>
     <div class="filters">
       @if (selectedCategory || selectedLocation || selectedOwner) {
       <button class="clear-filters interactive" (click)="clearFilters()">
         Clear all
       </button>
-      }
+      } @if (!showUnknown) {
       <app-select
         [css]="'secondary right'"
         [options]="ownerOptions"
@@ -31,6 +31,16 @@
         [isPersistent]="true"
         (optionSelected)="selectCategory($event)"
       />
+      } @if (showUnknown) {
+      <input
+        type="number"
+        id="timeLimit"
+        name="timeLimit"
+        class="input secondary interactive"
+        [(ngModel)]="timeLimit"
+        (ngModelChange)="applyFilters()"
+      />
+      <label for="timeLimit">Days</label> }
     </div>
   </header>
   <app-notification

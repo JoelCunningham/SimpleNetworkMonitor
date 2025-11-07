@@ -22,3 +22,7 @@ class MacServiceInterface(Protocol):
     def get_vendor_from_mac(self, mac_address: str) -> str | None:
         """Get vendor name from MAC address using OUI lookup."""
         ...
+        
+    def get_unassigned(self) -> list[Mac]:
+        """Return a list of MAC addresses that are not assigned to any device."""
+        ...

@@ -10,22 +10,7 @@ class DeviceService(DeviceServiceInterface):
         self.mac_service = mac_service
 
     def get_devices(self,) -> list[Device]:
-        devices = self.database.select(Device).all()
-        macs = self.database.select(Mac).all()
-
-        for mac in macs:
-            if not any(mac.address == device_mac.address for device in devices for device_mac in device.macs):
-                new_device = Device(
-                    name="",
-                    model="",
-                    category_id=0,
-                    location_id=None,
-                    owner_id=None,
-                    macs=[mac],
-                )
-                devices.append(new_device)
-
-        return devices
+        return self.database.select(Device).all()
 
     def add_device(self, device: DeviceInput) -> Device:
         new_device = Device(

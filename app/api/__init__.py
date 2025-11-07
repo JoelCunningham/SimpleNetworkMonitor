@@ -10,5 +10,6 @@ def create_api_app() -> APIRouter:
 	router.include_router(owner_router, prefix="/owners", tags=["owners"])
 	router.include_router(category_router, prefix="/categories", tags=["categories"])
 	router.include_router(location_router, prefix="/locations", tags=["locations"])
+	router.include_router(mac_router, prefix="/macs", tags=["macs"])
 
 	return router

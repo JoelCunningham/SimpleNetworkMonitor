@@ -7,7 +7,7 @@ export interface Device {
   id: number;
   name: string | null;
   model: string | null;
-  category: Category;
+  category: Category | null;
   location: Location | null;
   owner: Owner | null;
   macs: Mac[];

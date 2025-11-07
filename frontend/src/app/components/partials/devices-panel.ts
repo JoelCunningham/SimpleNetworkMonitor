@@ -6,27 +6,38 @@ import { Modal } from '#components/partials//modal';
 import { Category } from '#interfaces/category';
 import { Device } from '#interfaces/device';
 import { Location } from '#interfaces/location';
+import { Mac } from '#interfaces/mac';
 import { Option, Value } from '#interfaces/option';
 import { Owner } from '#interfaces/owner';
 import { CategoryService } from '#services/category_service';
 import { DeviceService } from '#services/device-service';
 import { LocationService } from '#services/location-service';
+import { MacService } from '#services/mac-service';
 import { OwnerService } from '#services/owner-service';
 import { UtilitiesService } from '#services/utilities-service';
 import { FormMode } from '#types/form-mode';
 import { NotificationType } from '#types/notification-type';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-devices-panel',
-  imports: [DeviceCard, Select, Notification, Modal, DeviceForm],
+  imports: [DeviceCard, Select, Notification, Modal, DeviceForm, FormsModule],
   templateUrl: './devices-panel.html',
   styleUrl: './devices-panel.scss',
 })
 export class DevicesPanel implements OnInit, OnDestroy {
+  @Input() showUnknown: boolean = false;
+
   private subscriptions: Subscription = new Subscription();
 
   private devices: Device[] = [];
@@ -51,8 +62,12 @@ export class DevicesPanel implements OnInit, OnDestroy {
   protected showDeviceModal = false;
   protected deviceFormMode: FormMode | null = null;
 
+  protected titleText = 'Devices';
+  protected timeLimit: number = 7;
+
   constructor(
     private deviceService: DeviceService,
+    private macService: MacService,
     private ownerService: OwnerService,
     private locationService: LocationService,
     private categoryService: CategoryService,
@@ -61,22 +76,56 @@ export class DevicesPanel implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscriptions.add(
-      this.deviceService.currentDevices().subscribe((devices) => {
-        this.devices = devices;
-        this.deviceList = this.sortDevices(devices);
+    if (!this.showUnknown) {
+      this.titleText = 'My Devices';
+      this.subscriptions.add(
+        this.deviceService.currentDevices().subscribe((devices) => {
+          this.devices = devices;
+          this.deviceList = this.sortDevices(devices);
 
-        if (this.currentDevice) {
-          this.currentDevice =
-            this.devices.find(
-              (device) => device.id === this.currentDevice!.id
-            ) || null;
-        }
+          if (this.currentDevice) {
+            this.currentDevice =
+              this.devices.find(
+                (device) => device.id === this.currentDevice!.id
+              ) || null;
+          }
 
-        this.applyFilters();
-        this.cdr.detectChanges();
-      })
-    );
+          this.applyFilters();
+          this.cdr.detectChanges();
+        })
+      );
+    } else {
+      this.titleText = 'Unknown Devices';
+      this.subscriptions.add(
+        this.macService.currentMacs().subscribe((macs) => {
+          this.devices = macs.map((mac) => {
+            const deviceFromMac: Device = {
+              id: 0,
+              name: mac.address,
+              model: null,
+              category: null,
+              location: null,
+              owner: null,
+              macs: [mac],
+              primary_mac: mac,
+            };
+            return deviceFromMac;
+          });
+
+          this.deviceList = this.sortDevices(this.devices);
+
+          if (this.currentDevice) {
+            this.currentDevice =
+              this.devices.find(
+                (device) => device.id === this.currentDevice!.id
+              ) || null;
+          }
+
+          this.applyFilters();
+          this.cdr.detectChanges();
+        })
+      );
+    }
 
     this.subscriptions.add(
       this.ownerService.currentOwners().subscribe((owners) => {
@@ -137,7 +186,7 @@ export class DevicesPanel implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
-  private applyFilters() {
+  protected applyFilters() {
     this.deviceList = this.devices.filter((device) => {
       const ownerMatch = this.selectedOwner
         ? device.owner?.id === this.selectedOwner.id
@@ -148,7 +197,15 @@ export class DevicesPanel implements OnInit, OnDestroy {
       const categoryMatch = this.selectedCategory
         ? device.category?.id === this.selectedCategory.id
         : true;
-      return ownerMatch && locationMatch && categoryMatch;
+      const timeMatch = this.showUnknown
+        ? (() => {
+            if (!this.timeLimit || this.timeLimit <= 0) return true;
+            const cutoff = Date.now() - this.timeLimit * 24 * 60 * 60 * 1000;
+            const latest = this.getLatestMacTime(device);
+            return latest >= cutoff;
+          })()
+        : true;
+      return ownerMatch && locationMatch && categoryMatch && timeMatch;
     });
 
     if (this.deviceList.length === 0) {
@@ -219,6 +276,14 @@ export class DevicesPanel implements OnInit, OnDestroy {
       return (a.macs[0]?.hostname || '').localeCompare(
         b.macs[0]?.hostname || ''
       );
+    });
+  }
+
+  private sortMacs(macs: Mac[]): Mac[] {
+    return macs.sort((a, b) => {
+      const aTime = a.last_seen ? new Date(a.last_seen).getTime() : 0;
+      const bTime = b.last_seen ? new Date(b.last_seen).getTime() : 0;
+      return bTime - aTime;
     });
   }
 

@@ -102,6 +102,9 @@ class MacService(MacServiceInterface):
             
         except Exception:
             return None
+        
+    def get_unassigned(self) -> list[Mac]:
+        return self.database.select(Mac).where(Mac.device_id == None).all()
 
     def _get_local_ip(self) -> str:
         """Returns the local IP address used to reach the internet."""
