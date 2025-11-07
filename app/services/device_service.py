@@ -13,27 +13,20 @@ class DeviceService(DeviceServiceInterface):
         self.scanning_service = scanning_service
 
     def get_current_devices(self,) -> list[Device]:
-        devices = self.database.select_all(Device).all()
-        scanned_devices = self.scanning_service.get_latest_results()
+        devices = self.database.select(Device).all()
+        macs = self.database.select(Mac).all()
 
-        for device_data in scanned_devices:
-            if device_data.mac_address:
-                has_device = any(
-                    device_data.mac_address == mac.address
-                    for device in devices
-                    for mac in device.macs
+        for mac in macs:
+            if not any(mac.address == device_mac.address for device in devices for device_mac in device.macs):
+                new_device = Device(
+                    name="",
+                    model="",
+                    category_id=0,
+                    location_id=None,
+                    owner_id=None,
+                    macs=[mac],
                 )
-                if not has_device:
-                    mac_data = self.mac_service.get_mac_by_address(device_data.mac_address)
-                    if mac_data:
-                        new_device = Device(
-                            model="",
-                            category_id=0,
-                            location_id=None,
-                            owner_id=None,
-                            macs=[mac_data],
-                        )
-                        devices.append(new_device)
+                devices.append(new_device)
 
         return devices
 
