@@ -7,6 +7,7 @@ import { Category } from '#interfaces/category';
 import { Device } from '#interfaces/device';
 import { Location } from '#interfaces/location';
 import { Mac } from '#interfaces/mac';
+import { Notification } from '#interfaces/notification';
 import { Option, Value } from '#interfaces/option';
 import { Owner } from '#interfaces/owner';
 import { CategoryService } from '#services/category_service';
@@ -56,8 +57,7 @@ export class DevicesPanel implements OnInit, OnDestroy {
   protected categoryOptions: Option[] = [];
   protected selectedCategory: Category | undefined;
 
-  protected notificationType: NotificationType | null = null;
-  protected notificationMessage: string | null = null;
+  protected notification: Notification | null = null;
 
   protected showDeviceModal = false;
   protected deviceFormMode: FormMode | null = null;
@@ -209,10 +209,12 @@ export class DevicesPanel implements OnInit, OnDestroy {
     });
 
     if (this.deviceList.length === 0) {
-      this.notificationType = NotificationType.INFO;
-      this.notificationMessage = 'No devices found';
+      this.notification = {
+        type: NotificationType.INFO,
+        message: 'No devices found',
+      };
     } else {
-      this.notificationType = null;
+      this.notification = null;
     }
   }
 
