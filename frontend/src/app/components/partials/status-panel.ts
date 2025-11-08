@@ -1,3 +1,4 @@
+import { BasePanel } from '#components/base/base-panel/base-panel';
 import { Icon } from '#components/common/icon';
 import { DeviceService } from '#services/device-service';
 import { DatePipe } from '@angular/common';
@@ -5,7 +6,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
   selector: 'app-status-panel',
-  imports: [Icon, DatePipe],
+  imports: [BasePanel, Icon, DatePipe],
   templateUrl: './status-panel.html',
   styleUrl: './status-panel.scss',
 })

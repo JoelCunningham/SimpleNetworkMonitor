@@ -1,3 +1,4 @@
+import { BasePanel } from '#components/base/base-panel/base-panel';
 import { BasicCard } from '#components/cards/basic-card';
 import { OwnerForm } from '#components/forms/owner-form';
 import { Modal } from '#components/partials/modal';
@@ -9,7 +10,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 @Component({
   standalone: true,
   selector: 'app-owners-panel',
-  imports: [OwnerForm, Modal, BasicCard],
+  imports: [BasePanel, OwnerForm, Modal, BasicCard],
   templateUrl: './owners-panel.html',
   styleUrl: './owners-panel.scss',
 })

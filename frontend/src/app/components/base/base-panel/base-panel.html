@@ -1,0 +1,15 @@
+<section class="panel">
+  @if (title) {
+  <header>
+    <h1>{{ title }}</h1>
+    <ng-content select="aside"></ng-content>
+  </header>
+  } @if (notification) {
+  <app-notification
+    [message]="notification.message"
+    [type]="notification.type"
+    [closeable]="false"
+  />
+  }
+  <ng-content select="main"></ng-content>
+</section>

@@ -1,6 +1,5 @@
-<section class="panel owners-panel">
-  <h1>Owners</h1>
-  <div class="owners-grid">
+<app-base-panel title="Owners" class="owners-panel">
+  <main>
     @for (owner of owners; track owner.id) {
     <app-basic-card
       badgeText="{{ owner.devices.length }}"
@@ -13,8 +12,8 @@
       [fullWidth]="hasOwners()"
       (onClick)="openAddModal()"
     />
-  </div>
-</section>
+  </main>
+</app-base-panel>
 
 @if (currentOwner && ownerFormMode) {
 <app-modal

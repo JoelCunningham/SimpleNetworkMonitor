@@ -1,83 +1,68 @@
-.devices-panel {
-  header {
+aside {
+  display: flex;
+  gap: 0.5rem;
+
+  .clear-filters {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-
-    .filters {
-      display: flex;
-      gap: 0.5rem;
-
-      .clear-filters {
-        display: flex;
-        align-items: center;
-        background-color: transparent;
-        border: none;
-        font-size: 1rem;
-        padding-right: 7px;
-        padding-top: 20px;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-        color: var(--colour-primary);
-      }
-
-      .clear-filters:hover {
-        box-shadow: none;
-      }
-
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      #timeLimit {
-        width: 5rem;
-        text-align: center;
-      }
-
-      label[for="timeLimit"] {
-        margin: auto;
-        padding-bottom: 4px;
-      }
-    }
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    padding-right: 7px;
+    padding-top: 20px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    color: var(--colour-primary);
   }
 
-  @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      align-items: start;
-      gap: 1rem;
-
-      .filters {
-        flex-direction: column;
-        width: 100%;
-      }
-    }
+  .clear-filters:hover {
+    box-shadow: none;
   }
 
-  .devices-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.5rem;
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
-    .card {
-      border-radius: var(--radius-panel);
-      padding: 1.25rem;
-      display: flex;
-      justify-content: center;
+  #timeLimit {
+    width: 5rem;
+    text-align: center;
+  }
 
-      img {
-        width: 1.5rem;
-        height: 1.5rem;
-        margin-right: 0.5rem;
-      }
+  label[for="timeLimit"] {
+    margin: auto;
+    padding-bottom: 4px;
+  }
+}
 
-      span {
-        font-size: 1.2rem;
-        font-weight: 500;
-      }
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+
+  .card {
+    border-radius: var(--radius-panel);
+    padding: 1.25rem;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.5rem;
+    }
+
+    span {
+      font-size: 1.2rem;
+      font-weight: 500;
     }
   }
 }

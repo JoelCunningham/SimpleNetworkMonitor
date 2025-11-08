@@ -1,19 +1,21 @@
-<section class="panel scan-status-panel">
-  <span class="status-info">
-    Last scan:
-    <time
-      id="lastScanTime"
-      [attr.datetime]="lastScan ? lastScan.toISOString() : 'never'"
+<app-base-panel class="status-panel">
+  <main>
+    <span class="status-info">
+      Last scan:
+      <time
+        id="lastScanTime"
+        [attr.datetime]="lastScan ? lastScan.toISOString() : 'never'"
+      >
+        {{ lastScan ? (lastScan | date : "HH:mm:ss, d MMM yyyy") : "Never" }}
+      </time>
+    </span>
+    <button
+      class="view-button input primary interactive"
+      [class.inactive]="!isLiveView"
+      (click)="toggleViewMode()"
     >
-      {{ lastScan ? (lastScan | date : "HH:mm:ss, d MMM yyyy") : "Never" }}
-    </time>
-  </span>
-  <button
-    class="view-button input primary interactive"
-    [class.inactive]="!isLiveView"
-    (click)="toggleViewMode()"
-  >
-    <app-icon name="refresh" size="20"></app-icon>
-    Live View
-  </button>
-</section>
+      <app-icon name="refresh" size="20"></app-icon>
+      Live View
+    </button>
+  </main>
+</app-base-panel>

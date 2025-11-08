@@ -1,0 +1,22 @@
+.panel {
+  margin: 2rem 0rem;
+  padding: 2rem;
+  background: var(--colour-section-background);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      align-items: start;
+      gap: 1rem;
+    }
+  }
+}
