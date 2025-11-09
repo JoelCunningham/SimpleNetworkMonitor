@@ -1,4 +1,4 @@
-import { BasePanel } from '#components/base/base-panel/base-panel';
+import { BasePanel } from '#components/base/base-panel';
 import { BasicCard } from '#components/cards/basic-card';
 import { OwnerForm } from '#components/forms/owner-form';
 import { Modal } from '#components/partials/modal';

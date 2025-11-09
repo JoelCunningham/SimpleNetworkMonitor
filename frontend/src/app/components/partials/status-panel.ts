@@ -1,4 +1,4 @@
-import { BasePanel } from '#components/base/base-panel/base-panel';
+import { BasePanel } from '#components/base/base-panel';
 import { Icon } from '#components/common/icon';
 import { DeviceService } from '#services/device-service';
 import { DatePipe } from '@angular/common';

@@ -1,4 +1,4 @@
-import { BasePanel } from '#components/base/base-panel/base-panel';
+import { BasePanel } from '#components/base/base-panel';
 import { DeviceCard } from '#components/cards/device-card';
 import { DeviceForm } from '#components/forms/device-form';
 import { Select } from '#components/inputs/select';
