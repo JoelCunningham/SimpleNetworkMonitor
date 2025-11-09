@@ -1,3 +1,4 @@
+import { BaseCard } from '#components/base/base-card';
 import { Icon } from '#components/common/icon';
 import { Device } from '#interfaces/device';
 import { Owner } from '#interfaces/owner';
@@ -19,19 +20,22 @@ import { interval, Subscription } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-device-card',
-  imports: [Icon],
+  imports: [BaseCard, Icon],
   templateUrl: './device-card.html',
   styleUrl: './device-card.scss',
 })
 export class DeviceCard implements OnInit, OnChanges, OnDestroy {
-  @Input() device: Device | null = null;
+  @Input() device!: Device;
   @Input() owner: Owner | null = null;
+
   @Input() showLink: boolean = false;
   @Input() showStatus: boolean = false;
-  @Input() showRemove: boolean = false;
+
+  @Input() removable: boolean = false;
+  @Input() interactive: boolean = true;
 
   @Output() onClick = new EventEmitter<Owner | null>();
-  @Output() cardRemoved = new EventEmitter<Device | null>();
+  @Output() onRemove = new EventEmitter<Device | null>();
 
   protected statusText: string = LastSeenStatus.NEVER;
   protected statusClass: string = DeviceStatus.OFFLINE;
@@ -86,7 +90,11 @@ export class DeviceCard implements OnInit, OnChanges, OnDestroy {
     this.statusClass = this.utilitiesService.getDeviceStatus(this.device);
   }
 
-  handleClick() {
+  click() {
     this.onClick.emit(this.owner);
+  }
+
+  remove() {
+    this.onRemove.emit(this.device);
   }
 }

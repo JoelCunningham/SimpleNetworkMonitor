@@ -16,7 +16,7 @@
     @if (owner.devices.length !== 0) {
     <div class="devices-grid">
       @for (device of owner.devices; track device.id) {
-      <app-device-card [device]="device" [owner]="owner" [showRemove]="false" />
+      <app-device-card [device]="device" [owner]="owner" [removable]="false" />
       }
     </div>
     } @else {
@@ -64,8 +64,9 @@
       <app-device-card
         [device]="device"
         [owner]="owner"
-        [showRemove]="true"
-        (cardRemoved)="removeDevice($event); clearErrors()"
+        [removable]="true"
+        [interactive]="false"
+        (onRemove)="removeDevice($event); clearErrors()"
       />
       }
     </div>

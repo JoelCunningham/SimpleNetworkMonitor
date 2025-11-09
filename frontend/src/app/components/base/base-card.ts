@@ -11,9 +11,8 @@ export class BaseCard<T> {
 
   @Input() primary: boolean = false;
   @Input() selected: boolean = false;
+  @Input() flexible: boolean = true;
   @Input() interactive: boolean = true;
-
-  @Input() fullWidth: boolean = false;
 
   @Output() onClick = new EventEmitter<T | null>();
 
