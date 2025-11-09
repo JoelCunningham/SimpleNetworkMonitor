@@ -1,7 +1,7 @@
 <section class="panel">
-  @if (title) {
+  @if (panelTitle) {
   <header>
-    <h1>{{ title }}</h1>
+    <h1>{{ panelTitle }}</h1>
     <ng-content select="aside"></ng-content>
   </header>
   } @if (notification) {

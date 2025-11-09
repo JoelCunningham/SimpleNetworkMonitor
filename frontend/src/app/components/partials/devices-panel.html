@@ -1,4 +1,4 @@
-<app-base-panel [title]="titleText" [notification]="notification">
+<app-base-panel [panelTitle]="titleText" [notification]="notification">
   <aside>
     @if (selectedCategory || selectedLocation || selectedOwner) {
     <button class="clear-filters interactive" (click)="clearFilters()">

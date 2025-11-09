@@ -9,6 +9,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './base-panel.scss',
 })
 export class BasePanel {
-  @Input() title: string | null = null;
+  @Input() panelTitle: string | null = null;
   @Input() notification: Notification | null = null;
 }
