@@ -1,0 +1,15 @@
+<article
+  class="card"
+  [class.primary]="primary"
+  [class.selected]="selected"
+  [class.full-width]="fullWidth"
+  [class.interactive]="interactive"
+  (click)="click()"
+>
+  <ng-content select="app-icon"></ng-content>
+  <span class="title">{{ title }}</span>
+  <ng-content select="span"></ng-content>
+  @if (removable) {
+  <app-icon class="remove-button" name="close" size="24" (click)="remove()" />
+  }
+</article>

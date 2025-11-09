@@ -1,17 +1,24 @@
 <app-base-panel title="Owners">
   <main>
     @for (owner of owners; track owner.id) {
-    <app-basic-card
-      badgeText="{{ owner.devices.length }}"
-      [data]="{ value: owner.id, label: owner.name }"
+    <app-base-card
+      [value]="owner.id"
+      [title]="owner.name"
       (onClick)="openViewModal(owner)"
-    />
+    >
+      <span class="card-badge">
+        {{ owner.devices.length }}
+      </span>
+    </app-base-card>
     }
-    <app-basic-card
-      [addText]="'owner'"
+    <app-base-card
+      title="Add Owner"
+      [primary]="true"
       [fullWidth]="hasOwners()"
       (onClick)="openAddModal()"
-    />
+    >
+      <app-icon class="add-card" name="add" size="24" />
+    </app-base-card>
   </main>
 </app-base-panel>
 

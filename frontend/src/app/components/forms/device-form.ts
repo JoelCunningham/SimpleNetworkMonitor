@@ -1,4 +1,4 @@
-import { BasicCard } from '#components/cards/basic-card';
+import { BaseCard } from '#components/base/base-card';
 import { Icon } from '#components/common/icon';
 import { Notification } from '#components/common/notification';
 import { FormSection } from '#components/forms/form-section';
@@ -34,11 +34,11 @@ import { Subscription } from 'rxjs';
   standalone: true,
   selector: 'app-device-form',
   imports: [
+    BaseCard,
     DatePipe,
     FormsModule,
     Select,
     Notification,
-    BasicCard,
     FormSection,
     Checkbox,
     Icon,

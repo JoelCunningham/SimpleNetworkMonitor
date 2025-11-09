@@ -33,23 +33,22 @@
     <label>Macs</label>
     <ul class="mac-list">
       @for (mac of getSortedMacs(device.macs); track mac.id) {
-      <app-basic-card
-        [data]="{ value: mac.id, label: mac.address }"
+      <app-base-card
+        [title]="mac.address"
+        [value]="mac.id"
         [selected]="mac.id === currentMac?.id"
         (onClick)="selectMac(mac)"
-        padding="0.75rem"
-      ></app-basic-card>
+      ></app-base-card>
       }
     </ul>
   </div>
   } @else {
   <div class="form-group macs-group">
     <ul class="mac-list">
-      <app-basic-card
-        [data]="{ value: 0, label: device.primary_mac.address }"
-        [disabled]="true"
-        padding="0.75rem"
-      ></app-basic-card>
+      <app-base-card
+        [title]="device.primary_mac.address"
+        [interactive]="false"
+      ></app-base-card>
     </ul>
   </div>
   }
@@ -260,12 +259,13 @@
     <label>Macs</label>
     <ul>
       @for (mac of newMacs; track mac.id) {
-      <app-basic-card
-        [data]="{ value: mac.id, label: mac.address }"
-        [showRemove]="true"
-        (onClick)="removeMac(mac)"
-        padding="0.75rem"
-      ></app-basic-card>
+      <app-base-card
+        [title]="mac.address"
+        [value]="mac.id"
+        [removable]="true"
+        [interactive]="false"
+        (onRemove)="removeMac(mac)"
+      ></app-base-card>
       }
     </ul>
   </div>

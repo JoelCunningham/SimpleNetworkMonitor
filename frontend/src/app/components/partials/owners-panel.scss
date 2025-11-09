@@ -2,5 +2,17 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
-  margin-top: 1rem;
+
+  .card-badge {
+    color: var(--colour-white);
+    background: var(--colour-primary);
+    border-radius: var(--radius-circle);
+    padding: 0.25rem 0.7rem;
+    font-size: 1rem;
+  }
+
+  .add-card {
+    transform: translateY(2px);
+    color: var(--colour-white);
+  }
 }
