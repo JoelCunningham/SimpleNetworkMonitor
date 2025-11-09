@@ -6,7 +6,7 @@
       [title]="owner.name"
       (onClick)="openViewModal(owner)"
     >
-      <span class="card-badge">
+      <span class="after card-badge">
         {{ owner.devices.length }}
       </span>
     </app-base-card>
@@ -17,7 +17,7 @@
       [fullWidth]="hasOwners()"
       (onClick)="openAddModal()"
     >
-      <app-icon class="add-card" name="add" size="24" />
+      <app-icon class="before add-card" name="add" size="24" />
     </app-base-card>
   </main>
 </app-base-panel>

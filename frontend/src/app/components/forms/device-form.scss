@@ -43,6 +43,17 @@
       margin-bottom: 0;
     }
 
+    .remove-button {
+      color: var(--colour-primary);
+      transform: translateY(2px);
+      cursor: pointer;
+      transition: transform var(--duration-fast) ease;
+
+      &:hover {
+        transform: scale(1.2) translateY(2px);
+      }
+    }
+
     span {
       margin: 0.85rem 0;
     }
@@ -126,6 +137,7 @@
     }
   }
 }
+
 app-checkbox {
   margin-top: 1.8rem;
 }

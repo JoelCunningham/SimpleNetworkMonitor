@@ -262,10 +262,15 @@
       <app-base-card
         [title]="mac.address"
         [value]="mac.id"
-        [removable]="true"
         [interactive]="false"
-        (onRemove)="removeMac(mac)"
-      ></app-base-card>
+      >
+        <app-icon
+          class="after remove-button"
+          name="close"
+          size="24"
+          (click)="removeMac(mac)"
+        />
+      </app-base-card>
       }
     </ul>
   </div>

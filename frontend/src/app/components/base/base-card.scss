@@ -24,10 +24,6 @@
     display: flex;
   }
 
-  &.static {
-    cursor: default;
-  }
-
   &.interactive:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
@@ -38,17 +34,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0 0.5rem;
-  }
-
-  .remove-button {
-    color: var(--colour-primary);
-    margin-left: 0.5rem;
-    transform: translateY(2px);
-    cursor: pointer;
-    transition: transform var(--duration-fast) ease;
-
-    &:hover {
-      transform: scale(1.2) translateY(2px);
-    }
   }
 }
