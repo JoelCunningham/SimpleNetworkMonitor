@@ -1,8 +1,8 @@
 import { BasePanel } from '#components/base/base-panel';
+import { LastScanText } from '#components/status-panel/last-scan-text';
 import { LiveViewButton } from '#components/status-panel/live-view-button';
 import { DeviceService } from '#services/device-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { LastScanText } from './last-scan-text';
 
 @Component({
   selector: 'app-status-panel',
@@ -18,8 +18,10 @@ export class StatusPanel {
     private cdr: ChangeDetectorRef
   ) {
     this.deviceService.lastRefresh.subscribe((date) => {
-      this.lastScan = date;
-      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.lastScan = date;
+        this.cdr.detectChanges();
+      });
     });
   }
 
