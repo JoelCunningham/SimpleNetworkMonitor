@@ -1,11 +1,6 @@
 <app-base-panel>
   <main>
-    <span class="status-info">
-      Last scan:
-      <time id="lastScanTime" [attr.datetime]="lastScan">
-        {{ lastScanFormatted() }}
-      </time>
-    </span>
+    <app-last-scan-text [lastScan]="lastScan" />
     <app-live-view-button (onChange)="toggleViewMode($event)" />
   </main>
 </app-base-panel>

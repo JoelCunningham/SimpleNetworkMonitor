@@ -2,10 +2,11 @@ import { BasePanel } from '#components/base/base-panel';
 import { LiveViewButton } from '#components/status-panel/live-view-button';
 import { DeviceService } from '#services/device-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { LastScanText } from './last-scan-text';
 
 @Component({
   selector: 'app-status-panel',
-  imports: [BasePanel, LiveViewButton],
+  imports: [BasePanel, LastScanText, LiveViewButton],
   templateUrl: './status-panel.html',
   styleUrl: './status-panel.scss',
 })
@@ -20,10 +21,6 @@ export class StatusPanel {
       this.lastScan = date;
       this.cdr.detectChanges();
     });
-  }
-
-  lastScanFormatted() {
-    return this.lastScan ? new Date(this.lastScan).toLocaleString() : 'Never';
   }
 
   toggleViewMode(isLiveView: boolean) {
