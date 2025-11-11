@@ -2,11 +2,8 @@
   <main>
     <span class="status-info">
       Last scan:
-      <time
-        id="lastScanTime"
-        [attr.datetime]="lastScan ? lastScan.toISOString() : 'never'"
-      >
-        {{ lastScan ? (lastScan | date : "HH:mm:ss, d MMM yyyy") : "Never" }}
+      <time id="lastScanTime" [attr.datetime]="lastScan">
+        {{ lastScanFormatted() }}
       </time>
     </span>
     <button

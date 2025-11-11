@@ -19,11 +19,15 @@ export class StatusPanel {
     private cdr: ChangeDetectorRef
   ) {
     this.deviceService.lastRefresh.subscribe((date) => {
-      setTimeout(() => {
-        this.lastScan = date;
-        this.cdr.detectChanges();
-      });
+      this.lastScan = date;
+      this.cdr.detectChanges();
     });
+  }
+
+  lastScanFormatted() {
+    return this.lastScan
+      ? new DatePipe('en-US').transform(this.lastScan, 'short')
+      : 'Never';
   }
 
   toggleViewMode() {
