@@ -2,3 +2,4 @@
 - [ ] mobile view
 - [ ] dropdowns
 - [ ] split device panel
+- [ ] tests

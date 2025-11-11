@@ -1,5 +1,5 @@
 import { BasePanel } from '#components/base/base-panel';
-import { LiveViewButton } from '#components/unsorted/live-view-button';
+import { LiveViewButton } from '#components/status-panel/live-view-button';
 import { DeviceService } from '#services/device-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 
