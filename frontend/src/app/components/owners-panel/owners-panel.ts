@@ -1,4 +1,3 @@
-import { BaseCard } from '#components/base/base-card';
 import { BasePanel } from '#components/base/base-panel';
 import { OwnerForm } from '#components/forms/owner-form';
 import { Modal } from '#components/partials/modal';
@@ -6,12 +5,13 @@ import { Owner } from '#interfaces/owner';
 import { OwnerService } from '#services/owner-service';
 import { FormMode } from '#types/form-mode';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Icon } from '#components/common/icon';
+import { AddOwnerCard } from './add-owner-card';
+import { OwnerCard } from './owner-card';
 
 @Component({
   standalone: true,
   selector: 'app-owners-panel',
-  imports: [BasePanel, BaseCard, OwnerForm, Modal, Icon],
+  imports: [BasePanel, OwnerCard, AddOwnerCard, OwnerForm, Modal],
   templateUrl: './owners-panel.html',
   styleUrl: './owners-panel.scss',
 })

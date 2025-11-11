@@ -1,0 +1,5 @@
+<app-base-card [value]="owner.id" [title]="owner.name" (onClick)="click(owner)">
+  <span class="after card-badge">
+    {{ owner.devices.length }}
+  </span>
+</app-base-card>
