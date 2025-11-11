@@ -3,6 +3,7 @@ import { Notification } from '#interfaces/notification';
 import { Component, Input } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-base-panel',
   imports: [AppNotification],
   templateUrl: './base-panel.html',

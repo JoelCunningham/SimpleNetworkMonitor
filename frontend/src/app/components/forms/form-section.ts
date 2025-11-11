@@ -2,6 +2,7 @@ import { Icon } from '#components/common/icon';
 import { Component, Input } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-form-section',
   imports: [Icon],
   templateUrl: './form-section.html',

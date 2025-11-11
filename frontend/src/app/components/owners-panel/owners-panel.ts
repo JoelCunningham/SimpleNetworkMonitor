@@ -1,12 +1,12 @@
 import { BasePanel } from '#components/base/base-panel';
-import { OwnerForm } from '#components/forms/owner-form';
+import { AddOwnerCard } from '#components/owners-panel/add-owner-card';
+import { OwnerCard } from '#components/owners-panel/owner-card';
+import { OwnerForm } from '#components/owners-panel/owner-form/owner-form';
 import { Modal } from '#components/partials/modal';
 import { Owner } from '#interfaces/owner';
 import { OwnerService } from '#services/owner-service';
 import { FormMode } from '#types/form-mode';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AddOwnerCard } from './add-owner-card';
-import { OwnerCard } from './owner-card';
 
 @Component({
   standalone: true,

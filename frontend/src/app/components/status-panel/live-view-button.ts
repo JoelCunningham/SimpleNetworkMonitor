@@ -2,6 +2,7 @@ import { Icon } from '#components/common/icon';
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-live-view-button',
   imports: [Icon],
   templateUrl: './live-view-button.html',

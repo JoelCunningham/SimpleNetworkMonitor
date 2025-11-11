@@ -3,6 +3,7 @@ import { Icon } from '#components/common/icon';
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-add-owner-card',
   imports: [BaseCard, Icon],
   templateUrl: './add-owner-card.html',

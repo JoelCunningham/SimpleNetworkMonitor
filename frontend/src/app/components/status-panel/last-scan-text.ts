@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-last-scan-text',
   imports: [],
   templateUrl: './last-scan-text.html',

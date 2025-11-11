@@ -3,6 +3,7 @@ import { Owner } from '#interfaces/owner';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-owner-card',
   imports: [BaseCard],
   templateUrl: './owner-card.html',
