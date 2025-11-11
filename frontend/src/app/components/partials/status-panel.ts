@@ -1,12 +1,11 @@
 import { BasePanel } from '#components/base/base-panel';
 import { Icon } from '#components/common/icon';
 import { DeviceService } from '#services/device-service';
-import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
   selector: 'app-status-panel',
-  imports: [BasePanel, Icon, DatePipe],
+  imports: [BasePanel, Icon],
   templateUrl: './status-panel.html',
   styleUrl: './status-panel.scss',
 })
@@ -25,9 +24,7 @@ export class StatusPanel {
   }
 
   lastScanFormatted() {
-    return this.lastScan
-      ? new DatePipe('en-US').transform(this.lastScan, 'short')
-      : 'Never';
+    return this.lastScan ? new Date(this.lastScan).toLocaleString() : 'Never';
   }
 
   toggleViewMode() {
