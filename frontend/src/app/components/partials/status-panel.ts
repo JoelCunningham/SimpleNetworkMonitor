@@ -1,16 +1,15 @@
 import { BasePanel } from '#components/base/base-panel';
-import { Icon } from '#components/common/icon';
+import { LiveViewButton } from '#components/unsorted/live-view-button';
 import { DeviceService } from '#services/device-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
   selector: 'app-status-panel',
-  imports: [BasePanel, Icon],
+  imports: [BasePanel, LiveViewButton],
   templateUrl: './status-panel.html',
   styleUrl: './status-panel.scss',
 })
 export class StatusPanel {
-  protected isLiveView = true;
   protected lastScan: Date | null = null;
 
   constructor(
@@ -27,8 +26,7 @@ export class StatusPanel {
     return this.lastScan ? new Date(this.lastScan).toLocaleString() : 'Never';
   }
 
-  toggleViewMode() {
-    this.isLiveView = !this.isLiveView;
-    this.deviceService.setAutoRefresh(this.isLiveView);
+  toggleViewMode(isLiveView: boolean) {
+    this.deviceService.setAutoRefresh(isLiveView);
   }
 }

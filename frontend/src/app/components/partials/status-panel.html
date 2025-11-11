@@ -6,13 +6,6 @@
         {{ lastScanFormatted() }}
       </time>
     </span>
-    <button
-      class="view-button input primary interactive"
-      [class.inactive]="!isLiveView"
-      (click)="toggleViewMode()"
-    >
-      <app-icon name="refresh" size="20"></app-icon>
-      Live View
-    </button>
+    <app-live-view-button (onChange)="toggleViewMode($event)" />
   </main>
 </app-base-panel>

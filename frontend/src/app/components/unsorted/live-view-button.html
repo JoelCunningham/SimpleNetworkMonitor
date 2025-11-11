@@ -1,0 +1,8 @@
+<button
+  class="input primary interactive"
+  [class.inactive]="!isLiveView"
+  (click)="toggleViewMode()"
+>
+  <app-icon name="refresh" size="20"></app-icon>
+  Live View
+</button>
