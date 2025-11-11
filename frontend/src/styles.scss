@@ -173,3 +173,21 @@ main {
     box-shadow: none;
   }
 }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+
+  span {
+    margin: 0.85rem 0;
+  }
+
+  label {
+    color: var(--colour-light-grey);
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+}

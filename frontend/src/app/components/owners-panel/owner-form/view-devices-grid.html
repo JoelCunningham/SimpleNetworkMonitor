@@ -1,0 +1,12 @@
+<div class="form-group">
+  <label class="label">Devices</label>
+  @if (owner.devices) {
+  <div class="devices-grid">
+    @for (device of owner.devices; track device.id) {
+    <app-device-card [device]="device" [owner]="owner" [removable]="false" />
+    }
+  </div>
+  } @else {
+  <span class="value">No devices assigned</span>
+  }
+</div>

@@ -5,40 +5,11 @@
   (onClose)="clearErrors()"
 />
 @if (isViewMode()) {
-<div class="owner-form owner-view">
-  <div class="form-group">
-    <label>Owner Name</label>
-    <span>{{ owner.name }}</span>
-  </div>
-
-  <div class="form-group">
-    <label>Devices</label>
-    @if (owner.devices.length !== 0) {
-    <div class="devices-grid">
-      @for (device of owner.devices; track device.id) {
-      <app-device-card [device]="device" [owner]="owner" [removable]="false" />
-      }
-    </div>
-    } @else {
-    <span>No devices assigned</span>
-    }
-  </div>
-
-  <div class="form-actions">
-    <div class="form-buttons">
-      <button
-        class="input secondary interactive"
-        (click)="setMode(editMode)"
-        [disabled]="!owner"
-      >
-        Edit
-      </button>
-      <button class="input primary interactive" (click)="deleteOwner()">
-        Delete
-      </button>
-    </div>
-  </div>
-</div>
+<app-view-owner-form
+  [owner]="owner"
+  (onEdit)="setMode(editMode)"
+  (onDelete)="deleteOwner()"
+/>
 } @else {
 <form (ngSubmit)="submitForm()" class="owner-form">
   <div class="form-group">

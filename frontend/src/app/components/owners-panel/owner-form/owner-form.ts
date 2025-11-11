@@ -1,6 +1,7 @@
 import { DeviceCard } from '#components/cards/device-card';
 import { Notification } from '#components/common/notification';
 import { Select } from '#components/inputs/select';
+import { ViewOwnerForm } from '#components/owners-panel/owner-form/view-owner-form';
 import { Device } from '#interfaces/device';
 import { Option, Value } from '#interfaces/option';
 import { Owner } from '#interfaces/owner';
@@ -23,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   standalone: true,
   selector: 'app-owner-form',
-  imports: [FormsModule, Select, DeviceCard, Notification],
+  imports: [FormsModule, ViewOwnerForm, Select, DeviceCard, Notification],
   templateUrl: './owner-form.html',
   styleUrl: './owner-form.scss',
 })

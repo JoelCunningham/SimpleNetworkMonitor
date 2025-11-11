@@ -45,18 +45,6 @@
     }
   }
 
-  &.owner-view {
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-
-      .form-buttons {
-        display: flex;
-        gap: 1rem;
-      }
-    }
-  }
-
   .form-actions {
     display: flex;
     justify-content: space-between;
