@@ -1,4 +1,4 @@
-<div class="form-buttons">
+<div class="form-actions">
   <app-select
     [css]="'primary left'"
     [options]="devices"
@@ -8,6 +8,10 @@
     [isReversed]="true"
     (optionSelected)="selectDevice($event)"
   />
-  <button class="input secondary interactive" (click)="cancel()">Cancel</button>
-  <button class="input primary interactive" (click)="add()">Add Owner</button>
+  <div class="form-buttons">
+    <button class="input secondary interactive" (click)="cancel()">
+      Cancel
+    </button>
+    <button class="input primary interactive" (click)="add()">Add Owner</button>
+  </div>
 </div>

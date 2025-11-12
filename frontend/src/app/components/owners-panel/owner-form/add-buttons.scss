@@ -1,4 +1,9 @@
-.form-buttons {
+.form-actions {
   display: flex;
-  gap: 1rem;
+
+  .form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;
+  }
 }
