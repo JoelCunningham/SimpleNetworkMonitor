@@ -20,11 +20,19 @@ import {
   Output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { EditOwnerForm } from './edit-owner-form';
 
 @Component({
   standalone: true,
   selector: 'app-owner-form',
-  imports: [FormsModule, ViewOwnerForm, Select, DeviceCard, Notification],
+  imports: [
+    FormsModule,
+    ViewOwnerForm,
+    EditOwnerForm,
+    Select,
+    DeviceCard,
+    Notification,
+  ],
   templateUrl: './owner-form.html',
   styleUrl: './owner-form.scss',
 })
@@ -142,6 +150,7 @@ export class OwnerForm implements OnInit, OnChanges {
       ];
       this.newDevices = this.newDevices.filter((d) => d !== device);
     }
+    this.cdr.detectChanges();
   }
 
   cancelEdit() {

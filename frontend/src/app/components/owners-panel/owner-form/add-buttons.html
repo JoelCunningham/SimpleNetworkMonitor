@@ -1,0 +1,13 @@
+<div class="form-buttons">
+  <app-select
+    [css]="'primary left'"
+    [options]="devices"
+    [placeholder]="'Assign a device'"
+    [isClearable]="false"
+    [isPersistent]="false"
+    [isReversed]="true"
+    (optionSelected)="selectDevice($event)"
+  />
+  <button class="input secondary interactive" (click)="cancel()">Cancel</button>
+  <button class="input primary interactive" (click)="add()">Add Owner</button>
+</div>

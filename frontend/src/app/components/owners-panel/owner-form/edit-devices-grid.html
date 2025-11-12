@@ -1,0 +1,16 @@
+@if (owner.devices) {
+<div class="form-group">
+  <label class="label">Devices</label>
+  <div class="devices-grid">
+    @for (device of owner.devices; track device.id) {
+    <app-device-card
+      [device]="device"
+      [owner]="owner"
+      [removable]="true"
+      [interactive]="false"
+      (onRemove)="removeDevice($event)"
+    />
+    }
+  </div>
+</div>
+}

@@ -1,5 +1,5 @@
 <div class="owner-form">
-  <app-field-view label="Owner Name" [value]="owner.name" />
+  <app-view-field label="Owner Name" [value]="owner.name" />
   <app-view-devices-grid [owner]="owner" />
   <app-view-buttons (onEdit)="edit()" (onDelete)="delete()" />
 </div>

@@ -1,4 +1,4 @@
-import { FieldView } from '#components/common/field-view';
+import { ViewField } from '#components/common/view-field';
 import { Owner } from '#interfaces/owner';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ViewButtons } from './view-buttons';
@@ -7,7 +7,7 @@ import { ViewDevicesGrid } from './view-devices-grid';
 @Component({
   standalone: true,
   selector: 'app-view-owner-form',
-  imports: [FieldView, ViewDevicesGrid, ViewButtons],
+  imports: [ViewField, ViewDevicesGrid, ViewButtons],
   templateUrl: './view-owner-form.html',
   styleUrl: './view-owner-form.scss',
 })

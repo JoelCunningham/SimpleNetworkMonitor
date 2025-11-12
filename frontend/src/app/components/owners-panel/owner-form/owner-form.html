@@ -10,6 +10,16 @@
   (onEdit)="setMode(editMode)"
   (onDelete)="deleteOwner()"
 />
+} @else if (isEditMode()) {
+<app-edit-owner-form
+  [owner]="owner"
+  [devices]="newDevices"
+  [availableDevices]="deviceOptions"
+  (onSave)="submitForm()"
+  (onCancel)="cancelEdit()"
+  (onSelectDevice)="addDevice($event)"
+  (onRemoveDevice)="removeDevice($event)"
+/>
 } @else {
 <form (ngSubmit)="submitForm()" class="owner-form">
   <div class="form-group">
@@ -51,7 +61,7 @@
       [placeholder]="'Assign a device'"
       [isClearable]="false"
       [isPersistent]="false"
-      [IsReversed]="true"
+      [isReversed]="true"
       (optionSelected)="addDevice($event); clearErrors()"
     />
     <div class="form-buttons">

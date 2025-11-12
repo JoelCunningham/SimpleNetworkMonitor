@@ -1,0 +1,29 @@
+import { Select } from '#components/inputs/select';
+import { Option, Value } from '#interfaces/option';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-edit-buttons',
+  imports: [Select],
+  templateUrl: './edit-buttons.html',
+  styleUrl: './edit-buttons.scss',
+})
+export class EditButtons {
+  @Input() devices: Option[] = [];
+
+  @Output() onSave = new EventEmitter<void>();
+  @Output() onCancel = new EventEmitter<void>();
+  @Output() onSelectDevice = new EventEmitter<Value>();
+
+  save() {
+    this.onSave.emit();
+  }
+
+  cancel() {
+    this.onCancel.emit();
+  }
+
+  selectDevice(deviceId: Value) {
+    this.onSelectDevice.emit(deviceId);
+  }
+}

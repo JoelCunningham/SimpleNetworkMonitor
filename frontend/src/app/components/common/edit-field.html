@@ -1,0 +1,13 @@
+<div class="form-group">
+  <label class="label">{{ label }}</label>
+  <input
+    type="text"
+    class="input secondary interactive"
+    [id]="label"
+    [name]="label"
+    [placeholder]="placeholder"
+    [class.error]="hasError"
+    (input)="clearError()"
+    [(ngModel)]="value"
+  />
+</div>
