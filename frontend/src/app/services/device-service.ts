@@ -16,16 +16,16 @@ export class DeviceService {
   public lastRefresh = this.lastRefreshSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    this.loadDevices();
+    this.refreshDevices();
 
     interval(60000).subscribe(() => {
       if (this.doRefresh) {
-        this.loadDevices();
+        this.refreshDevices();
       }
     });
   }
 
-  private loadDevices(): void {
+  refreshDevices(): void {
     this.http.get<Device[]>(this.apiUrl).subscribe({
       next: (devices) => {
         this.devicesSubject.next(devices);
@@ -43,16 +43,16 @@ export class DeviceService {
 
   createDevice(device: DeviceRequest): Observable<Device> {
     return this.http.post<Device>(this.apiUrl, device).pipe(
-      tap(() => {
-        this.loadDevices();
+      tap((newDevice) => {
+        this.mergeDevices(newDevice);
       })
     );
   }
 
   updateDevice(id: number, device: DeviceRequest): Observable<Device> {
     return this.http.put<Device>(`${this.apiUrl}/${id}`, device).pipe(
-      tap(() => {
-        this.loadDevices();
+      tap((updatedDevice) => {
+        this.mergeDevices(updatedDevice);
       })
     );
   }
@@ -60,15 +60,49 @@ export class DeviceService {
   deleteDevice(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       tap(() => {
-        this.loadDevices();
+        this.removeDevice(id);
       })
     );
+  }
+
+  mergeDevices(device: Device): void {
+    const currentDevices = [...this.devicesSubject.value];
+
+    const index = currentDevices.findIndex((d) => d.id === device.id);
+    if (index !== -1) {
+      currentDevices[index] = device;
+    } else {
+      currentDevices.push(device);
+    }
+
+    this.devicesSubject.next(currentDevices);
+  }
+
+  removeDevice(id: number): void {
+    const current = [...this.devicesSubject.value];
+    const filtered = current.filter((d) => d.id !== id);
+    this.devicesSubject.next(filtered);
+  }
+
+  removeOwnerFromDevices(id: number): void {
+    const current = [...this.devicesSubject.value];
+
+    const updated = current.map((d) => {
+      if (d.owner && d.owner.id === id) {
+        return { ...d, owner: null } as Device;
+      }
+      return d;
+    });
+
+    if (updated !== current) {
+      this.devicesSubject.next(updated);
+    }
   }
 
   setAutoRefresh(enabled: boolean): void {
     this.doRefresh = enabled;
     if (enabled) {
-      this.loadDevices();
+      this.refreshDevices();
     }
   }
 }

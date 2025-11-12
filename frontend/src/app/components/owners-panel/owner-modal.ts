@@ -1,5 +1,6 @@
 import { Modal } from '#components/partials/modal';
 import { Owner } from '#interfaces/owner';
+import { OwnerService } from '#services/owner-service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EditOwnerForm } from './owner-form/edit-owner-form';
 import { ViewOwnerForm } from './owner-form/view-owner-form';
@@ -15,13 +16,23 @@ export class OwnerModal {
   @Input() isOpen: boolean = false;
 
   @Output() onClose = new EventEmitter<void>();
-  @Output() onUpdate = new EventEmitter<Owner>();
-  @Output() onDelete = new EventEmitter<Owner>();
+  @Output() onDelete = new EventEmitter<void>();
 
   protected isViewMode: boolean = true;
 
+  constructor(private ownerService: OwnerService) {}
+
   ngOnChanges() {
     this.isViewMode = this.owner.id !== 0;
+
+    this.ownerService.currentOwners().subscribe((owners: Owner[]) => {
+      if (this.owner.id && this.owner.id !== 0) {
+        const updated = owners.find((o: Owner) => o.id === this.owner.id);
+        if (updated) {
+          this.owner = updated;
+        }
+      }
+    });
   }
 
   getModalTitle(): string | null {
@@ -47,11 +58,10 @@ export class OwnerModal {
   onFormUpdate(owner: Owner) {
     this.owner = owner;
     this.setViewMode(true);
-    this.onUpdate.emit(owner);
   }
 
-  onFormDelete(owner: Owner) {
+  onFormDelete() {
     this.setViewMode(true);
-    this.onDelete.emit(owner);
+    this.onDelete.emit();
   }
 }

@@ -48,19 +48,4 @@ export class OwnersPanel {
   handleModalClose() {
     this.showOwnerModal = false;
   }
-
-  handleOwnerUpdate(owner: Owner) {
-    const ownerIndex = this.owners.findIndex((o) => o.id === owner.id);
-    if (ownerIndex !== -1) {
-      this.owners[ownerIndex] = owner;
-    } else {
-      this.owners.push(owner);
-    }
-  }
-
-  handleOwnerDelete(owner: Owner) {
-    this.owners = this.owners.filter((o) => o.id !== owner.id);
-    this.currentOwner = null;
-    this.showOwnerModal = false;
-  }
 }

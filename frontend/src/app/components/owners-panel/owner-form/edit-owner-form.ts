@@ -1,7 +1,8 @@
 import { EditField } from '#components/common/edit-field';
+import { Notification } from '#components/common/notification';
 import { Device } from '#interfaces/device';
 import { Option, Value } from '#interfaces/option';
-import { Owner } from '#interfaces/owner';
+import { Owner, OwnerRequest } from '#interfaces/owner';
 import { DeviceService } from '#services/device-service';
 import { OwnerService } from '#services/owner-service';
 import { UtilitiesService } from '#services/utilities-service';
@@ -16,7 +17,6 @@ import {
 } from '@angular/core';
 import { EditButtons } from './edit-buttons';
 import { EditDevicesGrid } from './edit-devices-grid';
-import { Notification } from '#components/common/notification';
 
 @Component({
   standalone: true,
@@ -30,6 +30,8 @@ export class EditOwnerForm {
 
   @Output() onSubmit = new EventEmitter<Owner>();
   @Output() onCancel = new EventEmitter<void>();
+
+  protected editOwner!: Owner;
 
   protected allOwners: Owner[] = [];
   protected allDevices: Device[] = [];
@@ -69,10 +71,14 @@ export class EditOwnerForm {
     });
   }
 
+  ngOnChanges() {
+    this.editOwner = { ...this.owner };
+  }
+
   selectDevice(deviceId: Value) {
     const device = this.allDevices.find((d) => d.id === deviceId);
     if (device) {
-      this.owner.devices = [...this.owner.devices, device];
+      this.editOwner.devices = [...(this.editOwner.devices || []), device];
       this.unassignedDevices = this.unassignedDevices.filter(
         (d) => d.value !== device.id
       );
@@ -87,7 +93,9 @@ export class EditOwnerForm {
         label: this.utilitiesService.getDisplayName(device),
       },
     ];
-    this.owner.devices = this.owner.devices.filter((d) => d !== device);
+    this.editOwner.devices = (this.editOwner.devices || []).filter(
+      (d) => d !== device
+    );
   }
 
   clearErrors() {
@@ -96,17 +104,19 @@ export class EditOwnerForm {
   }
 
   validateName() {
-    if (!this.owner.name || !this.owner.name.trim()) {
+    if (!this.editOwner.name || !this.editOwner.name.trim()) {
       return 'Owner name is required.';
     }
-    if (this.RESERVED_NAMES.includes(this.owner.name.trim().toLowerCase())) {
-      return `Owner name cannot be "${this.owner.name}".`;
+    if (
+      this.RESERVED_NAMES.includes(this.editOwner.name.trim().toLowerCase())
+    ) {
+      return `Owner name cannot be "${this.editOwner.name}".`;
     }
     const isTaken = this.allOwners.some(
-      (o) => o.name === this.owner.name && o.id !== this.owner.id
+      (o) => o.name === this.editOwner.name && o.id !== this.editOwner.id
     );
     if (isTaken) {
-      return `An owner with the name "${this.owner.name}" already exists.`;
+      return `An owner with the name "${this.editOwner.name}" already exists.`;
     }
     return null;
   }
@@ -121,9 +131,15 @@ export class EditOwnerForm {
       return;
     }
 
-    if (this.owner.id === 0) {
-      this.ownerService.createOwner(this.owner).subscribe({
-        next: (owner: Owner) => {
+    const ownerRequest: OwnerRequest = {
+      name: this.editOwner.name,
+      device_ids: this.editOwner.devices.map((device) => device.id),
+    };
+
+    if (this.editOwner.id === 0) {
+      this.ownerService.createOwner(ownerRequest).subscribe({
+        next: (owner) => {
+          // emit full owner so UI can replace temp object immediately
           this.onSubmit.emit(owner);
         },
         error: () => {
@@ -132,8 +148,9 @@ export class EditOwnerForm {
         },
       });
     } else {
-      this.ownerService.updateOwner(this.owner).subscribe({
-        next: (owner: Owner) => {
+      this.ownerService.updateOwner(this.owner.id, ownerRequest).subscribe({
+        next: (owner) => {
+          // emit full owner so UI can update immediately
           this.onSubmit.emit(owner);
         },
         error: () => {

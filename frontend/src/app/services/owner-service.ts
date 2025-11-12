@@ -1,4 +1,5 @@
-import { Owner } from '#interfaces/owner';
+import { Owner, OwnerRequest } from '#interfaces/owner';
+import { DeviceService } from '#services/device-service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
@@ -10,11 +11,11 @@ export class OwnerService {
 
   public owners = this.ownersSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadOwners();
+  constructor(private http: HttpClient, private deviceService: DeviceService) {
+    this.refreshOwners();
   }
 
-  private loadOwners(): void {
+  refreshOwners(): void {
     this.http.get<Owner[]>(this.apiUrl).subscribe((owners) => {
       owners.forEach((owner) =>
         owner.devices.forEach((device) => (device.owner = owner))
@@ -27,55 +28,57 @@ export class OwnerService {
     return this.owners;
   }
 
-  createOwner(owner: Owner): Observable<Owner> {
-    const request: OwnerRequest = {
-      name: owner.name,
-      device_ids: owner.devices.map((device) => device.id),
-    };
-
-    return this.http.post<Owner>(this.apiUrl, request).pipe(
+  createOwner(owner: OwnerRequest): Observable<Owner> {
+    return this.http.post<Owner>(this.apiUrl, owner).pipe(
       tap((newOwner) => {
-        const currentOwners = this.ownersSubject.value;
-        this.ownersSubject.next([...currentOwners, newOwner]);
+        this.mergeOwners(newOwner);
       })
     );
   }
 
-  updateOwner(owner: Owner): Observable<Owner> {
-    const request: OwnerRequest = {
-      name: owner.name,
-      device_ids: owner.devices.map((device) => device.id),
-    };
-
-    return this.http.put<Owner>(`${this.apiUrl}/${owner.id}`, request).pipe(
+  updateOwner(id: number, owner: OwnerRequest): Observable<Owner> {
+    return this.http.put<Owner>(`${this.apiUrl}/${id}`, owner).pipe(
       tap((updatedOwner) => {
-        const currentOwners = this.ownersSubject.value;
-        const index = currentOwners.findIndex((o) => o.id === owner.id);
-        if (index !== -1) {
-          const newOwners = [...currentOwners];
-          newOwners[index] = updatedOwner;
-          this.ownersSubject.next(newOwners);
-        }
+        this.mergeOwners(updatedOwner);
       })
     );
   }
 
-  deleteOwner(ownerId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${ownerId}`).pipe(
+  deleteOwner(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       tap(() => {
-        const currentOwners = this.ownersSubject.value;
-        const filteredOwners = currentOwners.filter((o) => o.id !== ownerId);
-        this.ownersSubject.next(filteredOwners);
+        this.removeOwner(id);
       })
     );
   }
 
-  refreshOwners(): void {
-    this.loadOwners();
-  }
-}
+  private mergeOwners(owner: Owner): void {
+    const currentOwners = [...this.ownersSubject.value];
 
-interface OwnerRequest {
-  name: string;
-  device_ids: number[];
+    if (owner.devices) {
+      owner.devices.forEach((device) => (device.owner = owner));
+    }
+
+    const index = currentOwners.findIndex((o) => o.id === owner.id);
+    if (index !== -1) {
+      currentOwners[index] = owner;
+    } else {
+      currentOwners.push(owner);
+    }
+
+    this.ownersSubject.next(currentOwners);
+
+    if (owner.devices && owner.devices.length > 0) {
+      owner.devices.forEach((device) =>
+        this.deviceService.mergeDevices(device)
+      );
+    }
+  }
+
+  private removeOwner(ownerId: number): void {
+    const currentOwners = [...this.ownersSubject.value];
+    const filteredOwners = currentOwners.filter((o) => o.id !== ownerId);
+    this.ownersSubject.next(filteredOwners);
+    this.deviceService.removeOwnerFromDevices(ownerId);
+  }
 }

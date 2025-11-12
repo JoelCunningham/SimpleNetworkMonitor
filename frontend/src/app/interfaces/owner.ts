@@ -5,3 +5,8 @@ export interface Owner {
   name: string;
   devices: Device[];
 }
+
+export interface OwnerRequest {
+  name: string;
+  device_ids: number[];
+}

@@ -18,7 +18,7 @@ export class ViewOwnerForm {
   @Input() owner!: Owner;
 
   @Output() onEdit = new EventEmitter<void>();
-  @Output() onDelete = new EventEmitter<Owner>();
+  @Output() onDelete = new EventEmitter<void>();
 
   protected notification: string | null = null;
   protected errorNotification: NotificationType = NotificationType.ERROR;
@@ -32,7 +32,7 @@ export class ViewOwnerForm {
   delete() {
     this.ownerService.deleteOwner(this.owner.id).subscribe({
       next: () => {
-        this.onDelete.emit(this.owner);
+        this.onDelete.emit();
       },
       error: () => {
         this.notification = 'An unexpected error occurred. Please try again.';
