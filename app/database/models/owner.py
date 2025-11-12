@@ -16,5 +16,5 @@ if TYPE_CHECKING:
 
 class Owner(BaseModel, table=True):
     """Device owner model."""
-    name: str = Field(nullable=False, unique=True, max_length=100)
+    name: str = Field(nullable=False, max_length=100)
     devices: list["Device"] = Relation().forward("Owner", "Device")
