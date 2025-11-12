@@ -10,13 +10,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class EditButtons {
   @Input() devices: Option[] = [];
+  @Input() addMode: boolean = false;
 
-  @Output() onSave = new EventEmitter<void>();
+  @Output() onSubmit = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSelectDevice = new EventEmitter<Value>();
 
   save() {
-    this.onSave.emit();
+    this.onSubmit.emit();
   }
 
   cancel() {

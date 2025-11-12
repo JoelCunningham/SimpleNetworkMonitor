@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewOwnerForm } from './view-owner-form';
+import { EditOwnerForm } from './edit-owner-form';
 
-describe('ViewOwnerForm', () => {
-  let component: ViewOwnerForm;
-  let fixture: ComponentFixture<ViewOwnerForm>;
+describe('EditOwnerForm', () => {
+  let component: EditOwnerForm;
+  let fixture: ComponentFixture<EditOwnerForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewOwnerForm]
-    })
-    .compileComponents();
+      imports: [EditOwnerForm],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(ViewOwnerForm);
+    fixture = TestBed.createComponent(EditOwnerForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

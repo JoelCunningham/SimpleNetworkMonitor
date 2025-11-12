@@ -12,6 +12,8 @@
     <button class="input secondary interactive" (click)="cancel()">
       Cancel
     </button>
-    <button class="input primary interactive" (click)="save()">Save</button>
+    <button class="input primary interactive" (click)="save()">
+      {{ addMode ? "Add Owner" : "Save" }}
+    </button>
   </div>
 </div>

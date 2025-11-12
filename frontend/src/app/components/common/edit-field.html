@@ -7,7 +7,7 @@
     [name]="label"
     [placeholder]="placeholder"
     [class.error]="hasError"
-    (input)="clearError()"
     [(ngModel)]="value"
+    (ngModelChange)="onValueChange($event)"
   />
 </div>

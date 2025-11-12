@@ -34,8 +34,8 @@ export class DeviceCard implements OnInit, OnChanges, OnDestroy {
   @Input() removable: boolean = false;
   @Input() interactive: boolean = true;
 
-  @Output() onClick = new EventEmitter<Owner | null>();
-  @Output() onRemove = new EventEmitter<Device | null>();
+  @Output() onClick = new EventEmitter<void>();
+  @Output() onRemove = new EventEmitter<Device>();
 
   protected statusText: string = LastSeenStatus.NEVER;
   protected statusClass: string = DeviceStatus.OFFLINE;
@@ -91,7 +91,7 @@ export class DeviceCard implements OnInit, OnChanges, OnDestroy {
   }
 
   click() {
-    this.onClick.emit(this.owner);
+    this.onClick.emit();
   }
 
   remove() {

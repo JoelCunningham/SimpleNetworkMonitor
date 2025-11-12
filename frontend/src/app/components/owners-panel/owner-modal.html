@@ -1,0 +1,20 @@
+<app-modal
+  [title]="getModalTitle()"
+  [isOpen]="isOpen"
+  (onClose)="onFormClose()"
+>
+  @if (isViewMode) {
+  <app-view-owner-form
+    [owner]="owner"
+    (onEdit)="setViewMode(false)"
+    (onDelete)="onFormDelete($event)"
+    (onClose)="onFormClose()"
+  />
+  } @else {
+  <app-edit-owner-form
+    [owner]="owner"
+    (onSubmit)="onFormUpdate($event)"
+    (onCancel)="onFormClose()"
+  />
+  }
+</app-modal>

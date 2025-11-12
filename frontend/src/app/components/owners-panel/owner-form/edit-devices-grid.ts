@@ -13,9 +13,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class EditDevicesGrid {
   @Input() owner!: Owner;
 
-  @Output() onRemoveDevice = new EventEmitter<Device | null>();
+  @Output() onRemoveDevice = new EventEmitter<Device>();
 
-  removeDevice(device: Device | null) {
+  removeDevice(device: Device) {
     this.onRemoveDevice.emit(device);
   }
 }

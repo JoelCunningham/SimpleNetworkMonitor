@@ -1,4 +1,5 @@
 <div class="owner-form">
+  <app-notification [message]="notification" [type]="errorNotification" />
   <app-view-field label="Owner Name" [value]="owner.name" />
   <app-view-devices-grid [owner]="owner" />
   <app-view-buttons (onEdit)="edit()" (onDelete)="delete()" />

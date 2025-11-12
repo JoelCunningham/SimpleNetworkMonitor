@@ -1,7 +1,13 @@
 <div class="owner-form">
+  <app-notification
+    [message]="notification"
+    [type]="errorNotification"
+    (onClose)="clearErrors()"
+  />
   <app-edit-field
     label="Owner Name"
-    [value]="owner.name"
+    [(value)]="owner.name"
+    [hasError]="nameError"
     placeholder="Enter the name of the owner"
   />
   <app-edit-devices-grid
@@ -9,8 +15,9 @@
     (onRemoveDevice)="removeDevice($event)"
   />
   <app-edit-buttons
-    [devices]="availableDevices"
-    (onSave)="save()"
+    [devices]="unassignedDevices"
+    [addMode]="owner.id === 0"
+    (onSubmit)="submit()"
     (onCancel)="cancel()"
     (onSelectDevice)="selectDevice($event)"
   />

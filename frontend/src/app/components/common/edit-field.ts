@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,15 @@ export class EditField {
   @Input() placeholder: string = '';
   @Input() hasError: boolean = false;
 
+  @Output() valueChange = new EventEmitter<string>();
+
   clearError() {
     this.hasError = false;
+  }
+
+  onValueChange(value: string) {
+    this.value = value;
+    this.clearError();
+    this.valueChange.emit(value);
   }
 }

@@ -1,25 +1,23 @@
 import { BasePanel } from '#components/base/base-panel';
 import { AddOwnerCard } from '#components/owners-panel/add-owner-card';
 import { OwnerCard } from '#components/owners-panel/owner-card';
-import { OwnerForm } from '#components/owners-panel/owner-form/owner-form';
-import { Modal } from '#components/partials/modal';
 import { Owner } from '#interfaces/owner';
 import { OwnerService } from '#services/owner-service';
-import { FormMode } from '#types/form-mode';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { OwnerModal } from './owner-modal';
 
 @Component({
   standalone: true,
   selector: 'app-owners-panel',
-  imports: [BasePanel, OwnerCard, AddOwnerCard, OwnerForm, Modal],
+  imports: [BasePanel, OwnerCard, AddOwnerCard, OwnerModal],
   templateUrl: './owners-panel.html',
   styleUrl: './owners-panel.scss',
 })
-export class OwnersPanel implements OnInit {
-  owners: Owner[] = [];
-  currentOwner: Owner | null = null;
-  showOwnerModal = false;
-  ownerFormMode: FormMode | null = null;
+export class OwnersPanel {
+  protected owners: Owner[] = [];
+  protected currentOwner: Owner | null = null;
+
+  protected showOwnerModal = false;
 
   constructor(
     private ownerService: OwnerService,
@@ -39,40 +37,16 @@ export class OwnersPanel implements OnInit {
 
   openViewModal(owner: Owner) {
     this.currentOwner = owner;
-    this.ownerFormMode = FormMode.View;
     this.showOwnerModal = true;
   }
 
   openAddModal() {
     this.currentOwner = { id: 0, name: '', devices: [] };
-    this.ownerFormMode = FormMode.Add;
     this.showOwnerModal = true;
   }
 
-  closeModal() {
+  handleModalClose() {
     this.showOwnerModal = false;
-    setTimeout(() => {
-      this.ownerFormMode = null;
-      this.currentOwner = null;
-      this.cdr.detectChanges();
-    }, 100);
-  }
-
-  getModalTitle(): string | null {
-    switch (this.ownerFormMode) {
-      case FormMode.Add:
-        return 'Add Owner';
-      case FormMode.View:
-        return 'View Owner';
-      case FormMode.Edit:
-        return 'Edit Owner';
-      default:
-        return null;
-    }
-  }
-
-  hasOwners(): boolean {
-    return this.owners.length > 0;
   }
 
   handleOwnerUpdate(owner: Owner) {

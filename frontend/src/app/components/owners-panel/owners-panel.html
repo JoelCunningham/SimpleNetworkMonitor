@@ -7,19 +7,12 @@
   </main>
 </app-base-panel>
 
-@if (currentOwner && ownerFormMode) {
-<app-modal
-  [title]="getModalTitle()"
+@if (currentOwner) {
+<app-owner-modal
+  [owner]="currentOwner"
   [isOpen]="showOwnerModal"
-  (onClose)="closeModal()"
->
-  <app-owner-form
-    [owner]="currentOwner"
-    [mode]="ownerFormMode"
-    (onClose)="closeModal()"
-    (onSubmit)="handleOwnerUpdate($event)"
-    (onDelete)="handleOwnerDelete($event)"
-    (modeChange)="ownerFormMode = $event"
-  />
-</app-modal>
+  (onClose)="handleModalClose()"
+  (onUpdate)="handleOwnerUpdate($event)"
+  (onDelete)="handleOwnerDelete($event)"
+/>
 }
