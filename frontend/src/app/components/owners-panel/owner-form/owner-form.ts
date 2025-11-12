@@ -1,6 +1,4 @@
-import { DeviceCard } from '#components/cards/device-card';
 import { Notification } from '#components/common/notification';
-import { Select } from '#components/inputs/select';
 import { ViewOwnerForm } from '#components/owners-panel/owner-form/view-owner-form';
 import { Device } from '#interfaces/device';
 import { Option, Value } from '#interfaces/option';
@@ -19,20 +17,13 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { AddOwnerForm } from './add-owner-form';
 import { EditOwnerForm } from './edit-owner-form';
 
 @Component({
   standalone: true,
   selector: 'app-owner-form',
-  imports: [
-    FormsModule,
-    ViewOwnerForm,
-    EditOwnerForm,
-    Select,
-    DeviceCard,
-    Notification,
-  ],
+  imports: [ViewOwnerForm, EditOwnerForm, AddOwnerForm, Notification],
   templateUrl: './owner-form.html',
   styleUrl: './owner-form.scss',
 })

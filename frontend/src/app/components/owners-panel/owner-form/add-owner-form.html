@@ -1,0 +1,17 @@
+<div class="owner-form">
+  <app-edit-field
+    label="Owner Name"
+    [value]="owner.name"
+    placeholder="Enter the name of the owner"
+  />
+  <app-edit-devices-grid
+    [owner]="owner"
+    (onRemoveDevice)="removeDevice($event)"
+  />
+  <app-add-buttons
+    [devices]="availableDevices"
+    (onAdd)="add()"
+    (onCancel)="cancel()"
+    (onSelectDevice)="selectDevice($event)"
+  />
+</div>

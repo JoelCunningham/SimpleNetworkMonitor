@@ -21,70 +21,13 @@
   (onRemoveDevice)="removeDevice($event)"
 />
 } @else {
-<form (ngSubmit)="submitForm()" class="owner-form">
-  <div class="form-group">
-    <label for="ownerName">Owner Name</label>
-    <input
-      type="text"
-      id="ownerName"
-      name="ownerName"
-      placeholder="Enter the name of the owner"
-      class="input secondary interactive"
-      required
-      [class.error]="nameError"
-      (input)="clearErrors()"
-      [(ngModel)]="newName"
-    />
-  </div>
-
-  @if (newDevices.length > 0) {
-  <div class="form-group">
-    <label>Devices</label>
-    <div class="devices-grid">
-      @for (device of newDevices; track device.id) {
-      <app-device-card
-        [device]="device"
-        [owner]="owner"
-        [removable]="true"
-        [interactive]="false"
-        (onRemove)="removeDevice($event); clearErrors()"
-      />
-      }
-    </div>
-  </div>
-  }
-
-  <div class="form-actions">
-    <app-select
-      [css]="'primary left'"
-      [options]="deviceOptions"
-      [placeholder]="'Assign a device'"
-      [isClearable]="false"
-      [isPersistent]="false"
-      [isReversed]="true"
-      (optionSelected)="addDevice($event); clearErrors()"
-    />
-    <div class="form-buttons">
-      @if (isEditMode()) {
-      <button
-        type="button"
-        class="input secondary interactive"
-        (click)="cancelEdit()"
-      >
-        Cancel
-      </button>
-      <button type="submit" class="input primary interactive">Save</button>
-      } @else {
-      <button
-        type="reset"
-        class="input secondary interactive"
-        (click)="closeForm()"
-      >
-        Cancel
-      </button>
-      <button type="submit" class="input primary interactive">Add owner</button>
-      }
-    </div>
-  </div>
-</form>
+<app-add-owner-form
+  [owner]="owner"
+  [devices]="newDevices"
+  [availableDevices]="deviceOptions"
+  (onAdd)="submitForm()"
+  (onCancel)="cancelEdit()"
+  (onSelectDevice)="addDevice($event)"
+  (onRemoveDevice)="removeDevice($event)"
+/>
 }
