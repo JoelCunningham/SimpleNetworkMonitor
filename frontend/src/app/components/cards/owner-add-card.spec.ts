@@ -1,16 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Modal } from '#components/partials/modal';
 
-describe('Modal', () => {
-  let component: Modal;
-  let fixture: ComponentFixture<Modal>;
+import { OwnerAddCard } from './owner-add-card';
+
+describe('AddOwnerCard', () => {
+  let component: OwnerAddCard;
+  let fixture: ComponentFixture<OwnerAddCard>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Modal],
+      imports: [OwnerAddCard],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Modal);
+    fixture = TestBed.createComponent(OwnerAddCard);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

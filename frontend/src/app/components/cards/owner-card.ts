@@ -1,4 +1,4 @@
-import { BaseCard } from '#components/base/base-card';
+import { BaseCard } from '#components/cards/base-card';
 import { Owner } from '#interfaces/owner';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 

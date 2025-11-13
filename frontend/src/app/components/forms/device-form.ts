@@ -1,9 +1,9 @@
-import { BaseCard } from '#components/base/base-card';
+import { BaseCard } from '#components/cards/base-card';
+import { Checkbox } from '#components/common/checkbox';
 import { Icon } from '#components/common/icon';
 import { Notification } from '#components/common/notification';
+import { Select } from '#components/common/select';
 import { FormSection } from '#components/forms/form-section';
-import { Checkbox } from '#components/inputs/checkbox';
-import { Select } from '#components/inputs/select';
 import { Device, DeviceRequest } from '#interfaces/device';
 import { Mac } from '#interfaces/mac';
 import { Option, Value } from '#interfaces/option';

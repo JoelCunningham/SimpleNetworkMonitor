@@ -1,4 +1,4 @@
-import { Select } from '#components/inputs/select';
+import { Select } from '#components/common/select';
 import { Option, Value } from '#interfaces/option';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 

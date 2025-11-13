@@ -1,4 +1,4 @@
-import { EditField } from '#components/common/edit-field';
+import { EditField } from '#components/fields/edit-field';
 import { Notification } from '#components/common/notification';
 import { Device } from '#interfaces/device';
 import { Option, Value } from '#interfaces/option';
@@ -15,8 +15,8 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { EditButtons } from './edit-buttons';
-import { EditDevicesGrid } from './edit-devices-grid';
+import { EditButtons } from '../buttons/edit-buttons';
+import { EditDevicesGrid } from '../grids/edit-devices-grid';
 
 @Component({
   standalone: true,

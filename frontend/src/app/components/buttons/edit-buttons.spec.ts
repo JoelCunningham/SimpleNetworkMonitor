@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddOwnerCard } from './add-owner-card';
+import { ViewButtons } from '../forms/owner-form/view-buttons';
 
-describe('AddOwnerCard', () => {
-  let component: AddOwnerCard;
-  let fixture: ComponentFixture<AddOwnerCard>;
+describe('ViewButtons', () => {
+  let component: ViewButtons;
+  let fixture: ComponentFixture<ViewButtons>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddOwnerCard]
-    })
-    .compileComponents();
+      imports: [ViewButtons],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(AddOwnerCard);
+    fixture = TestBed.createComponent(ViewButtons);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

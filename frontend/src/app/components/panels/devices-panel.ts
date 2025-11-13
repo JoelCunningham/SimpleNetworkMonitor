@@ -1,8 +1,8 @@
-import { BasePanel } from '#components/base/base-panel';
 import { DeviceCard } from '#components/cards/device-card';
+import { Select } from '#components/common/select';
 import { DeviceForm } from '#components/forms/device-form';
-import { Select } from '#components/inputs/select';
-import { Modal } from '#components/partials//modal';
+import { BasePanel } from '#components/panels/base-panel';
+import { BaseModal } from '#components/modals/base-modal';
 import { Category } from '#interfaces/category';
 import { Device } from '#interfaces/device';
 import { Location } from '#interfaces/location';
@@ -32,7 +32,7 @@ import { Subscription } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-devices-panel',
-  imports: [BasePanel, DeviceCard, Select, Modal, DeviceForm, FormsModule],
+  imports: [BasePanel, BaseModal, DeviceCard, Select, DeviceForm, FormsModule],
   templateUrl: './devices-panel.html',
   styleUrl: './devices-panel.scss',
 })

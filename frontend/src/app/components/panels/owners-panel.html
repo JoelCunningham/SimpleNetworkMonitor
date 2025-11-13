@@ -3,7 +3,7 @@
     @for (owner of owners; track owner.id) {
     <app-owner-card [owner]="owner" (onClick)="openViewModal(owner)" />
     }
-    <app-add-owner-card (onClick)="openAddModal()" />
+    <app-owner-add-card (onClick)="openAddModal()" />
   </main>
 </app-base-panel>
 

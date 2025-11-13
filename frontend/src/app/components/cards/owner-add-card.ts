@@ -1,15 +1,15 @@
-import { BaseCard } from '#components/base/base-card';
+import { BaseCard } from '#components/cards/base-card';
 import { Icon } from '#components/common/icon';
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   standalone: true,
-  selector: 'app-add-owner-card',
+  selector: 'app-owner-add-card',
   imports: [BaseCard, Icon],
-  templateUrl: './add-owner-card.html',
-  styleUrl: './add-owner-card.scss',
+  templateUrl: './owner-add-card.html',
+  styleUrl: './owner-add-card.scss',
 })
-export class AddOwnerCard {
+export class OwnerAddCard {
   @Output() onClick = new EventEmitter<void>();
 
   click() {

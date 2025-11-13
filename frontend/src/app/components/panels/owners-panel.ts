@@ -1,15 +1,15 @@
-import { BasePanel } from '#components/base/base-panel';
-import { AddOwnerCard } from '#components/owners-panel/add-owner-card';
-import { OwnerCard } from '#components/owners-panel/owner-card';
+import { OwnerAddCard } from '#components/cards/owner-add-card';
+import { OwnerCard } from '#components/cards/owner-card';
+import { BasePanel } from '#components/panels/base-panel';
 import { Owner } from '#interfaces/owner';
 import { OwnerService } from '#services/owner-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { OwnerModal } from './owner-modal';
+import { OwnerModal } from '../modals/owner-modal';
 
 @Component({
   standalone: true,
   selector: 'app-owners-panel',
-  imports: [BasePanel, OwnerCard, AddOwnerCard, OwnerModal],
+  imports: [BasePanel, OwnerCard, OwnerAddCard, OwnerModal],
   templateUrl: './owners-panel.html',
   styleUrl: './owners-panel.scss',
 })

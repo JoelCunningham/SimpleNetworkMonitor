@@ -10,12 +10,12 @@ import {
 
 @Component({
   standalone: true,
-  selector: 'app-modal',
+  selector: 'app-base-modal',
   imports: [Icon],
-  templateUrl: './modal.html',
-  styleUrl: './modal.scss',
+  templateUrl: './base-modal.html',
+  styleUrl: './base-modal.scss',
 })
-export class Modal {
+export class BaseModal {
   @Input() title: string | null = '';
   @Input() isOpen: boolean = false;
   @Output() onClose = new EventEmitter<void>();

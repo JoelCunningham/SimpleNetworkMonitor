@@ -1,4 +1,4 @@
-import { BaseCard } from '#components/base/base-card';
+import { BaseCard } from '#components/cards/base-card';
 import { Icon } from '#components/common/icon';
 import { Device } from '#interfaces/device';
 import { Owner } from '#interfaces/owner';

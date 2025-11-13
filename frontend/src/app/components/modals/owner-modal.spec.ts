@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewButtons } from './view-buttons';
+import { OwnerModal } from '../modals/owner-modal';
 
-describe('ViewButtons', () => {
-  let component: ViewButtons;
-  let fixture: ComponentFixture<ViewButtons>;
+describe('OwnerModal', () => {
+  let component: OwnerModal;
+  let fixture: ComponentFixture<OwnerModal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewButtons]
-    })
-    .compileComponents();
+      imports: [OwnerModal],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(ViewButtons);
+    fixture = TestBed.createComponent(OwnerModal);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

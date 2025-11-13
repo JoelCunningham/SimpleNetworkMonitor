@@ -1,7 +1,7 @@
-import { OwnersPanel } from '#components/owners-panel/owners-panel';
-import { DevicesPanel } from '#components/partials/devices-panel';
-import { Header } from '#components/partials/header';
-import { StatusPanel } from '#components/status-panel/status-panel';
+import { DevicesPanel } from '#components/panels/devices-panel';
+import { Header } from '#components/panels/header';
+import { OwnersPanel } from '#components/panels/owners-panel';
+import { StatusPanel } from '#components/panels/status-panel';
 import { Component, signal } from '@angular/core';
 
 @Component({
