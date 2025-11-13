@@ -1,4 +1,4 @@
-import { NotificationType } from '#types/notification-type';
+import { NotificationType } from '#types';
 
 export interface Notification {
   message: string;

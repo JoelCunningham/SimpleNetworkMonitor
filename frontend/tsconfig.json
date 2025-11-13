@@ -27,8 +27,8 @@
       "#services/*": [
         "./src/app/services/*"
       ],
-      "#types/*": [
-        "./src/app/types/*"
+      "#types": [
+        "./src/app/_namespaces/types"
       ],
       "#icons/*": [
         "./public/icons/*"

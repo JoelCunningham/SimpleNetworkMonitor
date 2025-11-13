@@ -19,8 +19,7 @@ import { LocationService } from '#services/location-service';
 import { MacService } from '#services/mac-service';
 import { OwnerService } from '#services/owner-service';
 import { UtilitiesService } from '#services/utilities-service';
-import { FormMode } from '#types/form-mode';
-import { NotificationType } from '#types/notification-type';
+import { FormMode, NotificationType } from '#types';
 
 import {
   ChangeDetectorRef,

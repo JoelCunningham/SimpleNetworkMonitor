@@ -10,9 +10,7 @@ import { DeviceService } from '#services/device-service';
 import { LocationService } from '#services/location-service';
 import { OwnerService } from '#services/owner-service';
 import { UtilitiesService } from '#services/utilities-service';
-import { DeviceStatus } from '#types/device-status';
-import { FormMode } from '#types/form-mode';
-import { NotificationType } from '#types/notification-type';
+import { DeviceStatus, FormMode, NotificationType } from '#types';
 import { DatePipe } from '@angular/common';
 import {
   ChangeDetectorRef,

@@ -1,5 +1,5 @@
 import { Icon } from '#components/common/icon';
-import { NotificationType } from '#types/notification-type';
+import { NotificationType } from '#types';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({

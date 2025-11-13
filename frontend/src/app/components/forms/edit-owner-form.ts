@@ -4,8 +4,7 @@ import { Device, Option, Owner, OwnerRequest, Value } from '#interfaces';
 import { DeviceService } from '#services/device-service';
 import { OwnerService } from '#services/owner-service';
 import { UtilitiesService } from '#services/utilities-service';
-import { GENERIC_ERROR_MESSAGE } from '#types/constants';
-import { NotificationType } from '#types/notification-type';
+import { GENERIC_ERROR_MESSAGE, NotificationType } from '#types';
 import {
   ChangeDetectorRef,
   Component,

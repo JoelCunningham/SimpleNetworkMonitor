@@ -1,6 +1,5 @@
 import { Device, HttpPort } from '#interfaces';
-import { DeviceStatus } from '#types/device-status';
-import { LastSeenStatus } from '#types/last-seen-status';
+import { DeviceStatus, LastSeenStatus } from '#types';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
