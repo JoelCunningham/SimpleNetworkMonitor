@@ -1,17 +1,8 @@
 {
     "version": "0.2.0",
-    "compounds": [
-        {
-            "name": "Debug Angular (Chrome)",
-            "configurations": [
-                "Run Angular (npm start)",
-                "Attach to Chrome - Frontend"
-            ]
-        }
-    ],
     "configurations": [
         {
-            "name": "Debug FastAPI (Uvicorn Factory)",
+            "name": "Debug Backend (FastAPI - Uvicorn)",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
@@ -31,7 +22,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Run Angular (npm start)",
+            "name": "Run Angular",
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceFolder}/frontend",
@@ -44,10 +35,12 @@
             "windows": {
                 "runtimeExecutable": "npm.cmd"
             },
-            "env": {}
+            "presentation": {
+                "hidden": true,
+            }
         },
         {
-            "name": "Attach to Chrome - Frontend",
+            "name": "Attach to Chrome",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:4200",
@@ -55,7 +48,27 @@
             "runtimeExecutable": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
             "windows": {
                 "runtimeExecutable": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+            },
+            "presentation": {
+                "hidden": true,
             }
         }
-    ]
+    ],
+    "compounds": [
+        {
+            "name": "Debug Frontend (Angular - Chrome)",
+            "configurations": [
+                "Run Angular",
+                "Attach to Chrome"
+            ]
+        },
+        {
+            "name": "Debug Full Stack",
+            "configurations": [
+                "Debug Backend (FastAPI - Uvicorn)",
+                "Run Angular",
+                "Attach to Chrome"
+            ]
+        }
+    ],
 }
