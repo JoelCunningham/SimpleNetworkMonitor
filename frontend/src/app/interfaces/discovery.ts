@@ -1,4 +1,4 @@
-import { Mac } from '#interfaces/mac';
+import { Mac } from '#interfaces';
 
 export interface Discovery {
   id: number;

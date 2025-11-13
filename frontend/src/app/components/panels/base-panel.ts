@@ -1,5 +1,5 @@
 import { Notification as AppNotification } from '#components/common/notification';
-import { Notification } from '#interfaces/notification';
+import { Notification } from '#interfaces';
 import { Component, Input } from '@angular/core';
 
 @Component({

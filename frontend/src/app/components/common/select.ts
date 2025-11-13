@@ -1,5 +1,5 @@
 import { Icon } from '#components/common/icon';
-import { Option, Value } from '#interfaces/option';
+import { Option, Value } from '#interfaces';
 import {
   Component,
   ElementRef,

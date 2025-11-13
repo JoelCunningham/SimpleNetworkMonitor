@@ -1,4 +1,4 @@
-import { Device, DeviceRequest } from '#interfaces/device';
+import { Device, DeviceRequest } from '#interfaces';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, interval, Observable } from 'rxjs';

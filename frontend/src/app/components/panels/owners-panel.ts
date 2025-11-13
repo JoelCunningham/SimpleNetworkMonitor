@@ -1,10 +1,10 @@
 import { OwnerAddCard } from '#components/cards/owner-add-card';
 import { OwnerCard } from '#components/cards/owner-card';
+import { OwnerModal } from '#components/modals/owner-modal';
 import { BasePanel } from '#components/panels/base-panel';
-import { Owner } from '#interfaces/owner';
+import { Owner } from '#interfaces';
 import { OwnerService } from '#services/owner-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { OwnerModal } from '../modals/owner-modal';
 
 @Component({
   standalone: true,

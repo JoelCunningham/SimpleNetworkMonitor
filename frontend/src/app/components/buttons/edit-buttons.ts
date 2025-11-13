@@ -1,5 +1,5 @@
 import { Select } from '#components/common/select';
-import { Option, Value } from '#interfaces/option';
+import { Option, Value } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({

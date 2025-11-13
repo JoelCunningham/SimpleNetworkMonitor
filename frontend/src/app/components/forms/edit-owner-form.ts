@@ -1,8 +1,6 @@
-import { EditField } from '#components/fields/edit-field';
 import { Notification } from '#components/common/notification';
-import { Device } from '#interfaces/device';
-import { Option, Value } from '#interfaces/option';
-import { Owner, OwnerRequest } from '#interfaces/owner';
+import { EditField } from '#components/fields/edit-field';
+import { Device, Option, Owner, OwnerRequest, Value } from '#interfaces';
 import { DeviceService } from '#services/device-service';
 import { OwnerService } from '#services/owner-service';
 import { UtilitiesService } from '#services/utilities-service';

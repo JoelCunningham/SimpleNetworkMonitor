@@ -1,4 +1,4 @@
-import { Owner, OwnerRequest } from '#interfaces/owner';
+import { Owner, OwnerRequest } from '#interfaces';
 import { DeviceService } from '#services/device-service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

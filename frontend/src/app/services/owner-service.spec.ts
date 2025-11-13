@@ -1,10 +1,10 @@
+import { Owner } from '#interfaces';
+import { OwnerService } from '#services/owner-service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { Owner } from '#interfaces/owner';
-import { OwnerService } from '#services/owner-service';
 
 describe('OwnerService', () => {
   let service: OwnerService;
@@ -33,7 +33,7 @@ describe('OwnerService', () => {
       { id: 2, name: 'Bob', devices: [] },
     ];
 
-    service.getAllOwners().subscribe((owners) => {
+    service.currentOwners().subscribe((owners) => {
       expect(owners.length).toBe(2);
       expect(owners).toEqual(mockOwners);
     });

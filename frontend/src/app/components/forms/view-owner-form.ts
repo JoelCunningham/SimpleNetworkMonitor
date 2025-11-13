@@ -1,7 +1,7 @@
 import { ViewButtons } from '#components/buttons/view-buttons';
 import { Notification } from '#components/common/notification';
 import { ViewField } from '#components/fields/view-field';
-import { Owner } from '#interfaces/owner';
+import { Owner } from '#interfaces';
 import { OwnerService } from '#services/owner-service';
 import { NotificationType } from '#types/notification-type';
 import { Component, EventEmitter, Input, Output } from '@angular/core';

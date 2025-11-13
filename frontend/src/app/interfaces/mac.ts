@@ -1,6 +1,4 @@
-import { Device } from '#interfaces/device';
-import { Discovery } from '#interfaces/discovery';
-import { Port } from '#interfaces/port';
+import { Device, Discovery, Port } from '#interfaces';
 
 export interface Mac {
   id: number;

@@ -1,4 +1,4 @@
-import { Device } from '#interfaces/device';
+import { Device } from '#interfaces';
 
 export interface Owner {
   id: number;

@@ -1,7 +1,6 @@
 import { BaseCard } from '#components/cards/base-card';
 import { Icon } from '#components/common/icon';
-import { Device } from '#interfaces/device';
-import { Owner } from '#interfaces/owner';
+import { Device, Owner } from '#interfaces';
 import { UtilitiesService } from '#services/utilities-service';
 import { DeviceStatus } from '#types/device-status';
 import { LastSeenStatus } from '#types/last-seen-status';

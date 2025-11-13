@@ -1,5 +1,5 @@
 import { BaseModal } from '#components/modals/base-modal';
-import { Owner } from '#interfaces/owner';
+import { Owner } from '#interfaces';
 import { OwnerService } from '#services/owner-service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EditOwnerForm } from '../forms/edit-owner-form';

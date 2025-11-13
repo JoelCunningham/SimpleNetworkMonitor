@@ -15,23 +15,20 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
+      "#/*": [
+        "./src/app/*"
+      ],
       "#components/*": [
         "./src/app/components/*"
       ],
-      "#interfaces/*": [
-        "./src/app/interfaces/*"
-      ],
-      "#pages/*": [
-        "./src/app/pages/*"
+      "#interfaces": [
+        "./src/app/_namespaces/interfaces"
       ],
       "#services/*": [
         "./src/app/services/*"
       ],
       "#types/*": [
         "./src/app/types/*"
-      ],
-      "#/*": [
-        "./src/app/*"
       ],
       "#icons/*": [
         "./public/icons/*"

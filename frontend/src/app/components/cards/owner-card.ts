@@ -1,5 +1,5 @@
 import { BaseCard } from '#components/cards/base-card';
-import { Owner } from '#interfaces/owner';
+import { Owner } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({

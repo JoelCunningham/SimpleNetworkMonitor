@@ -1,15 +1,18 @@
 import { DeviceCard } from '#components/cards/device-card';
 import { Select } from '#components/common/select';
 import { DeviceForm } from '#components/forms/device-form';
-import { BasePanel } from '#components/panels/base-panel';
 import { BaseModal } from '#components/modals/base-modal';
-import { Category } from '#interfaces/category';
-import { Device } from '#interfaces/device';
-import { Location } from '#interfaces/location';
-import { Mac } from '#interfaces/mac';
-import { Notification } from '#interfaces/notification';
-import { Option, Value } from '#interfaces/option';
-import { Owner } from '#interfaces/owner';
+import { BasePanel } from '#components/panels/base-panel';
+import {
+  Category,
+  Device,
+  Location,
+  Mac,
+  Notification,
+  Option,
+  Owner,
+  Value,
+} from '#interfaces';
 import { CategoryService } from '#services/category_service';
 import { DeviceService } from '#services/device-service';
 import { LocationService } from '#services/location-service';

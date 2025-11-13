@@ -1,7 +1,4 @@
-import { Category } from '#interfaces/category';
-import { Location } from '#interfaces/location';
-import { Mac } from '#interfaces/mac';
-import { Owner } from '#interfaces/owner';
+import { Category, Location, Mac, Owner } from '#interfaces';
 
 export interface Device {
   id: number;

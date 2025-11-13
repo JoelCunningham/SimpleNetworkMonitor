@@ -1,5 +1,4 @@
-import { Device } from '#interfaces/device';
-import { HttpPort } from '#interfaces/httpPort';
+import { Device, HttpPort } from '#interfaces';
 import { DeviceStatus } from '#types/device-status';
 import { LastSeenStatus } from '#types/last-seen-status';
 import { Injectable } from '@angular/core';

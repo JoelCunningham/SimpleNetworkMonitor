@@ -1,5 +1,5 @@
 import { DeviceCard } from '#components/cards/device-card';
-import { Owner } from '#interfaces/owner';
+import { Owner } from '#interfaces';
 import { Component, Input } from '@angular/core';
 
 @Component({
