@@ -3,7 +3,7 @@ import { Notification } from '#components/common/notification';
 import { ViewField } from '#components/fields/view-field';
 import { ViewDevicesGrid } from '#components/grids/view-devices-grid';
 import { Owner } from '#interfaces';
-import { OwnerService } from '#services/owner-service';
+import { OwnerService } from '#services';
 import { NotificationType } from '#types';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 

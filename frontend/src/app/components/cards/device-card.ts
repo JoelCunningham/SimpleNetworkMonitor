@@ -1,7 +1,7 @@
 import { BaseCard } from '#components/cards/base-card';
 import { Icon } from '#components/common/icon';
 import { Device, Owner } from '#interfaces';
-import { UtilitiesService } from '#services/utilities-service';
+import { UtilitiesService } from '#services';
 import { DeviceStatus, LastSeenStatus } from '#types';
 import {
   ChangeDetectorRef,

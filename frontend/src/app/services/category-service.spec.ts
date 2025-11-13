@@ -1,4 +1,4 @@
-import { CategoryService } from '#services/category_service';
+import { CategoryService } from '#/services/category-service';
 import { TestBed } from '@angular/core/testing';
 
 describe('CategoryService', () => {

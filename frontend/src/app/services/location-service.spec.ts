@@ -1,4 +1,4 @@
-import { LocationService } from '#services/location-service';
+import { LocationService } from '#services';
 import { TestBed } from '@angular/core/testing';
 
 describe('LocationService', () => {

@@ -1,3 +1,4 @@
+import { CategoryService } from '#/services/category-service';
 import { BaseCard } from '#components/cards/base-card';
 import { Checkbox } from '#components/common/checkbox';
 import { Icon } from '#components/common/icon';
@@ -5,11 +6,12 @@ import { Notification } from '#components/common/notification';
 import { Select } from '#components/common/select';
 import { FormSection } from '#components/forms/form-section';
 import { Device, DeviceRequest, Mac, Option, Port, Value } from '#interfaces';
-import { CategoryService } from '#services/category_service';
-import { DeviceService } from '#services/device-service';
-import { LocationService } from '#services/location-service';
-import { OwnerService } from '#services/owner-service';
-import { UtilitiesService } from '#services/utilities-service';
+import {
+  DeviceService,
+  LocationService,
+  OwnerService,
+  UtilitiesService,
+} from '#services';
 import { DeviceStatus, FormMode, NotificationType } from '#types';
 import { DatePipe } from '@angular/common';
 import {

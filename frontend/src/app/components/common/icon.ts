@@ -1,4 +1,4 @@
-import { IconService } from '#services/icon-service';
+import { IconService } from '#services';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';

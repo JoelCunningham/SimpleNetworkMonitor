@@ -13,14 +13,15 @@ import {
   Owner,
   Value,
 } from '#interfaces';
-import { CategoryService } from '#services/category_service';
-import { DeviceService } from '#services/device-service';
-import { LocationService } from '#services/location-service';
-import { MacService } from '#services/mac-service';
-import { OwnerService } from '#services/owner-service';
-import { UtilitiesService } from '#services/utilities-service';
+import {
+  CategoryService,
+  DeviceService,
+  LocationService,
+  MacService,
+  OwnerService,
+  UtilitiesService,
+} from '#services';
 import { FormMode, NotificationType } from '#types';
-
 import {
   ChangeDetectorRef,
   Component,

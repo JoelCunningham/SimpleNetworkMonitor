@@ -3,7 +3,7 @@ import { OwnerCard } from '#components/cards/owner-card';
 import { OwnerModal } from '#components/modals/owner-modal';
 import { BasePanel } from '#components/panels/base-panel';
 import { Owner } from '#interfaces';
-import { OwnerService } from '#services/owner-service';
+import { OwnerService } from '#services';
 import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({

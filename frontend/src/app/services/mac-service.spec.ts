@@ -1,4 +1,4 @@
-import { MacService } from '#services/mac-service';
+import { MacService } from '#services';
 import { TestBed } from '@angular/core/testing';
 
 describe('MacService', () => {

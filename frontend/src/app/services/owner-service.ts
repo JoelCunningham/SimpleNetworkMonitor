@@ -1,5 +1,5 @@
 import { Owner, OwnerRequest } from '#interfaces';
-import { DeviceService } from '#services/device-service';
+import { DeviceService } from '#services';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';

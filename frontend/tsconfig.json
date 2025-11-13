@@ -24,8 +24,8 @@
       "#interfaces": [
         "./src/app/_namespaces/interfaces"
       ],
-      "#services/*": [
-        "./src/app/services/*"
+      "#services": [
+        "./src/app/_namespaces/services"
       ],
       "#types": [
         "./src/app/_namespaces/types"

@@ -1,5 +1,5 @@
 import { Owner } from '#interfaces';
-import { OwnerService } from '#services/owner-service';
+import { OwnerService } from '#services';
 import {
   HttpClientTestingModule,
   HttpTestingController,

@@ -1,9 +1,7 @@
 import { Notification } from '#components/common/notification';
 import { EditField } from '#components/fields/edit-field';
 import { Device, Option, Owner, OwnerRequest, Value } from '#interfaces';
-import { DeviceService } from '#services/device-service';
-import { OwnerService } from '#services/owner-service';
-import { UtilitiesService } from '#services/utilities-service';
+import { DeviceService, OwnerService, UtilitiesService } from '#services';
 import { GENERIC_ERROR_MESSAGE, NotificationType } from '#types';
 import {
   ChangeDetectorRef,
