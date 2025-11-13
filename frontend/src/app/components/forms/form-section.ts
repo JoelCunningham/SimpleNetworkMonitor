@@ -1,4 +1,4 @@
-import { Icon } from '#components/common/icon';
+import { Icon } from '#components/common';
 import { Component, Input } from '@angular/core';
 
 @Component({

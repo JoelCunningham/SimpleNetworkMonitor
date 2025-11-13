@@ -1,5 +1,5 @@
+import { BaseModal } from '#components/modals';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BaseModal } from '#components/modals/base-modal';
 
 describe('BaseModal', () => {
   let component: BaseModal;

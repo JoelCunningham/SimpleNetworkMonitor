@@ -1,6 +1,5 @@
+import { ViewButtons } from '#components/buttons';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ViewButtons } from './view-buttons';
 
 describe('ViewButtons', () => {
   let component: ViewButtons;
@@ -8,9 +7,8 @@ describe('ViewButtons', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewButtons]
-    })
-    .compileComponents();
+      imports: [ViewButtons],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewButtons);
     component = fixture.componentInstance;

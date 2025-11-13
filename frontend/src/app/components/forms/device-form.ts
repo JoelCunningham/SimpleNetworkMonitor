@@ -1,10 +1,7 @@
 import { CategoryService } from '#/services/category-service';
-import { BaseCard } from '#components/cards/base-card';
-import { Checkbox } from '#components/common/checkbox';
-import { Icon } from '#components/common/icon';
-import { Notification } from '#components/common/notification';
-import { Select } from '#components/common/select';
-import { FormSection } from '#components/forms/form-section';
+import { BaseCard } from '#components/cards';
+import { Checkbox, Icon, Notification, Select } from '#components/common';
+import { FormSection } from '#components/forms';
 import { Device, DeviceRequest, Mac, Option, Port, Value } from '#interfaces';
 import {
   DeviceService,

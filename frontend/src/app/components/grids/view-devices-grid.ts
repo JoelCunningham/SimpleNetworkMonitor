@@ -1,4 +1,4 @@
-import { DeviceCard } from '#components/cards/device-card';
+import { DeviceCard } from '#components/cards';
 import { Owner } from '#interfaces';
 import { Component, Input } from '@angular/core';
 

@@ -1,5 +1,5 @@
+import { Select } from '#components/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Select } from '#components/inputs/select';
 
 describe('Select', () => {
   let component: Select;

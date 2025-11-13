@@ -1,5 +1,5 @@
+import { StatusPanel } from '#components/panels';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { StatusPanel } from '#components/partials/status-panel';
 
 describe('StatusPanel', () => {
   let component: StatusPanel;

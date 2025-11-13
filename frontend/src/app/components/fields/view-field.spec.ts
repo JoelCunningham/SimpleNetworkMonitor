@@ -1,6 +1,5 @@
+import { ViewField } from '#components/fields';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ViewField } from './view-field';
 
 describe('ViewField', () => {
   let component: ViewField;

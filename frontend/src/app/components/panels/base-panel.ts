@@ -1,4 +1,4 @@
-import { Notification as AppNotification } from '#components/common/notification';
+import { Notification as AppNotification } from '#components/common';
 import { Notification } from '#interfaces';
 import { Component, Input } from '@angular/core';
 

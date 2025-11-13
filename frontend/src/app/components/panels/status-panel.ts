@@ -1,6 +1,6 @@
-import { LiveViewButton } from '#components/buttons/live-view-button';
-import { LastScanText } from '#components/fields/last-scan-text';
-import { BasePanel } from '#components/panels/base-panel';
+import { LiveViewButton } from '#components/buttons';
+import { LastScanText } from '#components/fields';
+import { BasePanel } from '#components/panels';
 import { DeviceService } from '#services';
 import { ChangeDetectorRef, Component } from '@angular/core';
 

@@ -1,5 +1,5 @@
+import { Notification } from '#components/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Notification } from '#components/common/notification';
 
 describe('Notification', () => {
   let component: Notification;

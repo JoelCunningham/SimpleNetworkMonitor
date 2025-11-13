@@ -1,6 +1,5 @@
+import { LastScanText } from '#components/fields';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { LastScanText } from './last-scan-text';
 
 describe('LastScanText', () => {
   let component: LastScanText;
@@ -8,9 +7,8 @@ describe('LastScanText', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LastScanText]
-    })
-    .compileComponents();
+      imports: [LastScanText],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LastScanText);
     component = fixture.componentInstance;

@@ -1,5 +1,5 @@
-import { BaseCard } from '#components/cards/base-card';
-import { Icon } from '#components/common/icon';
+import { BaseCard } from '#components/cards';
+import { Icon } from '#components/common';
 import { Device, Owner } from '#interfaces';
 import { UtilitiesService } from '#services';
 import { DeviceStatus, LastSeenStatus } from '#types';

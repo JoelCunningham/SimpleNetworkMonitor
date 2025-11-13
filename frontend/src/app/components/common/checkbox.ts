@@ -1,4 +1,4 @@
-import { Icon } from '#components/common/icon';
+import { Icon } from '#components/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({

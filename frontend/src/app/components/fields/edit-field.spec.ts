@@ -1,6 +1,5 @@
+import { EditField } from '#components/fields';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { EditField } from './edit-field';
 
 describe('EditField', () => {
   let component: EditField;

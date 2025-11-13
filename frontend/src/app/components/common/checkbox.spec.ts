@@ -1,4 +1,4 @@
-import { Checkbox } from '#components/inputs/checkbox';
+import { Checkbox } from '#components/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('Checkbox', () => {

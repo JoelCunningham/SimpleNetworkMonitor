@@ -1,7 +1,7 @@
-import { ViewButtons } from '#components/buttons/view-buttons';
-import { Notification } from '#components/common/notification';
-import { ViewField } from '#components/fields/view-field';
-import { ViewDevicesGrid } from '#components/grids/view-devices-grid';
+import { ViewButtons } from '#components/buttons';
+import { Notification } from '#components/common';
+import { ViewField } from '#components/fields';
+import { ViewDevicesGrid } from '#components/grids';
 import { Owner } from '#interfaces';
 import { OwnerService } from '#services';
 import { NotificationType } from '#types';

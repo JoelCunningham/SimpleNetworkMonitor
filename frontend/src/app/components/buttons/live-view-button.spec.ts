@@ -1,6 +1,5 @@
+import { LiveViewButton } from '#components/buttons';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { LiveViewButton } from './live-view-button';
 
 describe('LiveViewButton', () => {
   let component: LiveViewButton;
@@ -8,9 +7,8 @@ describe('LiveViewButton', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LiveViewButton]
-    })
-    .compileComponents();
+      imports: [LiveViewButton],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LiveViewButton);
     component = fixture.componentInstance;

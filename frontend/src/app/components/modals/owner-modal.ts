@@ -1,9 +1,8 @@
-import { BaseModal } from '#components/modals/base-modal';
+import { EditOwnerForm, ViewOwnerForm } from '#components/forms';
+import { BaseModal } from '#components/modals';
 import { Owner } from '#interfaces';
 import { OwnerService } from '#services';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { EditOwnerForm } from '../forms/edit-owner-form';
-import { ViewOwnerForm } from '../forms/view-owner-form';
 
 @Component({
   selector: 'app-owner-modal',

@@ -1,6 +1,5 @@
+import { ViewOwnerForm } from '#components/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ViewOwnerForm } from './view-owner-form';
 
 describe('ViewOwnerForm', () => {
   let component: ViewOwnerForm;
@@ -8,9 +7,8 @@ describe('ViewOwnerForm', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewOwnerForm]
-    })
-    .compileComponents();
+      imports: [ViewOwnerForm],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewOwnerForm);
     component = fixture.componentInstance;

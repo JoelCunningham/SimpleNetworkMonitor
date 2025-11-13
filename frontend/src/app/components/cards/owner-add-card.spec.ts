@@ -1,6 +1,5 @@
+import { OwnerAddCard } from '#components/cards';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { OwnerAddCard } from './owner-add-card';
 
 describe('AddOwnerCard', () => {
   let component: OwnerAddCard;

@@ -1,8 +1,8 @@
-import { DeviceCard } from '#components/cards/device-card';
-import { Select } from '#components/common/select';
-import { DeviceForm } from '#components/forms/device-form';
-import { BaseModal } from '#components/modals/base-modal';
-import { BasePanel } from '#components/panels/base-panel';
+import { DeviceCard } from '#components/cards';
+import { Select } from '#components/common';
+import { DeviceForm } from '#components/forms';
+import { BaseModal } from '#components/modals';
+import { BasePanel } from '#components/panels';
 import {
   Category,
   Device,

@@ -1,4 +1,4 @@
-import { Mac } from './mac';
+import { Mac } from '#interfaces';
 
 export interface Port {
   id: number;

@@ -1,6 +1,5 @@
+import { OwnerCard } from '#components/cards';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { OwnerCard } from './owner-card';
 
 describe('OwnerCard', () => {
   let component: OwnerCard;
@@ -8,9 +7,8 @@ describe('OwnerCard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OwnerCard]
-    })
-    .compileComponents();
+      imports: [OwnerCard],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OwnerCard);
     component = fixture.componentInstance;

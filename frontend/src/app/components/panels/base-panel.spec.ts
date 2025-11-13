@@ -1,6 +1,5 @@
+import { BasePanel } from '#components/panels';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { BasePanel } from './base-panel';
 
 describe('BasePanel', () => {
   let component: BasePanel;
@@ -8,9 +7,8 @@ describe('BasePanel', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BasePanel]
-    })
-    .compileComponents();
+      imports: [BasePanel],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BasePanel);
     component = fixture.componentInstance;

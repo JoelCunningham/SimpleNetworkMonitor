@@ -1,6 +1,5 @@
+import { OwnerModal } from '#components/modals';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { OwnerModal } from '../modals/owner-modal';
 
 describe('OwnerModal', () => {
   let component: OwnerModal;

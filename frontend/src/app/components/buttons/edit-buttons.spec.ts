@@ -1,6 +1,5 @@
+import { ViewButtons } from '#components/buttons';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ViewButtons } from '../forms/owner-form/view-buttons';
 
 describe('ViewButtons', () => {
   let component: ViewButtons;

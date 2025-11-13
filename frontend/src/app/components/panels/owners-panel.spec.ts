@@ -1,6 +1,6 @@
+import { OwnersPanel } from '#components/panels';
 import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { OwnersPanel } from '#components/partials/owners-panel';
 
 describe('OwnersPanel', () => {
   let component: OwnersPanel;

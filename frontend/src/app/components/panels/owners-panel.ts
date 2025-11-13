@@ -1,7 +1,6 @@
-import { OwnerAddCard } from '#components/cards/owner-add-card';
-import { OwnerCard } from '#components/cards/owner-card';
-import { OwnerModal } from '#components/modals/owner-modal';
-import { BasePanel } from '#components/panels/base-panel';
+import { OwnerAddCard, OwnerCard } from '#components/cards';
+import { OwnerModal } from '#components/modals';
+import { BasePanel } from '#components/panels';
 import { Owner } from '#interfaces';
 import { OwnerService } from '#services';
 import { ChangeDetectorRef, Component } from '@angular/core';

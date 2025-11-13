@@ -1,5 +1,7 @@
-import { Notification } from '#components/common/notification';
-import { EditField } from '#components/fields/edit-field';
+import { EditButtons } from '#components/buttons';
+import { Notification } from '#components/common';
+import { EditField } from '#components/fields';
+import { EditDevicesGrid } from '#components/grids';
 import { Device, Option, Owner, OwnerRequest, Value } from '#interfaces';
 import { DeviceService, OwnerService, UtilitiesService } from '#services';
 import { GENERIC_ERROR_MESSAGE, NotificationType } from '#types';
@@ -10,8 +12,6 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { EditButtons } from '../buttons/edit-buttons';
-import { EditDevicesGrid } from '../grids/edit-devices-grid';
 
 @Component({
   standalone: true,

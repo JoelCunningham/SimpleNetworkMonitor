@@ -19,7 +19,7 @@
         "./src/app/*"
       ],
       "#components/*": [
-        "./src/app/components/*"
+        "./src/app/_namespaces/components/*"
       ],
       "#interfaces": [
         "./src/app/_namespaces/interfaces"

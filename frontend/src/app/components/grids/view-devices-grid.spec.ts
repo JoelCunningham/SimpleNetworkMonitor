@@ -1,6 +1,5 @@
+import { ViewDevicesGrid } from '#components/grids';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ViewDevicesGrid } from './view-devices-grid';
 
 describe('ViewDevicesGrid', () => {
   let component: ViewDevicesGrid;
@@ -8,9 +7,8 @@ describe('ViewDevicesGrid', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewDevicesGrid]
-    })
-    .compileComponents();
+      imports: [ViewDevicesGrid],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewDevicesGrid);
     component = fixture.componentInstance;
