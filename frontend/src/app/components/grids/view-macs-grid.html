@@ -1,0 +1,13 @@
+<div class="form-group">
+  <label>Macs</label>
+  <ul class="mac-list">
+    @for (mac of getSortedMacs(device); track mac.id) {
+    <app-base-card
+      [title]="mac.address"
+      [value]="mac.id"
+      [selected]="mac.id === currentMac.id"
+      (onClick)="select(mac)"
+    ></app-base-card>
+    }
+  </ul>
+</div>

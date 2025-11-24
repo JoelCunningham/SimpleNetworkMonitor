@@ -1,0 +1,15 @@
+<app-base-form-section sectionTitle="Services">
+  <div class="tags">
+    @for (discovery of mac.discoveries; track discovery.id) {
+    <div class="tag" [title]="discovery.device_name">
+      {{ discovery.protocol }}
+    </div>
+    } @if (mac.discoveries?.length === 0) {
+    <app-notification
+      [message]="'No services detected'"
+      [type]="infoNotification"
+      [closeable]="false"
+    />
+    }
+  </div>
+</app-base-form-section>

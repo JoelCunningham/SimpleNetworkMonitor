@@ -1,0 +1,25 @@
+<app-base-form-section sectionTitle="Ports">
+  <div class="tags">
+    @for (port of ports; track port.id) { @if (getPortUrl(port)) {
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      [href]="getPortUrl(port)"
+      [title]="getPortUrl(port)"
+    >
+      <div class="tag interactive">
+        {{ getPortDescription(port) }}
+        <app-icon [name]="'external-link'" size="16"></app-icon>
+      </div>
+    </a>
+    } @else {
+    <div class="tag">{{ getPortDescription(port) }}</div>
+    } } @if (ports.length === 0) {
+    <app-notification
+      [message]="'No ports detected'"
+      [type]="infoNotification"
+      [closeable]="false"
+    />
+    }
+  </div>
+</app-base-form-section>

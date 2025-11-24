@@ -1,0 +1,31 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+
+  .link-button {
+    color: var(--colour-primary);
+  }
+
+  span {
+    margin: 0.85rem 0;
+  }
+
+  label {
+    color: var(--colour-light-grey);
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+
+    li {
+      list-style: none;
+    }
+  }
+}

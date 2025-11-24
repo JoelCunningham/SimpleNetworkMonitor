@@ -3,18 +3,21 @@ import { Option, Value } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-owner-edit-buttons',
+  selector: 'app-edit-device-buttons',
   imports: [Select],
-  templateUrl: './owner-edit-buttons.html',
-  styleUrl: './owner-edit-buttons.scss',
+  templateUrl: './edit-device-buttons.html',
+  styleUrl: './edit-device-buttons.scss',
 })
-export class OwnerEditButtons {
+export class EditDeviceButtons {
   @Input() devices: Option[] = [];
   @Input() addMode: boolean = false;
 
-  @Output() onSubmit = new EventEmitter<void>();
+  @Output() onSubmit = new EventEmitter<Value>();
   @Output() onCancel = new EventEmitter<void>();
-  @Output() onSelectDevice = new EventEmitter<Value>();
+
+  addToExisting(deviceId: Value) {
+    this.onSubmit.emit(deviceId);
+  }
 
   submit() {
     this.onSubmit.emit();
@@ -22,9 +25,5 @@ export class OwnerEditButtons {
 
   cancel() {
     this.onCancel.emit();
-  }
-
-  selectDevice(deviceId: Value) {
-    this.onSelectDevice.emit(deviceId);
   }
 }

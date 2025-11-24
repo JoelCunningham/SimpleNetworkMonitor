@@ -1,7 +1,6 @@
-import { DeviceForm } from '#/components/forms/device-form';
 import { DeviceCard } from '#components/cards';
 import { Select } from '#components/common';
-import { BaseModal } from '#components/modals';
+import { DeviceModal } from '#components/modals';
 import { BasePanel } from '#components/panels';
 import {
   Category,
@@ -35,7 +34,7 @@ import { Subscription } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-devices-panel',
-  imports: [BasePanel, BaseModal, DeviceCard, Select, DeviceForm, FormsModule],
+  imports: [BasePanel, DeviceCard, Select, FormsModule, DeviceModal],
   templateUrl: './devices-panel.html',
   styleUrl: './devices-panel.scss',
 })

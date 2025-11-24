@@ -1,0 +1,20 @@
+<app-base-modal
+  [title]="getModalTitle()"
+  [isOpen]="isOpen"
+  (onClose)="onFormClose()"
+>
+  @if (isViewMode) {
+  <app-view-device-form
+    [device]="device"
+    (onEdit)="setViewMode(false)"
+    (onDelete)="onFormDelete()"
+    (onClose)="onFormClose()"
+  />
+  } @else {
+  <app-device-form [device]="device" />
+  }
+</app-base-modal>
+<!-- [mode]="deviceFormMode"
+    (onClose)="closeModal()"
+    (modeChange)="deviceFormMode = $event"
+    (addedToDevice)="onAddedToDevice($event)" -->

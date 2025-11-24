@@ -1,7 +1,7 @@
 import { CategoryService } from '#/services/category-service';
 import { BaseCard } from '#components/cards';
 import { Checkbox, Icon, Notification, Select } from '#components/common';
-import { FormSection } from '#components/forms';
+import { BaseFormSection } from '#components/form-sections';
 import { Device, DeviceRequest, Mac, Option, Port, Value } from '#interfaces';
 import {
   DeviceService,
@@ -33,7 +33,7 @@ import { Subscription } from 'rxjs';
     FormsModule,
     Select,
     Notification,
-    FormSection,
+    BaseFormSection,
     Checkbox,
     Icon,
   ],

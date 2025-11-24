@@ -3,12 +3,12 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   standalone: true,
-  selector: 'app-form-section',
+  selector: 'app-base-form-section',
   imports: [Icon],
-  templateUrl: './form-section.html',
-  styleUrl: './form-section.scss',
+  templateUrl: './base-form-section.html',
+  styleUrl: './base-form-section.scss',
 })
-export class FormSection {
+export class BaseFormSection {
   @Input() sectionTitle: string = '';
   @Input() collapsible: boolean = false;
 

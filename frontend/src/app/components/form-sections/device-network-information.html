@@ -1,0 +1,20 @@
+<app-base-form-section sectionTitle="Network Information" [collapsible]="true">
+  <div class="form-row">
+    <app-view-field label="Last IP Address" [value]="mac.last_ip" />
+    <app-view-field label="Hostname" [value]="mac.hostname" />
+  </div>
+  <div class="form-row">
+    <app-view-field label="Vendor" [value]="mac.vendor" />
+    <app-view-field label="OS Group" [value]="mac.os_guess" />
+  </div>
+  <div class="form-row">
+    <app-view-field
+      label="Last Seen"
+      [value]="mac.last_seen | date : 'short'"
+    />
+    <app-view-field
+      label="TTL / ARP / Ping Time"
+      [value]="mac.ttl + ' / ' + mac.arp_time_ms + ' / ' + mac.ping_time_ms"
+    />
+  </div>
+</app-base-form-section>

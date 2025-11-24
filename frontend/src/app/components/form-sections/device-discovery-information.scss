@@ -1,0 +1,18 @@
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  color: var(--colour-white);
+  margin-bottom: 1.5rem;
+
+  .tag {
+    background: var(--colour-success);
+    border-radius: var(--radius-tag);
+    padding: 0.5rem 1rem;
+  }
+
+  app-notification {
+    width: 100%;
+    margin-bottom: -2rem;
+  }
+}

@@ -55,17 +55,10 @@
 </app-base-panel>
 
 @if(currentDevice && deviceFormMode) {
-<app-base-modal
-  [title]="getModalTitle()"
+<app-device-modal
+  [device]="currentDevice"
   [isOpen]="showDeviceModal"
   (onClose)="closeModal()"
->
-  <app-device-form
-    [device]="currentDevice"
-    [mode]="deviceFormMode"
-    (onClose)="closeModal()"
-    (modeChange)="deviceFormMode = $event"
-    (addedToDevice)="onAddedToDevice($event)"
-  />
-</app-base-modal>
+  (onDelete)="closeModal()"
+/>
 }

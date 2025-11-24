@@ -1,0 +1,10 @@
+.form-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0rem 2rem;
+
+  > * {
+    flex-direction: column;
+    height: -webkit-fill-available;
+  }
+}

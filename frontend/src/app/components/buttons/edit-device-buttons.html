@@ -1,0 +1,22 @@
+<div class="form-actions">
+  <div class="form-buttons">
+    @if (addMode) {
+    <app-select
+      [css]="'primary right'"
+      [options]="devices"
+      [placeholder]="'Assign a device'"
+      [isClearable]="false"
+      [isPersistent]="false"
+      [isReversed]="true"
+      (optionSelected)="addToExisting($event)"
+    />
+    } @else {
+    <button class="input secondary interactive" (click)="cancel()">
+      Cancel
+    </button>
+    }
+    <button class="input primary interactive" (click)="submit()">
+      {{ addMode ? "Create Device" : "Save" }}
+    </button>
+  </div>
+</div>

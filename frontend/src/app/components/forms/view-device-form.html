@@ -1,0 +1,16 @@
+<app-notification [message]="notification" [type]="errorNotification" />
+<app-device-general-information [device]="device" />
+<app-view-macs-grid
+  [device]="device"
+  [currentMac]="currentMac()"
+  (onSelectMac)="selectMac($event)"
+/>
+<app-device-network-information [mac]="currentMac()" />
+<div class="form-columns">
+  <app-device-port-information
+    [ports]="getSortedPorts(currentMac())"
+    [deviceIp]="currentMac().last_ip"
+  />
+  <app-device-discovery-information [mac]="currentMac()" />
+</div>
+<app-view-device-buttons (onEdit)="edit()" (onDelete)="delete()" />

@@ -3,4 +3,3 @@
 - [ ] dropdowns
 - [ ] split device panel
 - [ ] tests
-- [ ] add owner

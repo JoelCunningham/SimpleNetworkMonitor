@@ -1,16 +1,16 @@
-import { FormSection } from '#components/forms';
+import { DevicePortInformation } from '#components/form-sections';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('FormSection', () => {
-  let component: FormSection;
-  let fixture: ComponentFixture<FormSection>;
+describe('DevicePortInformation', () => {
+  let component: DevicePortInformation;
+  let fixture: ComponentFixture<DevicePortInformation>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormSection],
+      imports: [DevicePortInformation],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FormSection);
+    fixture = TestBed.createComponent(DevicePortInformation);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

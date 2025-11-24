@@ -52,7 +52,10 @@
     </ul>
   </div>
   }
-  <app-form-section sectionTitle="Network Information" [collapsible]="true">
+  <app-base-form-section
+    sectionTitle="Network Information"
+    [collapsible]="true"
+  >
     <div class="form-row">
       <div class="form-group">
         <label>Last IP Address</label>
@@ -86,10 +89,10 @@
         >
       </div>
     </div>
-  </app-form-section>
+  </app-base-form-section>
 
   <div class="form-columns">
-    <app-form-section sectionTitle="Ports">
+    <app-base-form-section sectionTitle="Ports">
       <div class="tags">
         @for (port of getSortedPorts(currentMac); track port.id) { @if
         (getPortHttpUrl(currentMac?.last_ip, port.number)) {
@@ -114,9 +117,9 @@
         />
         }
       </div>
-    </app-form-section>
+    </app-base-form-section>
 
-    <app-form-section sectionTitle="Services">
+    <app-base-form-section sectionTitle="Services">
       <div class="tags">
         @for (discovery of currentMac?.discoveries; track discovery.id) {
         <div class="tag discovery-tag" [title]="discovery.device_name">
@@ -130,7 +133,7 @@
         />
         }
       </div>
-    </app-form-section>
+    </app-base-form-section>
   </div>
 
   @if(device.id) {

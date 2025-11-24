@@ -9,6 +9,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class ViewField {
   @Input() label: string = '';
-  @Input() value: string = '';
-  @Input() placeholder: string = '';
+  @Input() value?: string | null = null;
+  @Input() short: boolean = true;
+
+  getValue(): string {
+    return this.value || 'N/A';
+  }
 }
