@@ -1,6 +1,6 @@
+import { DeviceForm } from '#/components/forms/device-form';
 import { DeviceCard } from '#components/cards';
 import { Select } from '#components/common';
-import { DeviceForm } from '#components/forms';
 import { BaseModal } from '#components/modals';
 import { BasePanel } from '#components/panels';
 import {
