@@ -1,3 +1,3 @@
 export { LiveViewButton } from '#/components/buttons/live-view-button';
-export { EditButtons } from '#/components/buttons/edit-buttons';
-export { ViewButtons } from '#/components/buttons/view-buttons';
+export { OwnerEditButtons } from '#/components/buttons/owner-edit-buttons';
+export { OwnerViewButtons } from '#/components/buttons/owner-view-buttons';

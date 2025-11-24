@@ -1,4 +1,4 @@
-import { EditButtons } from '#components/buttons';
+import { OwnerEditButtons } from '#components/buttons';
 import { Notification } from '#components/common';
 import { EditField } from '#components/fields';
 import { EditDevicesGrid } from '#components/grids';
@@ -16,7 +16,7 @@ import {
 @Component({
   standalone: true,
   selector: 'app-edit-owner-form',
-  imports: [EditField, EditDevicesGrid, EditButtons, Notification],
+  imports: [EditField, EditDevicesGrid, OwnerEditButtons, Notification],
   templateUrl: './edit-owner-form.html',
   styleUrl: './edit-owner-form.scss',
 })

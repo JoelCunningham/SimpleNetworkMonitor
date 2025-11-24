@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-view-buttons',
+  selector: 'app-owner-view-buttons',
   imports: [],
-  templateUrl: './view-buttons.html',
-  styleUrl: './view-buttons.scss',
+  templateUrl: './owner-view-buttons.html',
+  styleUrl: './owner-view-buttons.scss',
 })
-export class ViewButtons {
+export class OwnerViewButtons {
   @Output() onEdit = new EventEmitter<void>();
   @Output() onDelete = new EventEmitter<void>();
 
