@@ -19,13 +19,7 @@ import {
   UtilitiesService,
 } from '#services';
 import { Constants, NotificationType } from '#types';
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -66,8 +60,7 @@ export class EditDeviceForm {
     private categoryService: CategoryService,
     private locationService: LocationService,
     private ownerService: OwnerService,
-    private utilitiesService: UtilitiesService,
-    private cdr: ChangeDetectorRef
+    private utilitiesService: UtilitiesService
   ) {}
 
   ngOnInit() {
@@ -105,16 +98,15 @@ export class EditDeviceForm {
       return this.editDevice.name;
     }
     return this.utilitiesService.getDisplayNameEx(
-      this.editDevice.owner?.name || '',
-      this.editDevice.location?.name || '',
-      this.editDevice.category?.name || ''
+      this.owners.find((o) => o.selected)?.value?.name || '',
+      this.locations.find((o) => o.selected)?.value?.name || '',
+      this.categories.find((o) => o.selected)?.value?.name || ''
     );
   }
 
   removeMac(mac: Mac) {
     if (this.editDevice.macs.length === 1) {
       this.notification = 'At least one MAC address is required.';
-      this.cdr.detectChanges();
       return;
     }
     this.editDevice.macs = this.editDevice.macs.filter((m) => m.id !== mac.id);
