@@ -1,6 +1,21 @@
 <div class="form-actions">
   <div class="form-buttons">
+    @if (addMode) {
+    <app-select
+      [css]="'secondary right'"
+      [options]="devices"
+      [placeholder]="'Assign to device'"
+      [isClearable]="false"
+      [isPersistent]="false"
+      [isReversed]="true"
+      (selectedChange)="addToExisting($event)"
+    />
+    <button class="input primary interactive" (click)="add()">
+      Create new device
+    </button>
+    } @else {
     <button class="input secondary interactive" (click)="edit()">Edit</button>
     <button class="input primary interactive" (click)="delete()">Delete</button>
+    }
   </div>
 </div>

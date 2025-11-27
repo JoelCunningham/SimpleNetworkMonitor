@@ -7,8 +7,8 @@ import {
   DevicePortInformation,
 } from '#components/form-sections';
 import { ViewMacsGrid } from '#components/grids';
-import { Device, Mac, Port } from '#interfaces';
-import { DeviceService } from '#services';
+import { Device, DeviceRequest, Mac, Option, Port } from '#interfaces';
+import { DeviceService, UtilitiesService } from '#services';
 import { Constants, NotificationType } from '#types';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -31,18 +31,54 @@ export class ViewDeviceForm {
   @Input() device!: Device;
 
   @Output() onEdit = new EventEmitter<void>();
+  @Output() onSubmit = new EventEmitter<Device>();
   @Output() onDelete = new EventEmitter<void>();
 
-  private currentSelectedMac: Mac | null = null;
+  protected deviceOptions: Option<Device>[] = [];
+  protected currentSelectedMac: Mac | null = null;
 
   protected notification: string | null = null;
   protected infoNotification: NotificationType = NotificationType.INFO;
   protected errorNotification: NotificationType = NotificationType.ERROR;
 
-  constructor(private deviceService: DeviceService) {}
+  constructor(
+    private deviceService: DeviceService,
+    private utilitiesService: UtilitiesService
+  ) {}
+
+  ngOnInit() {
+    this.deviceService.currentDevices().subscribe((devices) => {
+      this.deviceOptions = devices
+        .map((device) => ({
+          value: device,
+          label: this.utilitiesService.getDisplayName(device),
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+    });
+  }
 
   edit() {
     this.onEdit.emit();
+  }
+
+  submit(device: Device) {
+    const request: DeviceRequest = {
+      name: device.name,
+      model: device.model,
+      owner_id: device.owner?.id ?? null,
+      category_id: device.category?.id ?? null,
+      location_id: device.location?.id ?? null,
+      mac_ids: device.macs.map((mac) => mac.id),
+    };
+
+    this.deviceService.updateDevice(device.id, request).subscribe({
+      next: (updatedDevice: Device) => {
+        this.onSubmit.emit(updatedDevice);
+      },
+      error: () => {
+        this.notification = Constants.GENERIC_ERROR_MESSAGE;
+      },
+    });
   }
 
   delete() {

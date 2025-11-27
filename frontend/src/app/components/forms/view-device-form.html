@@ -1,5 +1,7 @@
 <app-notification [message]="notification" [type]="errorNotification" />
+@if(device.id) {
 <app-device-general-information [device]="device" />
+}
 <app-view-macs-grid
   [device]="device"
   [currentMac]="currentMac()"
@@ -13,4 +15,11 @@
   />
   <app-device-discovery-information [mac]="currentMac()" />
 </div>
-<app-view-device-buttons (onEdit)="edit()" (onDelete)="delete()" />
+<app-view-device-buttons
+  [devices]="deviceOptions"
+  [addMode]="device.id === 0"
+  (onAdd)="edit()"
+  (onEdit)="edit()"
+  (onDelete)="delete()"
+  (onSubmitAddToDevice)="submit($event)"
+/>

@@ -76,9 +76,7 @@
 </div>
 }
 <app-edit-device-buttons
-  [devices]="unassignedDevices"
   [addMode]="editDevice.id === 0"
   (onSubmit)="submit()"
   (onCancel)="cancel()"
-  (onSubmitAddToDevice)="submitAddToDevice($event)"
 />

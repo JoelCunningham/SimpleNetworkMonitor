@@ -50,13 +50,6 @@ export class EditDeviceForm {
 
   protected editDevice!: Device;
 
-  protected allDevices: Device[] = [];
-  protected unassignedDevices: Option<Device>[] = [];
-
-  protected allMacs: Mac[] = [];
-  protected macOptions: Option<Mac>[] = [];
-  protected selectedMacs: Option<Mac>[] = [];
-
   protected categoryOptions: Option<Category>[] = [];
   protected selectedCategory?: Option<Category>;
 
@@ -68,11 +61,11 @@ export class EditDeviceForm {
 
   protected isAutoNamed: boolean = true;
 
-  protected notification: string | null = null;
-  protected errorNotification: NotificationType = NotificationType.ERROR;
-
   protected nameError: boolean = false;
   protected categoryError: boolean = false;
+
+  protected notification: string | null = null;
+  protected errorNotification: NotificationType = NotificationType.ERROR;
 
   constructor(
     private deviceService: DeviceService,
@@ -103,39 +96,22 @@ export class EditDeviceForm {
         label: owner.name,
       }));
     });
-    this.deviceService.currentDevices().subscribe((devices) => {
-      this.allDevices = devices.filter((device) => device.id);
-      this.unassignedDevices = devices
-        .sort((a, b) =>
-          this.utilitiesService
-            .getDisplayName(a)
-            .localeCompare(this.utilitiesService.getDisplayName(b))
-        )
-        .map((device) => ({
-          value: device,
-          label: this.utilitiesService.getDisplayName(device),
-        }));
-      this.allMacs = devices.flatMap((device) => device.macs || []);
-    });
+
+    this.selectedCategory = this.categoryOptions.find(
+      (option) => option.value?.id === this.editDevice.category?.id
+    );
+    this.selectedLocation = this.locationOptions.find(
+      (option) => option.value?.id === this.editDevice.location?.id
+    );
+    this.selectedOwner = this.ownerOptions.find(
+      (option) => option.value?.id === this.editDevice.owner?.id
+    );
   }
 
   ngOnChanges() {
     this.editDevice = { ...this.device };
-
-    this.selectedCategory = this.categoryOptions.find(
-      (option) => option.value === this.editDevice.category?.id
-    );
-    this.selectedLocation = this.locationOptions.find(
-      (option) => option.value === this.editDevice.location?.id
-    );
-    this.selectedOwner = this.ownerOptions.find(
-      (option) => option.value === this.editDevice.owner?.id
-    );
-
-    this.isAutoNamed = !this.editDevice.name;
+    this.isAutoNamed = this.device.id ? !this.editDevice.name : true;
   }
-
-  ///////////////////////
 
   getAutoName(): string {
     if (!this.isAutoNamed && this.editDevice.name) {
@@ -184,26 +160,6 @@ export class EditDeviceForm {
     }
 
     return null;
-  }
-
-  submitAddToDevice(device: Device) {
-    const request: DeviceRequest = {
-      name: device.name,
-      model: device.model,
-      owner_id: device.owner?.id ?? null,
-      category_id: device.category?.id ?? null,
-      location_id: device.location?.id ?? null,
-      mac_ids: device.macs.map((mac) => mac.id),
-    };
-
-    this.deviceService.updateDevice(device.id, request).subscribe({
-      next: (updatedDevice: Device) => {
-        this.onSubmit.emit(updatedDevice);
-      },
-      error: () => {
-        this.notification = Constants.GENERIC_ERROR_MESSAGE;
-      },
-    });
   }
 
   submit() {
