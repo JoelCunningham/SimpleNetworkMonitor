@@ -37,10 +37,16 @@ class DeviceService(DeviceServiceInterface):
             raise ValueError("At least one MAC address is required")
 
         existing_device.name = device.name
-        existing_device.model = device.model
+        existing_device.model = device.model      
         existing_device.category_id = device.category_id
         existing_device.location_id = device.location_id
         existing_device.owner_id = device.owner_id
+
+        if device.location_id is None:
+            existing_device.location = None
+        if device.owner_id is None:
+            existing_device.owner = None
+
         existing_device.macs = self.database.select(Mac).where_in(Mac.id, device.mac_ids).all()
 
         self.database.update(existing_device)
