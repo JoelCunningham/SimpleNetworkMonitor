@@ -17,7 +17,7 @@
       @for (option of selectOptions; track option.value) {
       <li
         class="select-option"
-        [class.action]="option.value == 0"
+        [class.action]="option.value === undefined"
         (click)="option.event(); $event.stopPropagation()"
       >
         {{ option.label }}

@@ -1,7 +1,5 @@
-export interface Option {
+export interface Option<T> {
   label: string;
-  value: Value;
+  value?: T;
   event?: any;
 }
-
-export type Value = number | null;

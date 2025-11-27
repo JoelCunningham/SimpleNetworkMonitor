@@ -1,12 +1,11 @@
 import { Icon } from '#components/common';
-import { Option, Value } from '#interfaces';
+import { Option } from '#interfaces';
 import {
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
   Output,
 } from '@angular/core';
 
@@ -17,20 +16,20 @@ import {
   templateUrl: './select.html',
   styleUrl: './select.scss',
 })
-export class Select implements OnChanges {
+export class Select<T> {
   @Input() css?: string;
-  @Input() options: Option[] = [];
+  @Input() options: Option<T>[] = [];
+  @Input() selected?: Option<T> | null;
   @Input() placeholder?: string;
-  @Input() initialOption?: Option;
   @Input() isClearable: boolean = false;
   @Input() isPersistent: boolean = false;
   @Input() isReversed: boolean = false;
 
-  @Output() optionSelected = new EventEmitter<Value>();
+  @Output() selectedChange = new EventEmitter<Option<T> | null>();
 
   protected isOpen = false;
   protected selectText: string = 'Select...';
-  protected selectOptions: Option[] = [];
+  protected selectOptions: Option<T>[] = [];
 
   constructor(private ref: ElementRef) {}
 
@@ -43,13 +42,12 @@ export class Select implements OnChanges {
     if (this.isClearable) {
       this.selectOptions.push({
         label: 'Clear',
-        value: 0,
         event: this.clearSelection.bind(this),
       });
     }
 
-    if (this.initialOption) {
-      this.selectText = this.initialOption.label;
+    if (this.selected) {
+      this.selectText = this.selected.label;
     } else if (this.placeholder) {
       this.selectText = this.placeholder;
     } else {
@@ -63,17 +61,16 @@ export class Select implements OnChanges {
     }
   }
 
-  selectOption(option: Option) {
-    this.optionSelected.emit(option.value);
+  selectOption(option: Option<T>) {
+    this.selectedChange.emit(option);
     this.isOpen = false;
-
     if (this.isPersistent) {
       this.selectText = option.label;
     }
   }
 
   clearSelection() {
-    this.optionSelected.emit(null);
+    this.selectedChange.emit(null);
     this.isOpen = false;
     this.selectText = this.placeholder || 'Select...';
   }

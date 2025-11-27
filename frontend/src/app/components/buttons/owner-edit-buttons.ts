@@ -1,5 +1,5 @@
 import { Select } from '#components/common';
-import { Option, Value } from '#interfaces';
+import { Device, Option } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
@@ -9,12 +9,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './owner-edit-buttons.scss',
 })
 export class OwnerEditButtons {
-  @Input() devices: Option[] = [];
+  @Input() devices: Option<Device>[] = [];
   @Input() addMode: boolean = false;
 
   @Output() onSubmit = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();
-  @Output() onSelectDevice = new EventEmitter<Value>();
+  @Output() onSelectDevice = new EventEmitter<Device>();
 
   submit() {
     this.onSubmit.emit();
@@ -24,7 +24,7 @@ export class OwnerEditButtons {
     this.onCancel.emit();
   }
 
-  selectDevice(deviceId: Value) {
-    this.onSelectDevice.emit(deviceId);
+  selectDevice(device: Option<Device> | null) {
+    device && this.onSelectDevice.emit(device.value);
   }
 }
