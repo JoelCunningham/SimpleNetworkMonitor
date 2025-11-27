@@ -1,5 +1,6 @@
-- [ ] notifications
+- [ ] email notifications
 - [ ] mobile view
 - [ ] dropdowns
 - [ ] split device panel
 - [ ] tests
+- [ ] success notifications

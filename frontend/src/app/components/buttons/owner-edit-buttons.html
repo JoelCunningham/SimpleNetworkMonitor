@@ -6,7 +6,7 @@
     [isClearable]="false"
     [isPersistent]="false"
     [isReversed]="true"
-    (optionSelected)="selectDevice($event)"
+    (selectedChange)="selectDevice($event)"
   />
   <div class="form-buttons">
     <button class="input secondary interactive" (click)="cancel()">

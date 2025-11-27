@@ -1,5 +1,5 @@
 import { Select } from '#components/common';
-import { Option, Value } from '#interfaces';
+import { Device, Option } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
@@ -9,14 +9,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './edit-device-buttons.scss',
 })
 export class EditDeviceButtons {
-  @Input() devices: Option[] = [];
+  @Input() devices: Option<Device>[] = [];
   @Input() addMode: boolean = false;
 
-  @Output() onSubmit = new EventEmitter<Value>();
+  @Output() onSubmit = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();
+  @Output() onSubmitAddToDevice = new EventEmitter<Device>();
 
-  addToExisting(deviceId: Value) {
-    this.onSubmit.emit(deviceId);
+  addToExisting(device: Option<Device> | null) {
+    device && this.onSubmitAddToDevice.emit(device.value);
   }
 
   submit() {

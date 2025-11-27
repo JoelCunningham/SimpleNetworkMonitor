@@ -65,6 +65,11 @@ body {
   color: var(--colour-dark-grey);
 }
 
+input[type="text"] {
+  font-family: inherit;
+  font-weight: inherit;
+}
+
 main {
   max-width: 1200px;
   margin: 0 auto;
@@ -135,10 +140,9 @@ main {
 
 .input {
   border: none;
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 1rem;
   border-radius: var(--radius-input);
   font-size: 1rem;
-  font-weight: 500;
 
   &:focus {
     outline: none;
@@ -179,8 +183,8 @@ main {
   flex-direction: column;
   margin-bottom: 2rem;
 
-  span {
-    margin: 0.85rem 0;
+  .value {
+    margin: 0.93rem 0;
   }
 
   label {
@@ -200,4 +204,14 @@ main {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0rem 2rem;
+}
+
+.form-actions {
+  display: flex;
+
+  .form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;
+  }
 }

@@ -2,9 +2,9 @@ import { OwnerEditButtons } from '#components/buttons';
 import { Notification } from '#components/common';
 import { EditField } from '#components/fields';
 import { EditDevicesGrid } from '#components/grids';
-import { Device, Option, Owner, OwnerRequest, Value } from '#interfaces';
+import { Device, Option, Owner, OwnerRequest } from '#interfaces';
 import { DeviceService, OwnerService, UtilitiesService } from '#services';
-import { GENERIC_ERROR_MESSAGE, NotificationType } from '#types';
+import { Constants, NotificationType } from '#types';
 import {
   ChangeDetectorRef,
   Component,
@@ -30,13 +30,12 @@ export class EditOwnerForm {
 
   protected allOwners: Owner[] = [];
   protected allDevices: Device[] = [];
-  protected unassignedDevices: Option[] = [];
+  protected unassignedDevices: Option<Device>[] = [];
 
   protected notification: string | null = null;
   protected errorNotification: NotificationType = NotificationType.ERROR;
 
   protected nameError: boolean = false;
-  private RESERVED_NAMES = ['none', 'owner'];
 
   constructor(
     private ownerService: OwnerService,
@@ -60,7 +59,7 @@ export class EditOwnerForm {
             .localeCompare(this.utilitiesService.getDisplayName(b))
         )
         .map((device) => ({
-          value: device.id,
+          value: device,
           label: this.utilitiesService.getDisplayName(device),
         }));
     });
@@ -70,12 +69,11 @@ export class EditOwnerForm {
     this.editOwner = { ...this.owner };
   }
 
-  selectDevice(deviceId: Value) {
-    const device = this.allDevices.find((d) => d.id === deviceId);
+  selectDevice(device: Device) {
     if (device) {
       this.editOwner.devices = [...(this.editOwner.devices || []), device];
       this.unassignedDevices = this.unassignedDevices.filter(
-        (d) => d.value !== device.id
+        (d) => d.value?.id !== device.id
       );
     }
   }
@@ -84,7 +82,7 @@ export class EditOwnerForm {
     this.unassignedDevices = [
       ...this.unassignedDevices,
       {
-        value: device.id,
+        value: device,
         label: this.utilitiesService.getDisplayName(device),
       },
     ];
@@ -102,9 +100,10 @@ export class EditOwnerForm {
     if (!this.editOwner.name || !this.editOwner.name.trim()) {
       return 'Owner name is required.';
     }
-    if (
-      this.RESERVED_NAMES.includes(this.editOwner.name.trim().toLowerCase())
-    ) {
+    const isReserved = Constants.RESERVED_NAMES.includes(
+      this.editOwner.name.trim().toLowerCase()
+    );
+    if (isReserved) {
       return `Owner name cannot be "${this.editOwner.name}".`;
     }
     const isTaken = this.allOwners.some(
@@ -134,22 +133,20 @@ export class EditOwnerForm {
     if (this.editOwner.id === 0) {
       this.ownerService.createOwner(ownerRequest).subscribe({
         next: (owner) => {
-          // emit full owner so UI can replace temp object immediately
           this.onSubmit.emit(owner);
         },
         error: () => {
-          this.notification = GENERIC_ERROR_MESSAGE;
+          this.notification = Constants.GENERIC_ERROR_MESSAGE;
           this.cdr.detectChanges();
         },
       });
     } else {
       this.ownerService.updateOwner(this.owner.id, ownerRequest).subscribe({
         next: (owner) => {
-          // emit full owner so UI can update immediately
           this.onSubmit.emit(owner);
         },
         error: () => {
-          this.notification = GENERIC_ERROR_MESSAGE;
+          this.notification = Constants.GENERIC_ERROR_MESSAGE;
           this.cdr.detectChanges();
         },
       });

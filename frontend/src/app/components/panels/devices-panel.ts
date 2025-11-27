@@ -10,7 +10,6 @@ import {
   Notification,
   Option,
   Owner,
-  Value,
 } from '#interfaces';
 import {
   CategoryService,
@@ -47,17 +46,14 @@ export class DevicesPanel implements OnInit, OnDestroy {
   protected deviceList: Device[] = [];
   protected currentDevice: Device | null = null;
 
-  private owners: Owner[] = [];
-  protected ownerOptions: Option[] = [];
-  protected selectedOwner: Owner | undefined;
+  protected ownerOptions: Option<Owner>[] = [];
+  protected selectedOwner: Option<Owner> | null = null;
 
-  private locations: Location[] = [];
-  protected locationOptions: Option[] = [];
-  protected selectedLocation: Location | undefined;
+  protected locationOptions: Option<Location>[] = [];
+  protected selectedLocation: Option<Location> | null = null;
 
-  private categories: Category[] = [];
-  protected categoryOptions: Option[] = [];
-  protected selectedCategory: Category | undefined;
+  protected categoryOptions: Option<Category>[] = [];
+  protected selectedCategory: Option<Category> | null = null;
 
   protected notification: Notification | null = null;
 
@@ -131,11 +127,10 @@ export class DevicesPanel implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.ownerService.currentOwners().subscribe((owners) => {
-        this.owners = owners;
         this.ownerOptions = owners
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((owner) => ({
-            value: owner.id,
+            value: owner,
             label: owner.name,
           }));
         this.cdr.markForCheck();
@@ -144,11 +139,10 @@ export class DevicesPanel implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.locationService.currentLocations().subscribe((locations) => {
-        this.locations = locations;
         this.locationOptions = locations
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((location) => ({
-            value: location.id,
+            value: location,
             label: location.name,
           }));
         this.cdr.markForCheck();
@@ -157,11 +151,10 @@ export class DevicesPanel implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.categoryService.currentCategories().subscribe((categories) => {
-        this.categories = categories;
         this.categoryOptions = categories
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((category) => ({
-            value: category.id,
+            value: category,
             label: category.name,
           }));
         this.cdr.markForCheck();
@@ -173,31 +166,16 @@ export class DevicesPanel implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  selectOwner(ownerId: Value) {
-    this.selectedOwner = this.owners.find((o) => o.id === ownerId);
-    this.applyFilters();
-  }
-
-  selectLocation(locationId: Value) {
-    this.selectedLocation = this.locations.find((l) => l.id === locationId);
-    this.applyFilters();
-  }
-
-  selectCategory(categoryId: Value) {
-    this.selectedCategory = this.categories.find((c) => c.id === categoryId);
-    this.applyFilters();
-  }
-
   protected applyFilters() {
     this.deviceList = this.devices.filter((device) => {
       const ownerMatch = this.selectedOwner
-        ? device.owner?.id === this.selectedOwner.id
+        ? device.owner?.id === this.selectedOwner.value?.id
         : true;
       const locationMatch = this.selectedLocation
-        ? device.location?.id === this.selectedLocation.id
+        ? device.location?.id === this.selectedLocation.value?.id
         : true;
       const categoryMatch = this.selectedCategory
-        ? device.category?.id === this.selectedCategory.id
+        ? device.category?.id === this.selectedCategory.value?.id
         : true;
       const timeMatch = this.showUnknown
         ? (() => {
@@ -221,12 +199,9 @@ export class DevicesPanel implements OnInit, OnDestroy {
   }
 
   clearFilters() {
-    this.selectedOwner = undefined;
-    this.selectedLocation = undefined;
-    this.selectedCategory = undefined;
-    this.ownerOptions = [...this.ownerOptions];
-    this.locationOptions = [...this.locationOptions];
-    this.categoryOptions = [...this.categoryOptions];
+    this.selectedOwner = null;
+    this.selectedLocation = null;
+    this.selectedCategory = null;
     this.applyFilters();
   }
 
@@ -280,14 +255,6 @@ export class DevicesPanel implements OnInit, OnDestroy {
       return (a.macs[0]?.hostname || '').localeCompare(
         b.macs[0]?.hostname || ''
       );
-    });
-  }
-
-  private sortMacs(macs: Mac[]): Mac[] {
-    return macs.sort((a, b) => {
-      const aTime = a.last_seen ? new Date(a.last_seen).getTime() : 0;
-      const bTime = b.last_seen ? new Date(b.last_seen).getTime() : 0;
-      return bTime - aTime;
     });
   }
 

@@ -1,0 +1,22 @@
+.form-group {
+  .link-button {
+    color: var(--colour-primary);
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+
+    li {
+      list-style: none;
+    }
+  }
+
+  &.macs-group {
+    margin-bottom: 1.5rem;
+  }
+}
+app-checkbox {
+  margin-top: 1.8rem;
+}

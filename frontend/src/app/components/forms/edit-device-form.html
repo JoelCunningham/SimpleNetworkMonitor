@@ -1,0 +1,84 @@
+<app-notification
+  [message]="notification"
+  [type]="errorNotification"
+  [css]="'margin-bottom: 2rem;'"
+  (onClose)="clearErrors()"
+/>
+<div class="form-row">
+  @if (!isAutoNamed) {
+  <app-edit-field
+    label="Device Name"
+    [(value)]="editDevice.name"
+    [hasError]="nameError"
+    placeholder="Enter the name of the device"
+  />
+  } @else {
+  <app-edit-field
+    label="Device Name"
+    [value]="getAutoName()"
+    [disabled]="true"
+  />
+  }
+  <app-checkbox
+    [label]="'Automatically generate name'"
+    [(checked)]="isAutoNamed"
+  />
+</div>
+<div class="form-row">
+  <app-edit-field
+    label="Device Model"
+    [(value)]="editDevice.model"
+    placeholder="Enter the model of the device"
+  />
+  <div class="form-group">
+    <label for="deviceCategory">Category</label>
+    <app-select
+      [options]="categoryOptions"
+      [(selected)]="selectedCategory"
+      [class.error]="categoryError"
+      [css]="'secondary right'"
+    />
+  </div>
+</div>
+<div class="form-row">
+  <div class="form-group">
+    <label for="deviceLocation">Location</label>
+    <app-select
+      [options]="locationOptions"
+      [(selected)]="selectedLocation"
+      [css]="'secondary right'"
+    />
+  </div>
+  <div class="form-group">
+    <label for="deviceOwner">Owner</label>
+    <app-select
+      [options]="ownerOptions"
+      [(selected)]="selectedOwner"
+      [css]="'secondary right'"
+    />
+  </div>
+</div>
+@if (editDevice.macs.length > 0) {
+<div class="form-group">
+  <label>Macs</label>
+  <ul>
+    @for (mac of editDevice.macs; track mac.id) {
+    <app-base-card [title]="mac.address" [value]="mac.id" [interactive]="false">
+      <app-icon
+        class="after link-button icon-button interactive"
+        name="close"
+        size="24"
+        (click)="removeMac(mac)"
+      />
+    </app-base-card>
+    }
+  </ul>
+</div>
+}
+<app-edit-device-buttons
+  [devices]="unassignedDevices"
+  [addMode]="editDevice.id === 0"
+  (onSubmit)="submit()"
+  (onCancel)="cancel()"
+  (onSubmitAddToDevice)="submitAddToDevice($event)"
+/>

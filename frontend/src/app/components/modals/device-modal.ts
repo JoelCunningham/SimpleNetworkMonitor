@@ -1,11 +1,11 @@
-import { DeviceForm, ViewDeviceForm } from '#components/forms';
+import { EditDeviceForm, ViewDeviceForm } from '#components/forms';
 import { BaseModal } from '#components/modals';
 import { Device } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-device-modal',
-  imports: [BaseModal, ViewDeviceForm, DeviceForm],
+  imports: [BaseModal, ViewDeviceForm, EditDeviceForm],
   templateUrl: './device-modal.html',
   styleUrl: './device-modal.scss',
 })

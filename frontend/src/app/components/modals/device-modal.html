@@ -11,10 +11,10 @@
     (onClose)="onFormClose()"
   />
   } @else {
-  <app-device-form [device]="device" />
+  <app-edit-device-form
+    [device]="device"
+    (onSubmit)="onFormUpdate($event)"
+    (onCancel)="onFormClose()"
+  />
   }
 </app-base-modal>
-<!-- [mode]="deviceFormMode"
-    (onClose)="closeModal()"
-    (modeChange)="deviceFormMode = $event"
-    (addedToDevice)="onAddedToDevice($event)" -->

@@ -8,7 +8,7 @@
       [isClearable]="false"
       [isPersistent]="false"
       [isReversed]="true"
-      (optionSelected)="addToExisting($event)"
+      (selectedChange)="addToExisting($event)"
     />
     } @else {
     <button class="input secondary interactive" (click)="cancel()">

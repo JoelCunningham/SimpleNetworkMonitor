@@ -1,16 +1,16 @@
-import { DeviceForm } from '#components/forms';
+import { EditDeviceForm } from '#components/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('DeviceForm', () => {
-  let component: DeviceForm;
-  let fixture: ComponentFixture<DeviceForm>;
+describe('EditDeviceForm', () => {
+  let component: EditDeviceForm;
+  let fixture: ComponentFixture<EditDeviceForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeviceForm],
+      imports: [EditDeviceForm],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DeviceForm);
+    fixture = TestBed.createComponent(EditDeviceForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

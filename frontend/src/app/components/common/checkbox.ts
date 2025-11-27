@@ -1,4 +1,4 @@
-import { Icon } from '#components/common';
+import { Icon } from '#/components/common/icon';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
@@ -15,7 +15,6 @@ export class Checkbox {
   @Output() checkedChange = new EventEmitter<boolean>();
 
   toggle() {
-    this.checked = !this.checked;
-    this.checkedChange.emit(this.checked);
+    this.checkedChange.emit(!this.checked);
   }
 }

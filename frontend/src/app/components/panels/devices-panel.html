@@ -8,26 +8,29 @@
     <app-select
       [css]="'secondary right'"
       [options]="ownerOptions"
+      [(selected)]="selectedOwner"
       [placeholder]="'Owner'"
       [isClearable]="true"
       [isPersistent]="true"
-      (optionSelected)="selectOwner($event)"
+      (selectedChange)="applyFilters()"
     />
     <app-select
       [css]="'secondary right'"
       [options]="locationOptions"
+      [(selected)]="selectedLocation"
       [placeholder]="'Location'"
       [isClearable]="true"
       [isPersistent]="true"
-      (optionSelected)="selectLocation($event)"
+      (selectedChange)="applyFilters()"
     />
     <app-select
       [css]="'secondary right'"
       [options]="categoryOptions"
+      [(selected)]="selectedCategory"
       [placeholder]="'Category'"
       [isClearable]="true"
       [isPersistent]="true"
-      (optionSelected)="selectCategory($event)"
+      (selectedChange)="applyFilters()"
     />
     } @if (showUnknown) {
     <input

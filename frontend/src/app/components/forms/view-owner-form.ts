@@ -4,7 +4,7 @@ import { ViewField } from '#components/fields';
 import { ViewDevicesGrid } from '#components/grids';
 import { Owner } from '#interfaces';
 import { OwnerService } from '#services';
-import { NotificationType } from '#types';
+import { Constants, NotificationType } from '#types';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
@@ -35,7 +35,7 @@ export class ViewOwnerForm {
         this.onDelete.emit();
       },
       error: () => {
-        this.notification = 'An unexpected error occurred. Please try again.';
+        this.notification = Constants.GENERIC_ERROR_MESSAGE;
       },
     });
   }
