@@ -33,8 +33,7 @@
   <div class="form-group">
     <label for="deviceCategory">Category</label>
     <app-select
-      [options]="categoryOptions"
-      [(selected)]="selectedCategory"
+      [(options)]="categories"
       [class.error]="categoryError"
       [css]="'secondary right'"
     />
@@ -44,8 +43,7 @@
   <div class="form-group">
     <label for="deviceLocation">Location</label>
     <app-select
-      [options]="locationOptions"
-      [(selected)]="selectedLocation"
+      [(options)]="locations"
       [isClearable]="true"
       [css]="'secondary right'"
     />
@@ -53,8 +51,7 @@
   <div class="form-group">
     <label for="deviceOwner">Owner</label>
     <app-select
-      [options]="ownerOptions"
-      [(selected)]="selectedOwner"
+      [(options)]="owners"
       [isClearable]="true"
       [css]="'secondary right'"
     />

@@ -21,8 +21,11 @@ export class ViewDeviceButtons {
     this.onAdd.emit();
   }
 
-  addToExisting(device: Option<Device> | null) {
-    device && this.onSubmitAddToDevice.emit(device.value);
+  addToExisting() {
+    const selectedDevice = this.devices.find((device) => device.selected);
+    if (selectedDevice) {
+      this.onSubmitAddToDevice.emit(selectedDevice.value);
+    }
   }
 
   edit() {

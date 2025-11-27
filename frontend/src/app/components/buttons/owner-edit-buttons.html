@@ -1,12 +1,12 @@
 <div class="form-actions">
   <app-select
     [css]="'primary left'"
-    [options]="devices"
+    [(options)]="devices"
     [placeholder]="'Assign a device'"
     [isClearable]="false"
     [isPersistent]="false"
     [isReversed]="true"
-    (selectedChange)="selectDevice($event)"
+    (optionsChange)="selectDevice()"
   />
   <div class="form-buttons">
     <button class="input secondary interactive" (click)="cancel()">

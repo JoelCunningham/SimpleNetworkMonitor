@@ -1,36 +1,33 @@
 <app-base-panel [panelTitle]="titleText" [notification]="notification">
   <aside>
-    @if (selectedCategory || selectedLocation || selectedOwner) {
+    @if (selectedCategory() || selectedLocation() || selectedOwner()) {
     <button class="clear-filters interactive" (click)="clearFilters()">
       Clear all
     </button>
     } @if (!showUnknown) {
     <app-select
       [css]="'secondary right'"
-      [options]="ownerOptions"
-      [(selected)]="selectedOwner"
+      [(options)]="owners"
       [placeholder]="'Owner'"
       [isClearable]="true"
       [isPersistent]="true"
-      (selectedChange)="applyFilters()"
+      (optionsChange)="applyFilters()"
     />
     <app-select
       [css]="'secondary right'"
-      [options]="locationOptions"
-      [(selected)]="selectedLocation"
+      [(options)]="locations"
       [placeholder]="'Location'"
       [isClearable]="true"
       [isPersistent]="true"
-      (selectedChange)="applyFilters()"
+      (optionsChange)="applyFilters()"
     />
     <app-select
       [css]="'secondary right'"
-      [options]="categoryOptions"
-      [(selected)]="selectedCategory"
+      [(options)]="categories"
       [placeholder]="'Category'"
       [isClearable]="true"
       [isPersistent]="true"
-      (selectedChange)="applyFilters()"
+      (optionsChange)="applyFilters()"
     />
     } @if (showUnknown) {
     <input

@@ -3,12 +3,12 @@
     @if (addMode) {
     <app-select
       [css]="'secondary right'"
-      [options]="devices"
+      [(options)]="devices"
       [placeholder]="'Assign to device'"
       [isClearable]="false"
       [isPersistent]="false"
       [isReversed]="true"
-      (selectedChange)="addToExisting($event)"
+      (optionsChange)="addToExisting()"
     />
     <button class="input primary interactive" (click)="add()">
       Create new device

@@ -6,7 +6,6 @@ import {
   Category,
   Device,
   Location,
-  Mac,
   Notification,
   Option,
   Owner,
@@ -20,15 +19,8 @@ import {
   UtilitiesService,
 } from '#services';
 import { FormMode, NotificationType } from '#types';
-import {
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -37,23 +29,16 @@ import { Subscription } from 'rxjs';
   templateUrl: './devices-panel.html',
   styleUrl: './devices-panel.scss',
 })
-export class DevicesPanel implements OnInit, OnDestroy {
+export class DevicesPanel {
   @Input() showUnknown: boolean = false;
-
-  private subscriptions: Subscription = new Subscription();
 
   private devices: Device[] = [];
   protected deviceList: Device[] = [];
   protected currentDevice: Device | null = null;
 
-  protected ownerOptions: Option<Owner>[] = [];
-  protected selectedOwner: Option<Owner> | null = null;
-
-  protected locationOptions: Option<Location>[] = [];
-  protected selectedLocation: Option<Location> | null = null;
-
-  protected categoryOptions: Option<Category>[] = [];
-  protected selectedCategory: Option<Category> | null = null;
+  protected owners: Option<Owner>[] = [];
+  protected locations: Option<Location>[] = [];
+  protected categories: Option<Category>[] = [];
 
   protected notification: Notification | null = null;
 
@@ -76,114 +61,103 @@ export class DevicesPanel implements OnInit, OnDestroy {
   ngOnInit() {
     if (!this.showUnknown) {
       this.titleText = 'My Devices';
-      this.subscriptions.add(
-        this.deviceService.currentDevices().subscribe((devices) => {
-          this.devices = devices;
-          this.deviceList = this.sortDevices(devices);
+      this.deviceService.currentDevices().subscribe((devices) => {
+        this.devices = devices;
+        this.deviceList = this.sortDevices(devices);
 
-          if (this.currentDevice) {
-            this.currentDevice =
-              this.devices.find(
-                (device) => device.id === this.currentDevice!.id
-              ) || null;
-          }
+        if (this.currentDevice) {
+          this.currentDevice =
+            this.devices.find(
+              (device) => device.id === this.currentDevice!.id
+            ) || null;
+        }
 
-          this.applyFilters();
-          this.cdr.detectChanges();
-        })
-      );
+        this.applyFilters();
+        this.cdr.detectChanges();
+      });
     } else {
       this.titleText = 'Unknown Devices';
-      this.subscriptions.add(
-        this.macService.currentMacs().subscribe((macs) => {
-          this.devices = macs.map((mac) => {
-            const deviceFromMac: Device = {
-              id: 0,
-              name: mac.address,
-              model: null,
-              category: null,
-              location: null,
-              owner: null,
-              macs: [mac],
-              primary_mac: mac,
-            };
-            return deviceFromMac;
-          });
+      this.macService.currentMacs().subscribe((macs) => {
+        this.devices = macs.map((mac) => {
+          const deviceFromMac: Device = {
+            id: 0,
+            name: mac.address,
+            model: null,
+            category: null,
+            location: null,
+            owner: null,
+            macs: [mac],
+            primary_mac: mac,
+          };
+          return deviceFromMac;
+        });
 
-          this.deviceList = this.sortDevices(this.devices);
+        this.deviceList = this.sortDevices(this.devices);
 
-          if (this.currentDevice) {
-            this.currentDevice =
-              this.devices.find(
-                (device) => device.id === this.currentDevice!.id
-              ) || null;
-          }
+        if (this.currentDevice) {
+          this.currentDevice =
+            this.devices.find(
+              (device) => device.id === this.currentDevice!.id
+            ) || null;
+        }
 
-          this.applyFilters();
-          this.cdr.detectChanges();
-        })
-      );
+        this.applyFilters();
+        this.cdr.detectChanges();
+      });
     }
 
-    this.subscriptions.add(
-      this.ownerService.currentOwners().subscribe((owners) => {
-        this.ownerOptions = owners
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((owner) => ({
-            value: owner,
-            label: owner.name,
-          }));
-        this.cdr.markForCheck();
-      })
-    );
+    this.ownerService.currentOwners().subscribe((owners) => {
+      this.owners = owners
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((owner) => ({
+          value: owner,
+          label: owner.name,
+        }));
+      this.cdr.markForCheck();
+    });
 
-    this.subscriptions.add(
-      this.locationService.currentLocations().subscribe((locations) => {
-        this.locationOptions = locations
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((location) => ({
-            value: location,
-            label: location.name,
-          }));
-        this.cdr.markForCheck();
-      })
-    );
+    this.locationService.currentLocations().subscribe((locations) => {
+      this.locations = locations
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((location) => ({
+          value: location,
+          label: location.name,
+        }));
+      this.cdr.markForCheck();
+    });
 
-    this.subscriptions.add(
-      this.categoryService.currentCategories().subscribe((categories) => {
-        this.categoryOptions = categories
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((category) => ({
-            value: category,
-            label: category.name,
-          }));
-        this.cdr.markForCheck();
-      })
-    );
+    this.categoryService.currentCategories().subscribe((categories) => {
+      this.categories = categories
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((category) => ({
+          value: category,
+          label: category.name,
+        }));
+      this.cdr.markForCheck();
+    });
   }
 
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
+  selectedOwner = () =>
+    this.owners.find((owner) => owner.selected)?.value || null;
+  selectedLocation = () =>
+    this.locations.find((location) => location.selected)?.value || null;
+  selectedCategory = () =>
+    this.categories.find((category) => category.selected)?.value || null;
 
-  protected applyFilters() {
+  applyFilters() {
     this.deviceList = this.devices.filter((device) => {
-      const ownerMatch = this.selectedOwner
-        ? device.owner?.id === this.selectedOwner.value?.id
+      const ownerMatch = this.selectedOwner()
+        ? device.owner?.id === this.selectedOwner()?.id
         : true;
-      const locationMatch = this.selectedLocation
-        ? device.location?.id === this.selectedLocation.value?.id
+      const locationMatch = this.selectedLocation()
+        ? device.location?.id === this.selectedLocation()?.id
         : true;
-      const categoryMatch = this.selectedCategory
-        ? device.category?.id === this.selectedCategory.value?.id
+      const categoryMatch = this.selectedCategory()
+        ? device.category?.id === this.selectedCategory()?.id
         : true;
       const timeMatch = this.showUnknown
-        ? (() => {
-            if (!this.timeLimit || this.timeLimit <= 0) return true;
-            const cutoff = Date.now() - this.timeLimit * 24 * 60 * 60 * 1000;
-            const latest = this.getLatestMacTime(device);
-            return latest >= cutoff;
-          })()
+        ? this.getLatestMacTime(device) >=
+          Date.now() - this.timeLimit * 24 * 60 * 60 * 1000
         : true;
       return ownerMatch && locationMatch && categoryMatch && timeMatch;
     });
@@ -199,9 +173,9 @@ export class DevicesPanel implements OnInit, OnDestroy {
   }
 
   clearFilters() {
-    this.selectedOwner = null;
-    this.selectedLocation = null;
-    this.selectedCategory = null;
+    this.owners.forEach((owner) => (owner.selected = false));
+    this.locations.forEach((location) => (location.selected = false));
+    this.categories.forEach((category) => (category.selected = false));
     this.applyFilters();
   }
 

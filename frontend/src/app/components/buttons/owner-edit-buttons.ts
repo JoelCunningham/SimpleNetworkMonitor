@@ -24,7 +24,10 @@ export class OwnerEditButtons {
     this.onCancel.emit();
   }
 
-  selectDevice(device: Option<Device> | null) {
-    device && this.onSelectDevice.emit(device.value);
+  selectDevice() {
+    const selectedDevice = this.devices.find((device) => device.selected);
+    if (selectedDevice) {
+      this.onSelectDevice.emit(selectedDevice.value);
+    }
   }
 }

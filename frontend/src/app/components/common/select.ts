@@ -17,15 +17,15 @@ import {
   styleUrl: './select.scss',
 })
 export class Select<T> {
-  @Input() css?: string;
   @Input() options: Option<T>[] = [];
-  @Input() selected?: Option<T> | null;
+
+  @Input() css?: string;
   @Input() placeholder?: string;
   @Input() isClearable: boolean = false;
   @Input() isPersistent: boolean = false;
   @Input() isReversed: boolean = false;
 
-  @Output() selectedChange = new EventEmitter<Option<T> | null>();
+  @Output() optionsChange = new EventEmitter<Option<T>[]>();
 
   private defaultPlaceholder: string = 'Select...';
 
@@ -35,21 +35,23 @@ export class Select<T> {
 
   constructor(private ref: ElementRef) {}
 
-  ngOnChanges() {
+  ngDoCheck() {
     this.selectOptions = this.options.map((option) => ({
       ...option,
       event: this.selectOption.bind(this, option),
     }));
 
-    if (this.isClearable && this.selected) {
+    const selectedOption = this.options.find((option) => option.selected);
+
+    if (this.isClearable && selectedOption) {
       this.selectOptions.push({
         label: 'Clear',
         event: this.clearSelection.bind(this),
       });
     }
 
-    if (this.selected) {
-      this.selectText = this.selected.label;
+    if (selectedOption) {
+      this.selectText = selectedOption.label;
     } else if (this.placeholder) {
       this.selectText = this.placeholder;
     } else {
@@ -64,17 +66,16 @@ export class Select<T> {
   }
 
   selectOption(option: Option<T>) {
-    this.selectedChange.emit(option);
+    this.options.map((option) => (option.selected = false));
+    option.selected = true;
+    this.optionsChange.emit(this.options);
     this.isOpen = false;
-    if (this.isPersistent) {
-      this.selectText = option.label;
-    }
   }
 
   clearSelection() {
-    this.selectedChange.emit(null);
+    this.options.map((option) => (option.selected = false));
+    this.optionsChange.emit(this.options);
     this.isOpen = false;
-    this.selectText = this.placeholder || this.defaultPlaceholder;
   }
 
   getDropdownHeight(): string {

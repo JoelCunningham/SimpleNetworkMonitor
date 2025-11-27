@@ -49,17 +49,11 @@ export class EditDeviceForm {
   @Output() onCancel = new EventEmitter<void>();
 
   protected editDevice!: Device;
-
-  protected categoryOptions: Option<Category>[] = [];
-  protected selectedCategory?: Option<Category>;
-
-  protected locationOptions: Option<Location>[] = [];
-  protected selectedLocation?: Option<Location>;
-
-  protected ownerOptions: Option<Owner>[] = [];
-  protected selectedOwner?: Option<Owner>;
-
   protected isAutoNamed: boolean = true;
+
+  protected categories: Option<Category>[] = [];
+  protected locations: Option<Location>[] = [];
+  protected owners: Option<Owner>[] = [];
 
   protected nameError: boolean = false;
   protected categoryError: boolean = false;
@@ -78,34 +72,27 @@ export class EditDeviceForm {
 
   ngOnInit() {
     this.categoryService.currentCategories().subscribe((categories) => {
-      this.categoryOptions = categories.map((category) => ({
+      this.categories = categories.map((category) => ({
         value: category,
         label: category.name,
+        selected: this.editDevice.category?.id === category.id,
       }));
     });
     this.locationService.currentLocations().subscribe((locations) => {
-      this.locationOptions = locations.map((location) => ({
+      this.locations = locations.map((location) => ({
         value: location,
         label: location.name,
+        selected: this.editDevice.location?.id === location.id,
       }));
     });
 
     this.ownerService.currentOwners().subscribe((owners) => {
-      this.ownerOptions = owners.map((owner) => ({
+      this.owners = owners.map((owner) => ({
         value: owner,
         label: owner.name,
+        selected: this.editDevice.owner?.id === owner.id,
       }));
     });
-
-    this.selectedCategory = this.categoryOptions.find(
-      (option) => option.value?.id === this.editDevice.category?.id
-    );
-    this.selectedLocation = this.locationOptions.find(
-      (option) => option.value?.id === this.editDevice.location?.id
-    );
-    this.selectedOwner = this.ownerOptions.find(
-      (option) => option.value?.id === this.editDevice.owner?.id
-    );
   }
 
   ngOnChanges() {
@@ -155,7 +142,7 @@ export class EditDeviceForm {
   }
 
   validateCategory() {
-    if (!this.selectedCategory) {
+    if (!this.categories.find((option) => option.selected)) {
       return 'Category is required.';
     }
 
@@ -182,9 +169,9 @@ export class EditDeviceForm {
     const request: DeviceRequest = {
       name: this.isAutoNamed ? null : this.editDevice.name,
       model: this.editDevice.model,
-      owner_id: this.selectedOwner?.value?.id ?? null,
-      category_id: this.selectedCategory?.value?.id ?? null,
-      location_id: this.selectedLocation?.value?.id ?? null,
+      owner_id: this.owners.find((o) => o.selected)?.value?.id ?? null,
+      category_id: this.categories.find((o) => o.selected)?.value?.id ?? null,
+      location_id: this.locations.find((o) => o.selected)?.value?.id ?? null,
       mac_ids: this.editDevice.macs.map((mac) => mac.id),
     };
 
