@@ -4,4 +4,3 @@
 - [ ] split device panel
 - [ ] tests
 - [ ] success notifications
-- [ ] validation service
