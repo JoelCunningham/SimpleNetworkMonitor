@@ -9,12 +9,9 @@
     display: flex;
     justify-content: space-between;
 
-    span {
-      padding-right: 12px;
-    }
-
     app-icon {
       width: 19px;
+      margin-left: 12px;
       margin-bottom: -2px;
       pointer-events: none;
       transform: rotate(0);

@@ -27,8 +27,10 @@ export class Select<T> {
 
   @Output() selectedChange = new EventEmitter<Option<T> | null>();
 
+  private defaultPlaceholder: string = 'Select...';
+
   protected isOpen = false;
-  protected selectText: string = 'Select...';
+  protected selectText: string = this.defaultPlaceholder;
   protected selectOptions: Option<T>[] = [];
 
   constructor(private ref: ElementRef) {}
@@ -39,7 +41,7 @@ export class Select<T> {
       event: this.selectOption.bind(this, option),
     }));
 
-    if (this.isClearable) {
+    if (this.isClearable && this.selected) {
       this.selectOptions.push({
         label: 'Clear',
         event: this.clearSelection.bind(this),
@@ -51,7 +53,7 @@ export class Select<T> {
     } else if (this.placeholder) {
       this.selectText = this.placeholder;
     } else {
-      this.selectText = 'Select...';
+      this.selectText = this.defaultPlaceholder;
     }
   }
 
@@ -72,7 +74,7 @@ export class Select<T> {
   clearSelection() {
     this.selectedChange.emit(null);
     this.isOpen = false;
-    this.selectText = this.placeholder || 'Select...';
+    this.selectText = this.placeholder || this.defaultPlaceholder;
   }
 
   getDropdownHeight(): string {
