@@ -18,7 +18,7 @@ import {
   UtilitiesService,
 } from '#services';
 import { NotificationType } from '#types';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -44,7 +44,8 @@ export class DevicesPanel {
     private ownerService: OwnerService,
     private locationService: LocationService,
     private categoryService: CategoryService,
-    private utilitiesService: UtilitiesService
+    private utilitiesService: UtilitiesService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -61,6 +62,7 @@ export class DevicesPanel {
           value: owner,
           label: owner.name,
         }));
+      this.cdr.detectChanges();
     });
 
     this.locationService.currentLocations().subscribe((locations) => {
@@ -70,6 +72,7 @@ export class DevicesPanel {
           value: location,
           label: location.name,
         }));
+      this.cdr.detectChanges();
     });
 
     this.categoryService.currentCategories().subscribe((categories) => {
@@ -79,6 +82,7 @@ export class DevicesPanel {
           value: category,
           label: category.name,
         }));
+      this.cdr.detectChanges();
     });
   }
 
@@ -111,6 +115,9 @@ export class DevicesPanel {
     } else {
       this.notification = undefined;
     }
+
+    // Trigger change detection to avoid ExpressionChangedAfterItHasBeenCheckedError
+    this.cdr.detectChanges();
   }
 
   openModal(device: Device) {
