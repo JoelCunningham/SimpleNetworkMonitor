@@ -18,7 +18,7 @@
       type="button"
       title="Remove device"
       class="remove-button icon-button interactive"
-      (click)="remove()"
+      (click)="remove(); $event.stopPropagation()"
     >
       <app-icon name="close" size="24"></app-icon>
     </button>
@@ -27,7 +27,7 @@
       type="button"
       title="Open in new tab"
       class="link-button icon-button interactive"
-      (click)="openInNewTab()"
+      (click)="openInNewTab(); $event.stopPropagation()"
     >
       <app-icon name="external-link" size="18"></app-icon>
     </button>
