@@ -51,11 +51,11 @@ export class OwnerModal {
   }
 
   onFormClose() {
-    if (this.owner.id !== 0 && !this.isViewMode) {
-      this.setViewMode(true);
-    } else {
-      this.onClose.emit();
-    }
+    this.onClose.emit();
+  }
+
+  onFormCancel() {
+    this.setViewMode(true);
   }
 
   onFormUpdate(owner: Owner) {

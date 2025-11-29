@@ -21,7 +21,6 @@ export class DeviceModal {
 
   ngOnChanges() {
     this.notification = undefined;
-    this.isViewMode = this.device.id !== 0;
   }
 
   getModalTitle() {
@@ -39,11 +38,11 @@ export class DeviceModal {
   }
 
   onFormClose() {
-    if (this.device.id !== 0 && !this.isViewMode) {
-      this.setViewMode(true);
-    } else {
-      this.onClose.emit();
-    }
+    this.onClose.emit();
+  }
+
+  onFormCancel() {
+    this.setViewMode(true);
   }
 
   onFormUpdate(device: Device) {
