@@ -1,4 +1,5 @@
 import { UnknownDevicesPanel } from '#components/panels';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('UnknownDevicesPanel', () => {
@@ -8,6 +9,7 @@ describe('UnknownDevicesPanel', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UnknownDevicesPanel],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UnknownDevicesPanel);

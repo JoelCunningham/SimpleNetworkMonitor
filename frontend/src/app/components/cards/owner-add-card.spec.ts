@@ -1,13 +1,15 @@
 import { OwnerAddCard } from '#components/cards';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('AddOwnerCard', () => {
+describe('OwnerAddCard', () => {
   let component: OwnerAddCard;
   let fixture: ComponentFixture<OwnerAddCard>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OwnerAddCard],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OwnerAddCard);

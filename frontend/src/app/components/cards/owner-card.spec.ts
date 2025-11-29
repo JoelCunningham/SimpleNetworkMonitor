@@ -12,6 +12,10 @@ describe('OwnerCard', () => {
 
     fixture = TestBed.createComponent(OwnerCard);
     component = fixture.componentInstance;
+
+    // Set required input
+    component.owner = { id: 1, name: 'Test Owner', devices: [] };
+
     fixture.detectChanges();
   });
 

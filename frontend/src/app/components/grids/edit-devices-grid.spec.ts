@@ -1,17 +1,23 @@
-import { ViewDevicesGrid } from '#components/grids';
+import { EditDevicesGrid } from '#components/grids';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('ViewDevicesGrid', () => {
-  let component: ViewDevicesGrid;
-  let fixture: ComponentFixture<ViewDevicesGrid>;
+describe('EditDevicesGrid', () => {
+  let component: EditDevicesGrid;
+  let fixture: ComponentFixture<EditDevicesGrid>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewDevicesGrid],
+      imports: [EditDevicesGrid],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ViewDevicesGrid);
+    fixture = TestBed.createComponent(EditDevicesGrid);
     component = fixture.componentInstance;
+
+    // Set required input
+    component.owner = { id: 1, name: 'Test Owner', devices: [] };
+
     fixture.detectChanges();
   });
 

@@ -12,6 +12,10 @@ describe('ViewDevicesGrid', () => {
 
     fixture = TestBed.createComponent(ViewDevicesGrid);
     component = fixture.componentInstance;
+
+    // Set required input
+    component.owner = { id: 1, name: 'Test Owner', devices: [] };
+
     fixture.detectChanges();
   });
 

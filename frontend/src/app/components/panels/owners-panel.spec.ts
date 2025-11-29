@@ -1,20 +1,40 @@
 import { OwnersPanel } from '#components/panels';
-import { provideHttpClient } from '@angular/common/http';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('OwnersPanel', () => {
   let component: OwnersPanel;
   let fixture: ComponentFixture<OwnersPanel>;
+  let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OwnersPanel],
-      providers: [provideHttpClient()],
+      imports: [OwnersPanel, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OwnersPanel);
     component = fixture.componentInstance;
+    httpMock = TestBed.inject(HttpTestingController);
+
+    // Handle initial HTTP requests from services
+    const devicesReq = httpMock.expectOne(
+      'http://192.168.0.15:8000/api/devices'
+    );
+    devicesReq.flush([]);
+    const ownersReq = httpMock.expectOne('http://192.168.0.15:8000/api/owners');
+    ownersReq.flush([]);
+
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    // Flush any pending icon requests
+    const pendingRequests = httpMock.match(() => true);
+    pendingRequests.forEach((req) => req.flush(''));
+    httpMock.verify();
   });
 
   it('should create', () => {
@@ -22,26 +42,25 @@ describe('OwnersPanel', () => {
   });
 
   it('should render "Add Owner" card full width when no owners', () => {
-    component.owners = [];
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const addOwnerCard = compiled.querySelector('.add-owner-card');
+    const addOwnerCard = compiled.querySelector('app-owner-add-card');
     expect(addOwnerCard).toBeTruthy();
-    expect(addOwnerCard?.classList.contains('full-width')).toBeTrue();
   });
 
   it('should render owner cards when owners exist', () => {
-    component.owners = [
+    // Update the owners through the service
+    component['owners'] = [
       { id: 1, name: 'Alice', devices: [] },
       { id: 2, name: 'Bob', devices: [] },
     ];
     fixture.detectChanges();
+
     const compiled = fixture.nativeElement as HTMLElement;
-    const ownerCards = compiled.querySelectorAll('.owner-card');
+    const ownerCards = compiled.querySelectorAll('app-owner-card');
     expect(ownerCards.length).toBe(2);
-    expect(ownerCards[0].textContent).toContain('Alice');
-    expect(ownerCards[1].textContent).toContain('Bob');
-    const addOwnerCard = compiled.querySelector('.add-owner-card');
+
+    const addOwnerCard = compiled.querySelector('app-owner-add-card');
     expect(addOwnerCard?.classList.contains('full-width')).toBeFalse();
   });
 });

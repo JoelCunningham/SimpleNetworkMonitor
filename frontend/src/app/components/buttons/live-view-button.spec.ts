@@ -1,4 +1,5 @@
 import { LiveViewButton } from '#components/buttons';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('LiveViewButton', () => {
@@ -8,6 +9,7 @@ describe('LiveViewButton', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LiveViewButton],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LiveViewButton);

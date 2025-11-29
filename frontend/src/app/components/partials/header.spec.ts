@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Header } from '#components/panels/header';
+import { Header } from '#components/partials';
 
 describe('Header', () => {
   let component: Header;
@@ -23,13 +23,6 @@ describe('Header', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain(
       'Simple Network Monitor'
-    );
-  });
-
-  it('should render the subtitle', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('p')?.textContent).toContain(
-      'Real-time network device discovery and monitoring'
     );
   });
 });

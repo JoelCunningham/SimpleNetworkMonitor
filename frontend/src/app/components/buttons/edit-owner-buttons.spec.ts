@@ -1,4 +1,5 @@
 import { EditOwnerButtons } from '#components/buttons';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('EditOwnerButtons', () => {
@@ -8,6 +9,7 @@ describe('EditOwnerButtons', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditOwnerButtons],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditOwnerButtons);

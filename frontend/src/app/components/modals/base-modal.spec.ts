@@ -1,4 +1,5 @@
 import { BaseModal } from '#components/modals';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('BaseModal', () => {
@@ -8,6 +9,7 @@ describe('BaseModal', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BaseModal],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BaseModal);

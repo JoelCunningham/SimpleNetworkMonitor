@@ -17,6 +17,14 @@ describe('OwnerService', () => {
     });
     service = TestBed.inject(OwnerService);
     httpMock = TestBed.inject(HttpTestingController);
+
+    // Handle the initial HTTP requests made by OwnerService and DeviceService constructors
+    const devicesReq = httpMock.expectOne(
+      'http://192.168.0.15:8000/api/devices'
+    );
+    devicesReq.flush([]);
+    const ownersReq = httpMock.expectOne('http://192.168.0.15:8000/api/owners');
+    ownersReq.flush([]);
   });
 
   afterEach(() => {
@@ -33,13 +41,17 @@ describe('OwnerService', () => {
       { id: 2, name: 'Bob', devices: [] },
     ];
 
-    service.currentOwners().subscribe((owners) => {
-      expect(owners.length).toBe(2);
-      expect(owners).toEqual(mockOwners);
-    });
+    // Manually trigger a refresh to test the HTTP call
+    service.refreshOwners();
 
     const req = httpMock.expectOne('http://192.168.0.15:8000/api/owners');
     expect(req.request.method).toBe('GET');
     req.flush(mockOwners);
+
+    // Verify the owners were updated
+    service.currentOwners().subscribe((owners) => {
+      expect(owners.length).toBe(2);
+      expect(owners).toEqual(mockOwners);
+    });
   });
 });
