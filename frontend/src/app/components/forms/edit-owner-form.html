@@ -14,7 +14,7 @@
     [owner]="editOwner"
     (onRemoveDevice)="removeDevice($event)"
   />
-  <app-owner-edit-buttons
+  <app-edit-owner-buttons
     [devices]="unassignedDevices"
     [addMode]="editOwner.id === 0"
     (onSubmit)="submit()"

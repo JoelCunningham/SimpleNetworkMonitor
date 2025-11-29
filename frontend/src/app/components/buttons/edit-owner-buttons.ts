@@ -3,12 +3,12 @@ import { Device, Option } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-owner-edit-buttons',
+  selector: 'app-edit-owner-buttons',
   imports: [Select],
-  templateUrl: './owner-edit-buttons.html',
-  styleUrl: './owner-edit-buttons.scss',
+  templateUrl: './edit-owner-buttons.html',
+  styleUrl: './edit-owner-buttons.scss',
 })
-export class OwnerEditButtons {
+export class EditOwnerButtons {
   @Input() devices: Option<Device>[] = [];
   @Input() addMode: boolean = false;
 

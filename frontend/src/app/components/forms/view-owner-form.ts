@@ -1,4 +1,4 @@
-import { OwnerViewButtons } from '#components/buttons';
+import { ViewOwnerButtons } from '#components/buttons';
 import { Notification } from '#components/common';
 import { ViewField } from '#components/fields';
 import { ViewDevicesGrid } from '#components/grids';
@@ -10,7 +10,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   standalone: true,
   selector: 'app-view-owner-form',
-  imports: [ViewField, ViewDevicesGrid, OwnerViewButtons, Notification],
+  imports: [ViewField, ViewDevicesGrid, ViewOwnerButtons, Notification],
   templateUrl: './view-owner-form.html',
   styleUrl: './view-owner-form.scss',
 })
