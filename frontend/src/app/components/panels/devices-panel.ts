@@ -1,5 +1,5 @@
+import { FilterDeviceButtons } from '#components/buttons';
 import { DeviceCard } from '#components/cards';
-import { Select } from '#components/common';
 import { DeviceModal } from '#components/modals';
 import { BasePanel } from '#components/panels';
 import {
@@ -19,12 +19,11 @@ import {
 } from '#services';
 import { NotificationType } from '#types';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
   selector: 'app-devices-panel',
-  imports: [BasePanel, DeviceCard, Select, FormsModule, DeviceModal],
+  imports: [BasePanel, DeviceCard, DeviceModal, FilterDeviceButtons],
   templateUrl: './devices-panel.html',
   styleUrl: './devices-panel.scss',
 })
@@ -112,13 +111,6 @@ export class DevicesPanel {
     } else {
       this.notification = undefined;
     }
-  }
-
-  clearFilters() {
-    this.owners.forEach((owner) => (owner.selected = false));
-    this.locations.forEach((location) => (location.selected = false));
-    this.categories.forEach((category) => (category.selected = false));
-    this.applyFilters();
   }
 
   openModal(device: Device) {

@@ -1,0 +1,31 @@
+<div class="filters">
+  @if (filterSelected()) {
+  <button class="clear-filters interactive" (click)="clearFilters()">
+    Clear all
+  </button>
+  }
+  <app-select
+    css="secondary right"
+    [(options)]="owners"
+    [placeholder]="'Owner'"
+    [isClearable]="true"
+    [isPersistent]="true"
+    (optionsChange)="filterChange()"
+  />
+  <app-select
+    css="secondary right"
+    [(options)]="locations"
+    [placeholder]="'Location'"
+    [isClearable]="true"
+    [isPersistent]="true"
+    (optionsChange)="filterChange()"
+  />
+  <app-select
+    css="secondary right"
+    [(options)]="categories"
+    [placeholder]="'Category'"
+    [isClearable]="true"
+    [isPersistent]="true"
+    (optionsChange)="filterChange()"
+  />
+</div>

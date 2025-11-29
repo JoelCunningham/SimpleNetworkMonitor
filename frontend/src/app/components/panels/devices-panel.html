@@ -1,33 +1,10 @@
 <app-base-panel panelTitle="My Devices" [notification]="notification">
   <aside>
-    @if (selectedCategory() || selectedLocation() || selectedOwner()) {
-    <button class="clear-filters interactive" (click)="clearFilters()">
-      Clear all
-    </button>
-    }
-    <app-select
-      [css]="'secondary right'"
-      [(options)]="owners"
-      [placeholder]="'Owner'"
-      [isClearable]="true"
-      [isPersistent]="true"
-      (optionsChange)="applyFilters()"
-    />
-    <app-select
-      [css]="'secondary right'"
-      [(options)]="locations"
-      [placeholder]="'Location'"
-      [isClearable]="true"
-      [isPersistent]="true"
-      (optionsChange)="applyFilters()"
-    />
-    <app-select
-      [css]="'secondary right'"
-      [(options)]="categories"
-      [placeholder]="'Category'"
-      [isClearable]="true"
-      [isPersistent]="true"
-      (optionsChange)="applyFilters()"
+    <app-filter-device-buttons
+      [(owners)]="owners"
+      [(locations)]="locations"
+      [(categories)]="categories"
+      (onFilterChange)="applyFilters()"
     />
   </aside>
   <main>

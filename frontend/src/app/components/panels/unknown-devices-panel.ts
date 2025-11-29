@@ -1,3 +1,4 @@
+import { FilterUnknownDeviceButtons } from '#components/buttons';
 import { DeviceCard } from '#components/cards';
 import { DeviceModal } from '#components/modals';
 import { BasePanel } from '#components/panels';
@@ -5,12 +6,11 @@ import { Device, Notification } from '#interfaces';
 import { MacService, UtilitiesService } from '#services';
 import { NotificationType } from '#types';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
   selector: 'app-unknown-devices-panel',
-  imports: [BasePanel, DeviceCard, FormsModule, DeviceModal],
+  imports: [BasePanel, DeviceCard, DeviceModal, FilterUnknownDeviceButtons],
   templateUrl: './unknown-devices-panel.html',
   styleUrl: './unknown-devices-panel.scss',
 })

@@ -1,0 +1,11 @@
+<div class="filters">
+  <input
+    type="number"
+    id="timeLimit"
+    name="timeLimit"
+    class="input secondary interactive"
+    [(value)]="timeLimit"
+    (input)="filterChange($event)"
+  />
+  <label for="timeLimit">Days</label>
+</div>
