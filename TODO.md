@@ -1,3 +1,2 @@
 - [ ] email notifications
-- [ ] mobile view
 - [ ] tests
