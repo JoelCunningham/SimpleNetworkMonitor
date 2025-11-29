@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OwnerService {
-  private apiUrl = 'http://localhost:8000/api/owners';
+  private apiUrl = 'http://192.168.0.15:8000/api/owners';
   private ownersSubject = new BehaviorSubject<Owner[]>([]);
 
   public owners = this.ownersSubject.asObservable();

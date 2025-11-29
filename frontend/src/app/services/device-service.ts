@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
-  private apiUrl = 'http://localhost:8000/api/devices';
+  private apiUrl = 'http://192.168.0.15:8000/api/devices';
   private doRefresh = true;
 
   private devicesSubject = new BehaviorSubject<Device[]>([]);

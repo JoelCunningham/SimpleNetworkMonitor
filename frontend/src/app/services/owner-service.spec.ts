@@ -38,7 +38,7 @@ describe('OwnerService', () => {
       expect(owners).toEqual(mockOwners);
     });
 
-    const req = httpMock.expectOne('http://localhost:8000/api/owners');
+    const req = httpMock.expectOne('http://192.168.0.15:8000/api/owners');
     expect(req.request.method).toBe('GET');
     req.flush(mockOwners);
   });
