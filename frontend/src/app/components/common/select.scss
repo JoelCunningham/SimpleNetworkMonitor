@@ -17,6 +17,10 @@
       transform: rotate(0);
       transition: transform var(--duration-fast) cubic-bezier(0.4, 0.2, 0.2, 1);
     }
+
+    .selected {
+      color: var(--colour-black);
+    }
   }
 
   .select-dropdown {

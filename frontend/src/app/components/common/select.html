@@ -7,7 +7,7 @@
   (click)="toggleDropdown()"
 >
   <div class="select-body">
-    <span>
+    <span [class.selected]="isSelected()">
       {{ selectText }}
     </span>
     <app-icon name="collapse" size="20" />
