@@ -15,11 +15,7 @@
     } @else {
     <div class="tag">{{ getPortDescription(port) }}</div>
     } } @if (ports.length === 0) {
-    <app-notification
-      [message]="'No ports detected'"
-      [type]="infoNotification"
-      [closeable]="false"
-    />
+    <app-notification [details]="noPortsNotification" [closeable]="false" />
     }
   </div>
 </app-base-form-section>

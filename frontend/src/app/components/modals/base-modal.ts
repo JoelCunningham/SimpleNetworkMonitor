@@ -1,4 +1,5 @@
-import { Icon } from '#components/common';
+import { Icon, Notification } from '#components/common';
+import { Notification as NotificationDetails } from '#interfaces';
 import {
   Component,
   ElementRef,
@@ -11,19 +12,25 @@ import {
 @Component({
   standalone: true,
   selector: 'app-base-modal',
-  imports: [Icon],
+  imports: [Icon, Notification],
   templateUrl: './base-modal.html',
   styleUrl: './base-modal.scss',
 })
 export class BaseModal {
-  @Input() title: string | null = '';
   @Input() isOpen: boolean = false;
+  @Input() modalTitle!: string;
+  @Input() notification?: NotificationDetails;
+
   @Output() onClose = new EventEmitter<void>();
 
   constructor(private ref: ElementRef) {}
 
   closeModal() {
     this.onClose.emit();
+  }
+
+  closeNotification() {
+    this.notification = undefined;
   }
 
   @HostListener('document:keydown.escape', ['$event'])

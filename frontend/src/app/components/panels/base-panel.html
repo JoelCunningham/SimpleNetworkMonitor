@@ -5,11 +5,7 @@
     <ng-content select="aside"></ng-content>
   </header>
   } @if (notification) {
-  <app-notification
-    [message]="notification.message"
-    [type]="notification.type"
-    [closeable]="false"
-  />
+  <app-notification [details]="notification" [closeable]="false" />
   }
   <ng-content select="main"></ng-content>
 </section>

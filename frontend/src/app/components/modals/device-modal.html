@@ -1,6 +1,7 @@
 <app-base-modal
-  [title]="getModalTitle()"
   [isOpen]="isOpen"
+  [modalTitle]="getModalTitle()"
+  [notification]="notification"
   (onClose)="onFormClose()"
 >
   @if (isViewMode) {
@@ -9,12 +10,14 @@
     (onEdit)="setViewMode(false)"
     (onDelete)="onFormDelete()"
     (onClose)="onFormClose()"
+    (onNotification)="onNotification($event)"
   />
   } @else {
   <app-edit-device-form
     [device]="device"
     (onSubmit)="onFormUpdate($event)"
     (onCancel)="onFormClose()"
+    (onNotification)="onNotification($event)"
   />
   }
 </app-base-modal>

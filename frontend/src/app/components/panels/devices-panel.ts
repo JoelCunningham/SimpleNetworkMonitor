@@ -16,9 +16,8 @@ import {
   LocationService,
   MacService,
   OwnerService,
-  UtilitiesService,
 } from '#services';
-import { FormMode, NotificationType } from '#types';
+import { NotificationType } from '#types';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -43,7 +42,6 @@ export class DevicesPanel {
   protected notification: Notification | null = null;
 
   protected showDeviceModal = false;
-  protected deviceFormMode: FormMode | null = null;
 
   protected titleText = 'Devices';
   protected timeLimit: number = 7;
@@ -54,7 +52,6 @@ export class DevicesPanel {
     private ownerService: OwnerService,
     private locationService: LocationService,
     private categoryService: CategoryService,
-    private utilitiesService: UtilitiesService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -179,43 +176,15 @@ export class DevicesPanel {
     this.applyFilters();
   }
 
-  getModalTitle(): string | null {
-    switch (this.deviceFormMode) {
-      case FormMode.Add:
-        return 'Add Device';
-      case FormMode.View:
-        return this.utilitiesService.getDisplayName(this.currentDevice);
-      case FormMode.Edit:
-        return 'Edit Device';
-      default:
-        return null;
-    }
-  }
-
-  openViewModal(device: Device) {
-    this.openModal(device, FormMode.View);
-  }
-
-  openAddModal(device: Device) {
-    this.openModal(device, FormMode.Add);
-  }
-
-  openModal(device: Device, form: FormMode) {
+  openModal(device: Device) {
     this.currentDevice = device;
-    this.deviceFormMode = form;
-    this.showDeviceModal = true;
-  }
-
-  onAddedToDevice(device: Device) {
-    this.currentDevice = device;
-    this.deviceFormMode = FormMode.View;
     this.showDeviceModal = true;
   }
 
   closeModal() {
+    this.notification = null;
     this.showDeviceModal = false;
     setTimeout(() => {
-      this.deviceFormMode = null;
       this.currentDevice = null;
       this.cdr.detectChanges();
     }, 100);

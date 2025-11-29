@@ -1,5 +1,4 @@
 import { ViewDeviceButtons } from '#components/buttons';
-import { Notification } from '#components/common';
 import {
   DeviceDiscoveryInformation,
   DeviceGeneralInformation,
@@ -7,7 +6,14 @@ import {
   DevicePortInformation,
 } from '#components/form-sections';
 import { ViewMacsGrid } from '#components/grids';
-import { Device, DeviceRequest, Mac, Option, Port } from '#interfaces';
+import {
+  Device,
+  DeviceRequest,
+  Mac,
+  Notification,
+  Option,
+  Port,
+} from '#interfaces';
 import { DeviceService, UtilitiesService } from '#services';
 import { Constants, NotificationType } from '#types';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -16,7 +22,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   standalone: true,
   selector: 'app-view-device-form',
   imports: [
-    Notification,
     ViewDeviceButtons,
     ViewMacsGrid,
     DeviceGeneralInformation,
@@ -33,13 +38,10 @@ export class ViewDeviceForm {
   @Output() onEdit = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<Device>();
   @Output() onDelete = new EventEmitter<void>();
+  @Output() onNotification = new EventEmitter<Notification>();
 
   protected deviceOptions: Option<Device>[] = [];
   protected currentSelectedMac: Mac | null = null;
-
-  protected notification: string | null = null;
-  protected infoNotification: NotificationType = NotificationType.INFO;
-  protected errorNotification: NotificationType = NotificationType.ERROR;
 
   constructor(
     private deviceService: DeviceService,
@@ -74,9 +76,16 @@ export class ViewDeviceForm {
     this.deviceService.updateDevice(device.id, request).subscribe({
       next: (updatedDevice: Device) => {
         this.onSubmit.emit(updatedDevice);
+        this.onNotification.emit({
+          type: NotificationType.SUCCESS,
+          message: 'Device updated successfully.',
+        });
       },
       error: () => {
-        this.notification = Constants.GENERIC_ERROR_MESSAGE;
+        this.onNotification.emit({
+          type: NotificationType.ERROR,
+          message: Constants.GENERIC_ERROR_MESSAGE,
+        });
       },
     });
   }
@@ -85,9 +94,16 @@ export class ViewDeviceForm {
     this.deviceService.deleteDevice(this.device.id).subscribe({
       next: () => {
         this.onDelete.emit();
+        this.onNotification.emit({
+          type: NotificationType.SUCCESS,
+          message: 'Device deleted successfully.',
+        });
       },
       error: () => {
-        this.notification = Constants.GENERIC_ERROR_MESSAGE;
+        this.onNotification.emit({
+          type: NotificationType.ERROR,
+          message: Constants.GENERIC_ERROR_MESSAGE,
+        });
       },
     });
   }

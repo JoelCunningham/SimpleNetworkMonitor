@@ -1,6 +1,6 @@
 import { EditOwnerForm, ViewOwnerForm } from '#components/forms';
 import { BaseModal } from '#components/modals';
-import { Owner } from '#interfaces';
+import { Notification, Owner } from '#interfaces';
 import { OwnerService } from '#services';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -18,6 +18,7 @@ export class OwnerModal {
   @Output() onDelete = new EventEmitter<void>();
 
   protected isViewMode: boolean = true;
+  protected notification?: Notification;
 
   constructor(private ownerService: OwnerService) {}
 
@@ -34,7 +35,7 @@ export class OwnerModal {
     });
   }
 
-  getModalTitle(): string | null {
+  getModalTitle() {
     if (this.isViewMode) {
       return 'View Owner';
     } else if (this.owner.id === 0) {
@@ -44,7 +45,9 @@ export class OwnerModal {
     }
   }
 
-  setViewMode = (isViewMode: boolean) => (this.isViewMode = isViewMode);
+  setViewMode(isViewMode: boolean) {
+    this.isViewMode = isViewMode;
+  }
 
   onFormClose() {
     if (this.owner.id !== 0 && !this.isViewMode) {
@@ -62,5 +65,9 @@ export class OwnerModal {
   onFormDelete() {
     this.setViewMode(true);
     this.onDelete.emit();
+  }
+
+  onNotification(notification?: Notification) {
+    this.notification = notification;
   }
 }

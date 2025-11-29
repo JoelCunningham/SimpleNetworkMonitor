@@ -1,7 +1,7 @@
 <dialog class="modal" [class.show]="isOpen" [class.hide]="!isOpen">
   <div class="modal-content">
     <header class="modal-header">
-      <h1>{{ title }}</h1>
+      <h1>{{ modalTitle }}</h1>
       <button
         class="modal-close icon-button interactive"
         (click)="closeModal()"
@@ -10,6 +10,10 @@
       </button>
     </header>
     <main class="modal-body">
+      <app-notification
+        [details]="notification"
+        (onClose)="closeNotification()"
+      />
       <ng-content></ng-content>
     </main>
     <footer class="modal-footer"></footer>

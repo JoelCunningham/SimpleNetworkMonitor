@@ -1,6 +1,6 @@
 import { EditDeviceForm, ViewDeviceForm } from '#components/forms';
 import { BaseModal } from '#components/modals';
-import { Device } from '#interfaces';
+import { Device, Notification } from '#interfaces';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
@@ -17,10 +17,11 @@ export class DeviceModal {
   @Output() onDelete = new EventEmitter<void>();
 
   protected isViewMode: boolean = true;
+  protected notification?: Notification;
 
   ngOnChanges() {}
 
-  getModalTitle(): string | null {
+  getModalTitle() {
     if (this.isViewMode) {
       return 'View Device';
     } else if (this.device.id === 0) {
@@ -30,7 +31,9 @@ export class DeviceModal {
     }
   }
 
-  setViewMode = (isViewMode: boolean) => (this.isViewMode = isViewMode);
+  setViewMode(isViewMode: boolean) {
+    this.isViewMode = isViewMode;
+  }
 
   onFormClose() {
     if (this.device.id !== 0 && !this.isViewMode) {
@@ -48,5 +51,9 @@ export class DeviceModal {
   onFormDelete() {
     this.setViewMode(true);
     this.onDelete.emit();
+  }
+
+  onNotification(notification?: Notification) {
+    this.notification = notification;
   }
 }

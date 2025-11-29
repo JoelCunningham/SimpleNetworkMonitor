@@ -4,6 +4,7 @@ import { Port } from '#interfaces';
 import { UtilitiesService } from '#services';
 import { NotificationType } from '#types';
 import { Component, Input } from '@angular/core';
+import { Notification as NotificationDetails } from '#interfaces';
 
 @Component({
   selector: 'app-device-port-information',
@@ -15,8 +16,12 @@ export class DevicePortInformation {
   @Input() ports: Port[] = [];
   @Input() deviceIp: string = '';
 
-  protected infoNotification: NotificationType = NotificationType.INFO;
   protected portUrls: { [key: number]: string | null } = {};
+
+  protected noPortsNotification: NotificationDetails = {
+    type: NotificationType.INFO,
+    message: 'No open ports detected',
+  };
 
   constructor(private utilitiesService: UtilitiesService) {}
 

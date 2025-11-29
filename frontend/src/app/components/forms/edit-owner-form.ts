@@ -1,22 +1,15 @@
 import { EditOwnerButtons } from '#components/buttons';
-import { Notification } from '#components/common';
 import { EditField } from '#components/fields';
 import { EditDevicesGrid } from '#components/grids';
-import { Device, Option, Owner, OwnerRequest } from '#interfaces';
+import { Device, Notification, Option, Owner, OwnerRequest } from '#interfaces';
 import { DeviceService, OwnerService, UtilitiesService } from '#services';
 import { Constants, NotificationType } from '#types';
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   standalone: true,
   selector: 'app-edit-owner-form',
-  imports: [EditField, EditDevicesGrid, EditOwnerButtons, Notification],
+  imports: [EditField, EditDevicesGrid, EditOwnerButtons],
   templateUrl: './edit-owner-form.html',
   styleUrl: './edit-owner-form.scss',
 })
@@ -25,6 +18,7 @@ export class EditOwnerForm {
 
   @Output() onSubmit = new EventEmitter<Owner>();
   @Output() onCancel = new EventEmitter<void>();
+  @Output() onNotification = new EventEmitter<Notification>();
 
   protected editOwner!: Owner;
 
@@ -32,16 +26,12 @@ export class EditOwnerForm {
   protected allDevices: Device[] = [];
   protected unassignedDevices: Option<Device>[] = [];
 
-  protected notification: string | null = null;
-  protected errorNotification: NotificationType = NotificationType.ERROR;
-
   protected nameError: boolean = false;
 
   constructor(
     private ownerService: OwnerService,
     private deviceService: DeviceService,
-    private utilitiesService: UtilitiesService,
-    private cdr: ChangeDetectorRef
+    private utilitiesService: UtilitiesService
   ) {}
 
   ngOnInit() {
@@ -93,7 +83,6 @@ export class EditOwnerForm {
 
   clearErrors() {
     this.nameError = false;
-    this.notification = null;
   }
 
   validateName() {
@@ -121,7 +110,10 @@ export class EditOwnerForm {
     const nameValidationMessage = this.validateName();
     if (nameValidationMessage) {
       this.nameError = true;
-      this.notification = nameValidationMessage;
+      this.onNotification.emit({
+        type: NotificationType.ERROR,
+        message: nameValidationMessage,
+      });
       return;
     }
 
@@ -134,20 +126,32 @@ export class EditOwnerForm {
       this.ownerService.createOwner(ownerRequest).subscribe({
         next: (owner) => {
           this.onSubmit.emit(owner);
+          this.onNotification.emit({
+            type: NotificationType.SUCCESS,
+            message: `Owner created successfully.`,
+          });
         },
         error: () => {
-          this.notification = Constants.GENERIC_ERROR_MESSAGE;
-          this.cdr.detectChanges();
+          this.onNotification.emit({
+            type: NotificationType.ERROR,
+            message: Constants.GENERIC_ERROR_MESSAGE,
+          });
         },
       });
     } else {
       this.ownerService.updateOwner(this.owner.id, ownerRequest).subscribe({
         next: (owner) => {
           this.onSubmit.emit(owner);
+          this.onNotification.emit({
+            type: NotificationType.SUCCESS,
+            message: `Owner updated successfully.`,
+          });
         },
         error: () => {
-          this.notification = Constants.GENERIC_ERROR_MESSAGE;
-          this.cdr.detectChanges();
+          this.onNotification.emit({
+            type: NotificationType.ERROR,
+            message: Constants.GENERIC_ERROR_MESSAGE,
+          });
         },
       });
     }

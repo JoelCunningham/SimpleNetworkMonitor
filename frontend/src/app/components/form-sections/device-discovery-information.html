@@ -6,8 +6,7 @@
     </div>
     } @if (mac.discoveries?.length === 0) {
     <app-notification
-      [message]="'No services detected'"
-      [type]="infoNotification"
+      [details]="noDiscoveriesNotification"
       [closeable]="false"
     />
     }

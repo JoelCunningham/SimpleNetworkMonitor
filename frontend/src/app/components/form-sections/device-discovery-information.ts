@@ -1,6 +1,6 @@
 import { Notification } from '#components/common';
 import { BaseFormSection } from '#components/form-sections';
-import { Mac } from '#interfaces';
+import { Mac, Notification as NotificationDetails } from '#interfaces';
 import { NotificationType } from '#types';
 import { Component, Input } from '@angular/core';
 
@@ -13,5 +13,8 @@ import { Component, Input } from '@angular/core';
 export class DeviceDiscoveryInformation {
   @Input() mac!: Mac;
 
-  protected infoNotification: NotificationType = NotificationType.INFO;
+  protected noDiscoveriesNotification: NotificationDetails = {
+    type: NotificationType.INFO,
+    message: 'No services detected',
+  };
 }

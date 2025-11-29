@@ -4,7 +4,7 @@ export type { Discovery } from '#/interfaces/discovery';
 export type { HttpPort } from '#/interfaces/http-port';
 export type { Location } from '#/interfaces/location';
 export type { Mac } from '#/interfaces/mac';
-export type { Notification } from '#/interfaces/notification';
+export type { Notification } from '#/interfaces/notification-info';
 export type { Option } from '#/interfaces/option';
 export type { Owner, OwnerRequest } from '#/interfaces/owner';
 export type { Port } from '#/interfaces/port';

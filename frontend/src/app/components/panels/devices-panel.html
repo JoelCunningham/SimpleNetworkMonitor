@@ -48,13 +48,13 @@
       [showStatus]="true"
       [showLink]="true"
       [removable]="false"
-      (onClick)="openViewModal(device)"
+      (onClick)="openModal(device)"
     />
     }
   </main>
 </app-base-panel>
 
-@if(currentDevice && deviceFormMode) {
+@if(currentDevice) {
 <app-device-modal
   [device]="currentDevice"
   [isOpen]="showDeviceModal"

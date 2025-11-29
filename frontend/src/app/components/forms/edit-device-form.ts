@@ -1,6 +1,6 @@
 import { EditDeviceButtons } from '#components/buttons';
 import { BaseCard } from '#components/cards';
-import { Checkbox, Icon, Notification, Select } from '#components/common';
+import { Checkbox, Icon, Select } from '#components/common';
 import { EditField } from '#components/fields';
 import {
   Category,
@@ -8,6 +8,7 @@ import {
   DeviceRequest,
   Location,
   Mac,
+  Notification,
   Option,
   Owner,
 } from '#interfaces';
@@ -24,15 +25,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   standalone: true,
   selector: 'app-edit-device-form',
-  imports: [
-    EditField,
-    EditDeviceButtons,
-    BaseCard,
-    Select,
-    Notification,
-    Checkbox,
-    Icon,
-  ],
+  imports: [EditField, EditDeviceButtons, BaseCard, Select, Checkbox, Icon],
   templateUrl: './edit-device-form.html',
   styleUrl: './edit-device-form.scss',
 })
@@ -41,6 +34,7 @@ export class EditDeviceForm {
 
   @Output() onSubmit = new EventEmitter<Device>();
   @Output() onCancel = new EventEmitter<void>();
+  @Output() onNotification = new EventEmitter<Notification>();
 
   protected editDevice!: Device;
   protected isAutoNamed: boolean = true;
@@ -51,9 +45,6 @@ export class EditDeviceForm {
 
   protected nameError: boolean = false;
   protected categoryError: boolean = false;
-
-  protected notification: string | null = null;
-  protected errorNotification: NotificationType = NotificationType.ERROR;
 
   constructor(
     private deviceService: DeviceService,
@@ -106,7 +97,10 @@ export class EditDeviceForm {
 
   removeMac(mac: Mac) {
     if (this.editDevice.macs.length === 1) {
-      this.notification = 'At least one MAC address is required.';
+      this.onNotification.emit({
+        type: NotificationType.INFO,
+        message: 'A device must have at least one MAC address.',
+      });
       return;
     }
     this.editDevice.macs = this.editDevice.macs.filter((m) => m.id !== mac.id);
@@ -115,7 +109,6 @@ export class EditDeviceForm {
   clearErrors() {
     this.nameError = false;
     this.categoryError = false;
-    this.notification = null;
   }
 
   validateName() {
@@ -147,14 +140,20 @@ export class EditDeviceForm {
     const nameValidationMessage = this.validateName();
     if (nameValidationMessage) {
       this.nameError = true;
-      this.notification = nameValidationMessage;
+      this.onNotification.emit({
+        type: NotificationType.ERROR,
+        message: nameValidationMessage,
+      });
       return;
     }
 
     const categoryValidationMessage = this.validateCategory();
     if (categoryValidationMessage) {
       this.categoryError = true;
-      this.notification = categoryValidationMessage;
+      this.onNotification.emit({
+        type: NotificationType.ERROR,
+        message: categoryValidationMessage,
+      });
       return;
     }
 
@@ -171,19 +170,32 @@ export class EditDeviceForm {
       this.deviceService.updateDevice(this.device.id, request).subscribe({
         next: (updatedDevice: Device) => {
           this.onSubmit.emit(updatedDevice);
-          this.notification = 'Device updated successfully.';
+          this.onNotification.emit({
+            type: NotificationType.SUCCESS,
+            message: 'Device updated successfully.',
+          });
         },
         error: () => {
-          this.notification = Constants.GENERIC_ERROR_MESSAGE;
+          this.onNotification.emit({
+            type: NotificationType.ERROR,
+            message: Constants.GENERIC_ERROR_MESSAGE,
+          });
         },
       });
     } else {
       this.deviceService.createDevice(request).subscribe({
         next: (createdDevice: Device) => {
           this.onSubmit.emit(createdDevice);
+          this.onNotification.emit({
+            type: NotificationType.SUCCESS,
+            message: 'Device created successfully.',
+          });
         },
         error: () => {
-          this.notification = Constants.GENERIC_ERROR_MESSAGE;
+          this.onNotification.emit({
+            type: NotificationType.ERROR,
+            message: Constants.GENERIC_ERROR_MESSAGE,
+          });
         },
       });
     }

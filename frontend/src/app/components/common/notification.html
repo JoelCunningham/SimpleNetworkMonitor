@@ -1,6 +1,6 @@
-@if (visible) {
-<div class="notification {{ type }}" [style]="css">
-  <p>{{ message }}</p>
+@if (details) {
+<div class="notification {{ details.type }}">
+  <p>{{ details.message }}</p>
   @if (closeable) {
   <button
     type="button"
