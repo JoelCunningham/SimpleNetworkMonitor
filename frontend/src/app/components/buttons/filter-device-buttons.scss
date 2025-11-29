@@ -23,6 +23,13 @@
 @media (max-width: 768px) {
   .filters {
     flex-direction: column;
+    align-items: stretch;
     width: 100%;
+    gap: 1rem;
+    padding-bottom: 1rem;
+
+    .clear-filters {
+      margin: auto;
+    }
   }
 }

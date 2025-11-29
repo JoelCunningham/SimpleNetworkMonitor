@@ -1,0 +1,15 @@
+@media (max-width: 768px) {
+  .form-actions {
+    flex-direction: column;
+
+    .dropdown {
+      margin-top: -1rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-buttons {
+      width: 100%;
+      flex-direction: column;
+    }
+  }
+}

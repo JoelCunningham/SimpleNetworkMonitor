@@ -1,6 +1,12 @@
 import { Icon } from '#components/common';
 import { Notification as NotificationDetails } from '#interfaces';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 
 @Component({
   standalone: true,
@@ -14,6 +20,15 @@ export class Notification {
   @Input() closeable: boolean = true;
 
   @Output() onClose = new EventEmitter<void>();
+
+  constructor(private ref: ElementRef) {}
+
+  ngOnChanges() {
+    this.ref.nativeElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+    });
+  }
 
   closeNotification() {
     this.onClose.emit();

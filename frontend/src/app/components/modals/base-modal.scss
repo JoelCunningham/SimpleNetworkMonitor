@@ -86,3 +86,18 @@
     opacity: 0;
   }
 }
+
+@media (max-width: 768px) {
+  .modal {
+    align-items: center;
+
+    .modal-content {
+      width: 90%;
+
+      .modal-body {
+        max-height: 75vh;
+        padding: 1rem;
+      }
+    }
+  }
+}

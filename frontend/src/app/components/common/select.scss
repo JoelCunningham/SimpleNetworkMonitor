@@ -8,6 +8,7 @@
   .select-body {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     app-icon {
       width: 19px;
@@ -117,6 +118,15 @@
           transform: rotate(0) translateY(0);
         }
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .select-body {
+    span {
+      margin: auto;
+      transform: translateX(16px);
     }
   }
 }

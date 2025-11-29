@@ -13,3 +13,13 @@
     padding-bottom: 4px;
   }
 }
+
+@media (max-width: 768px) {
+  .filters {
+    padding: 1rem;
+
+    input {
+      width: 100%;
+    }
+  }
+}

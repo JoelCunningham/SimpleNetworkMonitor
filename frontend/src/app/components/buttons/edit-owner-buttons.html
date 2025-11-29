@@ -1,13 +1,15 @@
 <div class="form-actions">
-  <app-select
-    [css]="'primary left'"
-    [(options)]="devices"
-    [placeholder]="'Assign a device'"
-    [isClearable]="false"
-    [isPersistent]="false"
-    [isReversed]="true"
-    (optionsChange)="selectDevice()"
-  />
+  <div class="dropdown">
+    <app-select
+      [css]="'primary left'"
+      [(options)]="devices"
+      [placeholder]="'Assign a device'"
+      [isClearable]="false"
+      [isPersistent]="false"
+      [isReversed]="true"
+      (optionsChange)="selectDevice()"
+    />
+  </div>
   <div class="form-buttons">
     <button class="input secondary interactive" (click)="cancel()">
       Cancel

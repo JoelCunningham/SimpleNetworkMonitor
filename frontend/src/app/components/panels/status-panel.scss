@@ -2,10 +2,16 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
 
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
+  main {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
+
+    app-last-scan-text {
+      display: flex;
+    }
   }
 }

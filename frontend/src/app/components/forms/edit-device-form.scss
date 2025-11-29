@@ -17,6 +17,24 @@
     margin-bottom: 1.5rem;
   }
 }
+
 app-checkbox {
   margin-top: 1.8rem;
+}
+
+@media (max-width: 768px) {
+  .form-group {
+    ul {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  app-checkbox {
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+  }
 }

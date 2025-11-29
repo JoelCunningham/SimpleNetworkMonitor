@@ -6,7 +6,9 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 
 @Component({
@@ -16,7 +18,7 @@ import {
   templateUrl: './base-modal.html',
   styleUrl: './base-modal.scss',
 })
-export class BaseModal {
+export class BaseModal implements OnChanges {
   @Input() isOpen: boolean = false;
   @Input() modalTitle!: string;
   @Input() notification?: NotificationDetails;
@@ -24,6 +26,14 @@ export class BaseModal {
   @Output() onClose = new EventEmitter<void>();
 
   constructor(private ref: ElementRef) {}
+
+  ngOnChanges(): void {
+    if (this.isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
 
   closeModal() {
     this.onClose.emit();
