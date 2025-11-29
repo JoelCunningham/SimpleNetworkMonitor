@@ -182,7 +182,6 @@ export class DevicesPanel {
   }
 
   closeModal() {
-    this.notification = null;
     this.showDeviceModal = false;
     setTimeout(() => {
       this.currentDevice = null;

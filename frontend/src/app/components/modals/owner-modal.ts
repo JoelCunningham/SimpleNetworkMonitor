@@ -23,6 +23,7 @@ export class OwnerModal {
   constructor(private ownerService: OwnerService) {}
 
   ngOnChanges() {
+    this.notification = undefined;
     this.isViewMode = this.owner.id !== 0;
 
     this.ownerService.currentOwners().subscribe((owners: Owner[]) => {

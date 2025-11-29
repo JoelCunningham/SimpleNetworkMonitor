@@ -19,7 +19,10 @@ export class DeviceModal {
   protected isViewMode: boolean = true;
   protected notification?: Notification;
 
-  ngOnChanges() {}
+  ngOnChanges() {
+    this.notification = undefined;
+    this.isViewMode = this.device.id !== 0;
+  }
 
   getModalTitle() {
     if (this.isViewMode) {
