@@ -78,6 +78,10 @@ export class Select<T> {
     this.isOpen = false;
   }
 
+  isSelected(): boolean {
+    return this.options.some((option) => option.selected);
+  }
+
   getDropdownHeight(): string {
     return this.selectOptions.length * 39 + 'px';
   }

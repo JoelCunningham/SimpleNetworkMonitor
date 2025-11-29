@@ -122,4 +122,21 @@ export class UtilitiesService {
     const protocol = this.httpsPorts.includes(port) ? 'https' : 'http';
     return `${protocol}${'://'}${ip}:${port}`;
   }
+
+  sortDevices(devices: Device[]): Device[] {
+    return devices.sort((a, b) => {
+      const aLatestMac = this.getLatestMacTime(a);
+      const bLatestMac = this.getLatestMacTime(b);
+      if (bLatestMac !== aLatestMac) return bLatestMac - aLatestMac;
+      return (a.macs[0]?.hostname || '').localeCompare(
+        b.macs[0]?.hostname || ''
+      );
+    });
+  }
+
+  getLatestMacTime(device: Device): number {
+    return device.macs
+      .map((mac) => (mac.last_seen ? new Date(mac.last_seen).getTime() : 0))
+      .reduce((max, current) => Math.max(max, current), 0);
+  }
 }

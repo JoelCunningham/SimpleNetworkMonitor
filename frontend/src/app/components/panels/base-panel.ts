@@ -11,5 +11,5 @@ import { Component, Input } from '@angular/core';
 })
 export class BasePanel {
   @Input() panelTitle: string | null = null;
-  @Input() notification: NotificationDetails | null = null;
+  @Input() notification?: NotificationDetails | null = null;
 }

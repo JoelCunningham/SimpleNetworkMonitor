@@ -1,0 +1,33 @@
+<app-base-panel panelTitle="Unknown Devices" [notification]="notification">
+  <aside>
+    <input
+      type="number"
+      id="timeLimit"
+      name="timeLimit"
+      class="input secondary interactive"
+      [(ngModel)]="timeLimit"
+      (ngModelChange)="applyFilters()"
+    />
+    <label for="timeLimit">Days</label>
+  </aside>
+  <main>
+    @for (device of deviceList; track device.primary_mac.address) {
+    <app-device-card
+      [device]="device"
+      [showStatus]="true"
+      [showLink]="true"
+      [removable]="false"
+      (onClick)="openModal(device)"
+    />
+    }
+  </main>
+</app-base-panel>
+
+@if(currentDevice) {
+<app-device-modal
+  [device]="currentDevice"
+  [isOpen]="showDeviceModal"
+  (onClose)="closeModal()"
+  (onDelete)="closeModal()"
+/>
+}
