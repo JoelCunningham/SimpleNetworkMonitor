@@ -44,7 +44,7 @@ export class Select<T> {
     const selectedOption = this.options.find((option) => option.selected);
 
     if (this.isClearable && selectedOption) {
-      this.selectOptions.push({
+      this.selectOptions.unshift({
         label: 'Clear',
         event: this.clearSelection.bind(this),
       });
@@ -80,10 +80,6 @@ export class Select<T> {
 
   isSelected(): boolean {
     return this.options.some((option) => option.selected);
-  }
-
-  getDropdownHeight(): string {
-    return this.selectOptions.length * 39 + 'px';
   }
 
   isDisabled(): boolean {

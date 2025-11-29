@@ -28,14 +28,33 @@
     top: 110%;
     left: 0;
     min-width: 100%;
-    max-height: 100px;
+    max-height: 195px;
     border: 2px solid var(--colour-primary);
     border-radius: var(--radius-input);
     background: var(--colour-dropdown-background);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    overflow-y: hidden;
+    overflow: hidden;
     transition: max-height var(--duration-fast) cubic-bezier(0.4, 0.2, 0.2, 1);
     z-index: 2;
+
+    .select-options {
+      max-height: 195px;
+      overflow-y: auto;
+    }
+
+    .select-options::-webkit-scrollbar {
+      width: var(--radius-input);
+    }
+
+    .select-options::-webkit-scrollbar-track {
+      background: transparent;
+      margin: -4px 0;
+    }
+
+    .select-options::-webkit-scrollbar-thumb {
+      background: var(--colour-primary);
+      border-radius: var(--radius-input);
+    }
 
     .select-option {
       padding: 0.5rem 1rem;
@@ -53,7 +72,7 @@
 
       &.action {
         text-align: center;
-        border-top: 1px solid var(--colour-placeholder);
+        border-bottom: 1px solid var(--colour-placeholder);
       }
     }
   }

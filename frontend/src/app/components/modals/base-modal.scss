@@ -60,17 +60,11 @@
 
     .modal-body {
       padding: 2rem;
-      padding-bottom: calc(2rem - var(--radius-panel));
+      border-radius: 0 0 var(--radius-panel) var(--radius-panel);
       background: var(--colour-section-background);
       max-height: 75vh;
       overflow-y: auto;
       scrollbar-width: none;
-    }
-
-    .modal-footer {
-      height: var(--radius-panel);
-      background: var(--colour-section-background);
-      border-radius: 0 0 var(--radius-panel) var(--radius-panel);
     }
   }
 }
