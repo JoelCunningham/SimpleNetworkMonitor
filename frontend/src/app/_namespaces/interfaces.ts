@@ -1,10 +1,10 @@
 export type { Category } from '#/interfaces/category';
 export type { Device, DeviceRequest } from '#/interfaces/device';
 export type { Discovery } from '#/interfaces/discovery';
-export type { HttpPort } from '#/interfaces/http-port';
+export type { PortInfo } from '#/interfaces/port-info';
 export type { Location } from '#/interfaces/location';
 export type { Mac } from '#/interfaces/mac';
-export type { Notification } from '#/interfaces/notification-info';
+export type { Notification } from '#/interfaces/notification';
 export type { Option } from '#/interfaces/option';
 export type { Owner, OwnerRequest } from '#/interfaces/owner';
 export type { Port } from '#/interfaces/port';

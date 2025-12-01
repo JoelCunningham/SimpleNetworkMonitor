@@ -1,4 +1,4 @@
-import { Device, HttpPort } from '#interfaces';
+import { Device, PortInfo, Port } from '#interfaces';
 import { DeviceStatus, LastSeenStatus } from '#types';
 import { Injectable } from '@angular/core';
 
@@ -62,65 +62,33 @@ export class UtilitiesService {
     return (now - lastSeen) / 60000;
   }
 
-  getDeviceHttpUrl(device: Device): string | null {
+  httpPortNumbers = [80, 443];
+  httpsPortNumber = 443;
+
+  getDeviceHttpUrl(device: Device): string | undefined {
     if (!device.primary_mac || !device.primary_mac.last_ip) {
-      return null;
+      return undefined;
     }
 
     const ip = device.primary_mac.last_ip;
-    let httpPorts: HttpPort[] = [];
-
-    if (device.macs) {
-      device.macs.forEach((mac) => {
-        if (mac.ports) {
-          mac.ports.forEach((port) => {
-            if (port) {
-              const portNumber = port.number;
-              const service = port.service?.toLowerCase() || '';
-              if (
-                [80, 443, 8080, 8443].includes(portNumber) ||
-                service.includes('http')
-              ) {
-                httpPorts.push({
-                  port: portNumber,
-                  isHttps:
-                    [443, 8443].includes(portNumber) ||
-                    service.includes('https'),
-                });
-              }
-            }
-          });
-        }
-      });
-    }
+    const httpPorts = device.macs
+      .flatMap((mac) => mac.ports || [])
+      .filter((port) => this.httpPortNumbers.includes(port.number))
+      .sort((a, b) => a.number - b.number);
 
     if (httpPorts.length === 0) {
-      return null;
+      return undefined;
     }
 
-    // Prefer HTTP, then HTTPS, then others
-    const sortedPorts = httpPorts.sort((a, b) => {
-      if (!a.isHttps && b.isHttps) return -1;
-      if (a.isHttps && !b.isHttps) return 1;
-      if (a.port === 80) return -1;
-      if (b.port === 80) return 1;
-      if (a.port === 443) return -1;
-      if (b.port === 443) return 1;
-      return a.port - b.port;
-    });
-
-    return this.getPortHttpUrl(ip, sortedPorts[0].port);
+    return this.getPortHttpUrl(ip, httpPorts[0].number);
   }
 
-  httpPorts = [80, 8080];
-  httpsPorts = [443, 8443];
-
-  getPortHttpUrl(ip: string, port: number): string | null {
-    if (!this.httpPorts.includes(port) && !this.httpsPorts.includes(port)) {
-      return null;
+  getPortHttpUrl(ip: string, port: number): string | undefined {
+    if (this.httpPortNumbers.includes(port)) {
+      const protocol = port === this.httpsPortNumber ? 'https' : 'http';
+      return `${protocol}${'://'}${ip}:${port}`;
     }
-    const protocol = this.httpsPorts.includes(port) ? 'https' : 'http';
-    return `${protocol}${'://'}${ip}:${port}`;
+    return undefined;
   }
 
   sortDevices(devices: Device[]): Device[] {
@@ -132,6 +100,18 @@ export class UtilitiesService {
         b.macs[0]?.hostname || ''
       );
     });
+  }
+
+  getPortInfo(ip: string, ports: Port[]): PortInfo[] {
+    return ports
+      .map((port) => ({
+        port: port,
+        isHttp: this.httpPortNumbers.includes(port.number),
+        address: this.getPortHttpUrl(ip, port.number),
+      }))
+      .sort((a, b) => {
+        return a.port.number - b.port.number;
+      });
   }
 
   getLatestMacTime(device: Device): number {

@@ -1,19 +1,20 @@
-<app-base-form-section sectionTitle="Ports">
+<app-base-form-section sectionTitle="Open Ports">
   <div class="tags">
-    @for (port of ports; track port.id) { @if (getPortUrl(port)) {
+    @for (portInfo of getSortedPorts(); track portInfo.port.id) { @if
+    (portInfo.isHttp) {
     <a
       target="_blank"
       rel="noopener noreferrer"
-      [href]="getPortUrl(port)"
-      [title]="getPortUrl(port)"
+      [href]="portInfo.address"
+      [title]="portInfo.address"
     >
       <div class="tag interactive">
-        {{ getPortDescription(port) }}
+        {{ getPortDescription(portInfo) }}
         <app-icon [name]="'external-link'" size="16"></app-icon>
       </div>
     </a>
     } @else {
-    <div class="tag">{{ getPortDescription(port) }}</div>
+    <div class="tag">{{ getPortDescription(portInfo) }}</div>
     } } @if (ports.length === 0) {
     <app-notification [details]="noPortsNotification" [closeable]="false" />
     }

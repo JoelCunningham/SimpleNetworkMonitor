@@ -1,10 +1,13 @@
 import { Icon, Notification } from '#components/common';
 import { BaseFormSection } from '#components/form-sections';
-import { Port } from '#interfaces';
+import {
+  Notification as NotificationDetails,
+  Port,
+  PortInfo,
+} from '#interfaces';
 import { UtilitiesService } from '#services';
 import { NotificationType } from '#types';
 import { Component, Input } from '@angular/core';
-import { Notification as NotificationDetails } from '#interfaces';
 
 @Component({
   selector: 'app-device-port-information',
@@ -16,8 +19,6 @@ export class DevicePortInformation {
   @Input() ports: Port[] = [];
   @Input() deviceIp: string = '';
 
-  protected portUrls: { [key: number]: string | null } = {};
-
   protected noPortsNotification: NotificationDetails = {
     type: NotificationType.INFO,
     message: 'No open ports detected',
@@ -25,18 +26,12 @@ export class DevicePortInformation {
 
   constructor(private utilitiesService: UtilitiesService) {}
 
-  getPortUrl(port: Port): string | null {
-    if (!this.portUrls[port.number]) {
-      this.portUrls[port.number] = this.utilitiesService.getPortHttpUrl(
-        this.deviceIp,
-        port.number
-      );
-    }
-    return this.portUrls[port.number];
+  getSortedPorts(): PortInfo[] {
+    return this.utilitiesService.getPortInfo(this.deviceIp, this.ports);
   }
 
-  getPortDescription(port: Port) {
-    const service = port.service ? ` (${port.service.split(' ')[0]})` : '';
-    return `${port.number}${service}`;
+  getPortDescription(info: PortInfo): string {
+    const service = info.port.service ? ` (${info.port.service})` : '';
+    return `${info.port.number}${service}`;
   }
 }

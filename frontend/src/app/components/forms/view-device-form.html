@@ -7,13 +7,10 @@
   (onSelectMac)="selectMac($event)"
 />
 <app-device-network-information [mac]="currentMac()" />
-<div class="form-columns">
-  <app-device-port-information
-    [ports]="getSortedPorts(currentMac())"
-    [deviceIp]="currentMac().last_ip"
-  />
-  <app-device-discovery-information [mac]="currentMac()" />
-</div>
+<app-device-port-information
+  [ports]="getSortedPorts(currentMac())"
+  [deviceIp]="currentMac().last_ip"
+/>
 <app-view-device-buttons
   [devices]="deviceOptions"
   [addMode]="device.id === 0"

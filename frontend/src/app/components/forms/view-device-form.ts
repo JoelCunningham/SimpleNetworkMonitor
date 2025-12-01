@@ -1,6 +1,5 @@
 import { ViewDeviceButtons } from '#components/buttons';
 import {
-  DeviceDiscoveryInformation,
   DeviceGeneralInformation,
   DeviceNetworkInformation,
   DevicePortInformation,
@@ -27,7 +26,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     DeviceGeneralInformation,
     DeviceNetworkInformation,
     DevicePortInformation,
-    DeviceDiscoveryInformation,
   ],
   templateUrl: './view-device-form.html',
   styleUrl: './view-device-form.scss',
