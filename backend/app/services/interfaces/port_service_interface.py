@@ -7,7 +7,7 @@ from app.common.objects import PortInfo, ServiceInfo
 class PortServiceInterface(Protocol):
     """Interface for port scanning and storage."""
 
-    def scan_ports(self, ip_address: str, ports: list[int]) -> list[PortInfo]:
+    def scan_ports(self, ip_address: str, ports: list[int], udp_ports: list[int]) -> list[PortInfo]:
         """Scan specified ports on an IP address and return open PortInfo entries."""
         ...
 

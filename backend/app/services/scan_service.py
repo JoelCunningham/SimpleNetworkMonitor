@@ -116,7 +116,7 @@ class ScanService(ScanServiceInterface):
         # Step 7: Port scanning
         if scan_options.port_scan:
             self._print_status(f"{ip_address} Port scanning started")
-            scan_result.open_ports = self.port_service.scan_ports(ip_address, COMMON_PORTS)
+            scan_result.open_ports = self.port_service.scan_ports(ip_address, TCP_COMMON_PORTS, UDP_COMMON_PORTS)
         
         #Step 8: Service detection
         for port_info in scan_result.open_ports:
