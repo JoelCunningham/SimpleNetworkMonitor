@@ -77,7 +77,7 @@ class PingService(PingServiceInterface):
             backoff_factor=self._ping_retry_backoff
         )
         
-        if result not in RetryStatus:
+        if result and not isinstance(result, RetryStatus):
             return result      
         return None
 

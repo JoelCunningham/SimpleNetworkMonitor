@@ -106,7 +106,7 @@ class MacService(MacServiceInterface):
             backoff_factor=self._arp_retry_backoff
         )
         
-        if result not in RetryStatus:
+        if result and not isinstance(result, RetryStatus):
             return result     
 
     def get_vendor_from_mac(self, mac_address: str) -> str | None:
