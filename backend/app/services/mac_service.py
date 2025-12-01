@@ -9,7 +9,7 @@ from scapy.packet import Packet
 from app import config
 from app.common.constants import *
 from app.common.objects import AddressData
-from app.common.utilities import Time, time_operation
+from app.common.utilities import Time, time_operation, RetryStatus, run_and_retry
 from app.database.interfaces import DatabaseInterface
 from app.database.models import Mac
 from app.services.interfaces import MacServiceInterface
@@ -21,6 +21,10 @@ class MacService(MacServiceInterface):
     def __init__(self, database: DatabaseInterface) -> None:
         self.database = database
         self.arp_semaphore = threading.Semaphore(10) 
+        
+        self._arp_max_retries = config.arp_max_retries
+        self._arp_retry_delay_ms = config.arp_retry_delay_ms
+        self._arp_retry_backoff = config.arp_retry_backoff
 
     def save_mac(self, address_data: AddressData, preserve: bool = False) -> Mac:
         if address_data.mac_address is None:
@@ -68,30 +72,42 @@ class MacService(MacServiceInterface):
         return self.database.select(Mac).where(Mac.address == mac_address).first()
 
     def resolve_mac_address(self, ip_address: str) -> tuple[str, int] | None:
-        arp: Packet = ARP(pdst=ip_address)  # type: ignore
-        ether: Packet = Ether(dst=BROADCAST_MAC_ADDRESS)  # type: ignore
-        packet: Packet = ether / arp  # type: ignore
         
-        iface = self._find_interface(self._get_local_ip())
-        
-        timeout = config.arp_timeout_ms / 1000
+        def attempt_arp() -> tuple[str, int] | RetryStatus:
+            arp: Packet = ARP(pdst=ip_address)  # type: ignore
+            ether: Packet = Ether(dst=BROADCAST_MAC_ADDRESS)  # type: ignore
+            packet: Packet = ether / arp  # type: ignore
+            
+            iface = self._find_interface(self._get_local_ip())
+            
+            timeout = config.arp_timeout_ms / 1000
 
-        arp_time = Time()
-        with self.arp_semaphore:
-            with time_operation(arp_time):
-                try:
-                    results = srp(packet, iface=iface, timeout=timeout, verbose=0)[0]  # type: ignore
-                except Exception as e:
-                    print(f"WARN arp lookup error for {ip_address}: {e}")
-                    return None
+            arp_time = Time()
+            with self.arp_semaphore:
+                with time_operation(arp_time):
+                    try:
+                        results = srp(packet, iface=iface, timeout=timeout, verbose=0)[0]  # type: ignore
+                    except Exception as e:
+                        print(f"WARN arp lookup error for {ip_address}: {e}")
+                        return RetryStatus.ERROR
 
-            if results:
-                received_pkt = results[0][1]
-                mac_address = getattr(received_pkt, MAC_ADDRESS_ATTR, None)
-                if mac_address and isinstance(mac_address, str):
-                    return (mac_address.lower(), int(arp_time.value))
+                if results:
+                    received_pkt = results[0][1]
+                    mac_address = getattr(received_pkt, MAC_ADDRESS_ATTR, None)
+                    if mac_address and isinstance(mac_address, str):
+                        return (mac_address.lower(), int(arp_time.value))
+                
+                return RetryStatus.FAILURE
         
-        return None
+        result = run_and_retry(
+            attempt_arp, 
+            max_attempts=self._arp_max_retries, 
+            initial_delay=self._arp_retry_delay_ms / 1000, 
+            backoff_factor=self._arp_retry_backoff
+        )
+        
+        if result not in RetryStatus:
+            return result     
 
     def get_vendor_from_mac(self, mac_address: str) -> str | None:
         if not mac_address or len(mac_address) < MAC_OUI_LENGTH:

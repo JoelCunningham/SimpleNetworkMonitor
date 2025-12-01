@@ -4,7 +4,7 @@ from typing import Protocol
 class PingServiceInterface(Protocol):
     """Interface for ping related operations."""
 
-    def ping(self, ip_address: str) -> tuple[bool | None, int, str | None]:
+    def ping(self, ip_address: str) -> tuple[int, str] | None:
         """Ping an IP address and return (success, rtt_ms, stdout_if_success_else_None)."""
         ...
 

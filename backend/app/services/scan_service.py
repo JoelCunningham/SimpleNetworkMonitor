@@ -80,9 +80,11 @@ class ScanService(ScanServiceInterface):
         
         # Step 1: Ping the IP
         self._print_status(f"{ip_address} Scanning started")
-        success, scan_result.ping_time_ms, ping_out = self.ping_service.ping(ip_address)
-        if not success:
-            return None
+        ping_result = self.ping_service.ping(ip_address)
+        if ping_result:
+            scan_result.ping_time_ms, ping_out = ping_result
+        else:
+            return None # IP is unreachable, skip further steps
                 
         # Step 2: MAC resolution
         if scan_options.mac_resolution:

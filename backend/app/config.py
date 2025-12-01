@@ -32,6 +32,14 @@ class Config(BaseSettings):
     max_threads: int = Field(default=254)
     ping_count: int = Field(default=3)
     
+    # Retry configuration
+    arp_max_retries: int = Field(default=3, ge=1)
+    ping_max_retries: int = Field(default=3, ge=1)
+    arp_retry_delay_ms: int = Field(default=100, ge=0)
+    ping_retry_delay_ms: int = Field(default=100, ge=0)
+    arp_retry_backoff: float = Field(default=2.0, ge=1.0)
+    ping_retry_backoff: float = Field(default=2.0, ge=1.0)
+    
     # Timeout configuration (in milliseconds)
     ping_timeout_ms: int = Field(default=2000)
     arp_timeout_ms: int = Field(default=1000)
