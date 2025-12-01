@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import { Device, DeviceRequest } from '#interfaces';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -6,7 +7,7 @@ import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
-  private apiUrl = 'http://192.168.0.15:8000/api/devices';
+  private apiUrl = `${Environment.apiUrl}/devices`;
   private doRefresh = true;
 
   private devicesSubject = new BehaviorSubject<Device[]>([]);

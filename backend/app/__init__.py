@@ -30,3 +30,7 @@ def create_app() -> FastAPI:
     app.include_router(api_app, prefix="/api")
 
     return app
+
+
+# Create app instance for uvicorn
+app = create_app()

@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import { Category } from '#interfaces';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -5,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private apiUrl = 'http://192.168.0.15:8000/api/categories';
+  private apiUrl = `${Environment.apiUrl}/categories`;
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
 
   public categories = this.categoriesSubject.asObservable();

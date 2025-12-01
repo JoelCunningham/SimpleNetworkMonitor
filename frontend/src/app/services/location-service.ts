@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import { Location } from '#interfaces';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -5,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
-  private apiUrl = 'http://192.168.0.15:8000/api/locations';
+  private apiUrl = `${Environment.apiUrl}/locations`;
   private locationsSubject = new BehaviorSubject<Location[]>([]);
 
   public locations = this.locationsSubject.asObservable();

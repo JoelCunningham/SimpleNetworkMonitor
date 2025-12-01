@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import { Owner, OwnerRequest } from '#interfaces';
 import { DeviceService } from '#services';
 import { HttpClient } from '@angular/common/http';
@@ -6,7 +7,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OwnerService {
-  private apiUrl = 'http://192.168.0.15:8000/api/owners';
+  private apiUrl = `${Environment.apiUrl}/owners`;
   private ownersSubject = new BehaviorSubject<Owner[]>([]);
 
   public owners = this.ownersSubject.asObservable();
