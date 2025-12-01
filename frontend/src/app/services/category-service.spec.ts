@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import { CategoryService } from '#/services/category-service';
 import {
   HttpClientTestingModule,
@@ -18,7 +19,7 @@ describe('CategoryService', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     // Handle the initial HTTP request made by the constructor
-    const req = httpMock.expectOne('http://192.168.0.15:8000/api/categories');
+    const req = httpMock.expectOne(`${Environment.apiUrl}/categories`);
     req.flush([]);
   });
 
