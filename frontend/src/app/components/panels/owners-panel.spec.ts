@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import { OwnersPanel } from '#components/panels';
 import {
   HttpClientTestingModule,
@@ -20,11 +21,9 @@ describe('OwnersPanel', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     // Handle initial HTTP requests from services
-    const devicesReq = httpMock.expectOne(
-      'http://192.168.0.15:8000/api/devices'
-    );
+    const devicesReq = httpMock.expectOne(`${Environment.apiUrl}/devices`);
     devicesReq.flush([]);
-    const ownersReq = httpMock.expectOne('http://192.168.0.15:8000/api/owners');
+    const ownersReq = httpMock.expectOne(`${Environment.apiUrl}/owners`);
     ownersReq.flush([]);
 
     fixture.detectChanges();

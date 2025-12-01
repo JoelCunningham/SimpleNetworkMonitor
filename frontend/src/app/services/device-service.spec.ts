@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -25,7 +26,7 @@ describe('DeviceService', () => {
     service = TestBed.inject(DeviceService);
 
     // Handle the initial HTTP request made by the constructor
-    const req = httpMock.expectOne('http://192.168.0.15:8000/api/devices');
+    const req = httpMock.expectOne(`${Environment.apiUrl}/devices`);
     req.flush([]);
 
     expect(service).toBeTruthy();

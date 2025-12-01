@@ -1,3 +1,4 @@
+import { Environment } from '#environment';
 import { Owner } from '#interfaces';
 import { OwnerService } from '#services';
 import {
@@ -19,11 +20,9 @@ describe('OwnerService', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     // Handle the initial HTTP requests made by OwnerService and DeviceService constructors
-    const devicesReq = httpMock.expectOne(
-      'http://192.168.0.15:8000/api/devices'
-    );
+    const devicesReq = httpMock.expectOne(`${Environment.apiUrl}/devices`);
     devicesReq.flush([]);
-    const ownersReq = httpMock.expectOne('http://192.168.0.15:8000/api/owners');
+    const ownersReq = httpMock.expectOne(`${Environment.apiUrl}/owners`);
     ownersReq.flush([]);
   });
 
@@ -44,7 +43,7 @@ describe('OwnerService', () => {
     // Manually trigger a refresh to test the HTTP call
     service.refreshOwners();
 
-    const req = httpMock.expectOne('http://192.168.0.15:8000/api/owners');
+    const req = httpMock.expectOne(`${Environment.apiUrl}/owners`);
     expect(req.request.method).toBe('GET');
     req.flush(mockOwners);
 
