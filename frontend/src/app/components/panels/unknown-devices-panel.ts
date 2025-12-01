@@ -5,7 +5,7 @@ import { BasePanel } from '#components/panels';
 import { Device, Notification } from '#interfaces';
 import { MacService, UtilitiesService } from '#services';
 import { NotificationType } from '#types';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -26,7 +26,8 @@ export class UnknownDevicesPanel {
 
   constructor(
     private macService: MacService,
-    private utilitiesService: UtilitiesService
+    private utilitiesService: UtilitiesService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -66,6 +67,8 @@ export class UnknownDevicesPanel {
     } else {
       this.notification = undefined;
     }
+
+    this.cdr.detectChanges();
   }
 
   openModal(device: Device) {

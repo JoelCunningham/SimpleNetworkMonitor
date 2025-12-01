@@ -1,8 +1,7 @@
 import threading
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from app import config
-from app.common.constants import *
 from app.common.objects.scan_options import ScanOptions
 from app.services.interfaces import (ScanningServiceInterface,
                                      ScanServiceInterface)
@@ -22,6 +21,7 @@ class ScanningService(ScanningServiceInterface):
         self.scan_error: str | None = None
         self.last_scan_results = []
         
+        self.scan_check_interval = config.scan_check_interval_s
         self.basic_scan_interval = config.background_scan_interval_s
         self.full_scan_interval = config.background_full_scan_interval_s
         
@@ -47,15 +47,19 @@ class ScanningService(ScanningServiceInterface):
         last_basic_scan = datetime.now()
         
         while not self.stop_event.is_set():
-            if self.stop_event.wait(timeout=SCAN_CHECK_INTERVAL):
+            if self.stop_event.wait(timeout=self.scan_check_interval):
                 break
             
-            if not self.is_scanning:                
-                if last_full_scan >= datetime.now() - timedelta(seconds=self.full_scan_interval):
+            if not self.is_scanning:
+                time_since_full_scan = (datetime.now() - last_full_scan).total_seconds()
+                time_since_basic_scan = (datetime.now() - last_basic_scan).total_seconds()
+                
+                if time_since_full_scan >= self.full_scan_interval:
                     self._perform_scan(full_scan=True)
                     last_full_scan = datetime.now()
+                    last_basic_scan = datetime.now()
                     
-                elif last_basic_scan >= datetime.now() - timedelta(seconds=self.basic_scan_interval):
+                elif time_since_basic_scan >= self.basic_scan_interval:
                     self._perform_scan(full_scan=False)
                     last_basic_scan = datetime.now()
             

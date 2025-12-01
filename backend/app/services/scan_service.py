@@ -80,9 +80,11 @@ class ScanService(ScanServiceInterface):
         
         # Step 1: Ping the IP
         self._print_status(f"{ip_address} Scanning started")
-        success, scan_result.ping_time_ms, ping_out = self.ping_service.ping(ip_address)
-        if not success:
-            return None
+        ping_result = self.ping_service.ping(ip_address)
+        if ping_result:
+            scan_result.ping_time_ms, ping_out = ping_result
+        else:
+            return None # IP is unreachable, skip further steps
                 
         # Step 2: MAC resolution
         if scan_options.mac_resolution:
@@ -114,7 +116,7 @@ class ScanService(ScanServiceInterface):
         # Step 7: Port scanning
         if scan_options.port_scan:
             self._print_status(f"{ip_address} Port scanning started")
-            scan_result.open_ports = self.port_service.scan_ports(ip_address, COMMON_PORTS)
+            scan_result.open_ports = self.port_service.scan_ports(ip_address, TCP_COMMON_PORTS, UDP_COMMON_PORTS)
         
         #Step 8: Service detection
         for port_info in scan_result.open_ports:

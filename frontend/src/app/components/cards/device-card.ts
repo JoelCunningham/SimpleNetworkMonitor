@@ -38,7 +38,7 @@ export class DeviceCard implements OnInit, OnChanges, OnDestroy {
   protected statusText: string = LastSeenStatus.NEVER;
   protected statusClass: string = DeviceStatus.OFFLINE;
   protected displayName: string = 'Unknown Device';
-  protected portalUrl: string | null = null;
+  protected portalUrl?: string;
   protected iconName: string = 'unknown';
 
   private statusSubscription?: Subscription;
