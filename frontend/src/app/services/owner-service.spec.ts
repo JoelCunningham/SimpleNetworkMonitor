@@ -20,9 +20,7 @@ describe('OwnerService', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     // Handle the initial HTTP requests made by OwnerService and DeviceService constructors
-    const devicesReq = httpMock.expectOne(
-      `${Environment.apiUrl}/devices`
-    );
+    const devicesReq = httpMock.expectOne(`${Environment.apiUrl}/devices`);
     devicesReq.flush([]);
     const ownersReq = httpMock.expectOne(`${Environment.apiUrl}/owners`);
     ownersReq.flush([]);
