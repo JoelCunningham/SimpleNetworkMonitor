@@ -20,7 +20,7 @@ class MacService(MacServiceInterface):
     
     def __init__(self, database: DatabaseInterface) -> None:
         self.database = database
-        self.lock = threading.Lock()
+        self.arp_semaphore = threading.Semaphore(10) 
 
     def save_mac(self, address_data: AddressData, preserve: bool = False) -> Mac:
         if address_data.mac_address is None:
@@ -77,7 +77,7 @@ class MacService(MacServiceInterface):
         timeout = config.arp_timeout_ms / 1000
 
         arp_time = Time()
-        with self.lock:
+        with self.arp_semaphore:
             with time_operation(arp_time):
                 try:
                     results = srp(packet, iface=iface, timeout=timeout, verbose=0)[0]  # type: ignore
@@ -85,11 +85,11 @@ class MacService(MacServiceInterface):
                     print(f"WARN arp lookup error for {ip_address}: {e}")
                     return None
 
-        if results:
-            received_pkt = results[0][1]
-            mac_address = getattr(received_pkt, MAC_ADDRESS_ATTR, None)
-            if mac_address and isinstance(mac_address, str):
-                return (mac_address.lower(), int(arp_time.value))
+            if results:
+                received_pkt = results[0][1]
+                mac_address = getattr(received_pkt, MAC_ADDRESS_ATTR, None)
+                if mac_address and isinstance(mac_address, str):
+                    return (mac_address.lower(), int(arp_time.value))
         
         return None
 
