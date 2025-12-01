@@ -21,6 +21,7 @@ class Config(BaseSettings):
     sqlalchemy_echo: bool = Field(default=False)
     
     # Background task configuration
+    scan_check_interval_s: int = Field(default=10, ge=5)
     background_scan_interval_s: int = Field(default=60, ge=60)
     background_full_scan_interval_s: int = Field(default=300, ge=60)
     
